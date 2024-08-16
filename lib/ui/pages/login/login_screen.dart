@@ -1,233 +1,203 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:reconocimiento_app/ui/pages/home/home_page.dart';
-import 'package:reconocimiento_app/ui/pages/register/register_screen.dart';
+import 'dart:convert';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:reconocimiento_app/ui/pages/home/home_page.dart';
+
+class PaginadeInicio extends StatefulWidget {
+  const PaginadeInicio({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<PaginadeInicio> createState() => _PaginadeInicioState();
 }
 
+class _PaginadeInicioState extends State<PaginadeInicio> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isloading = false;
 
-// Estado interno de la clase Login
-class _LoginState extends State<Login> {
-  // Controladores para los campos de texto
-  TextEditingController documentNumberController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  Future<void> _login() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
 
-  // Variable para almacenar el tipo de documento seleccionado
-  String selectedDocumentType = 'Cédula de ciudadanía';
-
-  // Lista de tipos de documentos
-  List<String> documentTypes = [
-    'Cédula de ciudadanía',
-    'Tarjeta de identidad',
-    'Cédula de extranjería'
-  ];
-
-  // Llave para el formulario
-  final _formKey = GlobalKey<FormState>();
-
-  // Método para autenticar al usuario
-  void _login() {
-    // Verificar si el formulario es válido
-    if (_formKey.currentState!.validate()) {
-      // Obtener los valores de los campos de texto
-      String documentNumber = documentNumberController.text;
-      String password = passwordController.text;
-
-      // Autenticación (en este caso, hardcodeada)
-      if (documentNumber == '123' && password == '123') {
-        // Mostrar diálogo de confirmación
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            // Cerrar el diálogo después de 1 segundo
-            Future.delayed(const Duration(seconds: 1), () {
-              Navigator.of(context).pop(true); // Cierra el modal
-            });
-            return const AlertDialog(
-              title: Text('Inicio de sesión exitoso'),
-              content: Text('Sesión iniciada con éxito.'),
-            );
-          },
-        ).then((_) {
-          // Navegar a la pantalla de inicio
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const MyHomePage()),
-          );
-        });
-      } else {
-        // Mostrar mensaje de error si la autenticación falla
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Número de documento o contraseña incorrectos')),
-        );
-      }
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Por favor, ingrese un correo electrónico y contraseña"),
+      ));
+      return;
     }
+
+    setState(() {
+      _isloading = true;
+    });
+
+    try {
+      final responselogin = await http.post(
+        Uri.parse("https://apimercadolibreochoa.onrender.com/api/login"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          "nombre": "DatoFucticio",
+          "email": email,
+          "password": password,
+        }),
+      );
+
+      if (responselogin.statusCode == 200) {
+        final jsonData = jsonDecode(responselogin.body);
+        if (jsonData['token'] != null) {
+          if (mounted) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const MyHomePage()),
+            );
+          }
+        } else {
+          _showError("Contraseña o correo son incorrectos.");
+        }
+      } else if (responselogin.statusCode == 401) {
+        final jsonData = jsonDecode(responselogin.body);
+        if (jsonData['error'] == 'Invalid password') {
+          _showError("La contraseña es incorrecta.");
+        } else if (jsonData['error'] == 'Email not found') {
+          _showError("El correo no existe.");
+        } else {
+          _showError("Por favor verifique su correo y contraseña.");
+        }
+      } else {
+        _showError("Por favor verifique su correo.");
+      }
+    } catch (e) {
+      _showError(
+          "Ocurrió un error inesperado. Verifique su conexión a Internet e intente nuevamente.");
+    } finally {
+      setState(() {
+        _isloading = false;
+      });
+    }
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
-    // Construir la interfaz de usuario
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.green,
-        body: SingleChildScrollView(
-          child: Stack(
-            children: [
-              // Logo en la esquina superior izquierda
-              Positioned(
-                top: 0,
-                left: 0,
-                child: Image.asset(
+    return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 10, 10, 10),
+      // backgroundColor: const Color(0xFFF7FAFC),
+
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: SizedBox(
+            width: 300,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
                     'images/login/LogoReconocimientoFacialBlanco.png',
-                    height: 50),
-              ),
-              // Logo en la esquina superior derecha
-              Positioned(
-                top: 0,
-                right: 0,
-                child: Image.asset('images/login/logoSenaBlanco.png', height: 50),
-              ),
-                
-              // Contenedor blanco con bordes redondeados
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.white, borderRadius: BorderRadius.circular(20)),
-                margin: const EdgeInsets.only(
-                    top: 100, left: 20, right: 20, bottom: 50),
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: Center(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Título "Ingreso Usuario Registrado"
-                        const Text("Ingreso Usuario Registrado"),
-                        const SizedBox(height: 20),
-                        // Selección de tipo de documento
-                        const Text("Tipo de documento"),
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: DropdownButton<String>(
-                            isExpanded: true,
-                            value: selectedDocumentType,
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                selectedDocumentType = newValue!;
-                              });
-                            },
-                            items: documentTypes
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            underline: const SizedBox(), // Remove the underline
-                          ),
+                    width: 100,
+                    height: 100,
+                    color: Colors.green ,
+                  ),
+                  const SizedBox(height: 16.0),
+                  const Text(
+                    "Bienvenido a SENAuthenticator ",
+                    style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                  const SizedBox(height: 16.0),
+                  const Text(
+                    "Iniciar sesión para continuar..",
+                    style: TextStyle(fontSize: 16.0, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 30),
+                  TextField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      labelText: 'Digita Email',
+                      labelStyle: const TextStyle(color: Colors.green),
+                      prefixIcon: const Icon(Icons.email, color: Colors.green),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.green),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  const SizedBox(height: 15),
+                  TextField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      labelStyle: const TextStyle(color: Colors.green),
+                      prefixIcon: const Icon(Icons.lock, color: Colors.green),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.green),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  const SizedBox(height: 30.0),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _isloading ? null : _login,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 15.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
-                        const SizedBox(height: 20),
-                        // Campo de texto para número de documento
-                        const Text("Número de documento"),
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: TextFormField(
-                            controller: documentNumberController,
-                            decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                hintText: "Número de documento"),
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Por favor ingrese su número de documento';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        // Campo de texto para contraseña
-                        const Text("Contraseña"),
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: TextFormField(
-                            controller: passwordController,
-                            obscureText: true,
-                            decoration: const InputDecoration(
-                                border: InputBorder.none, hintText: "Contraseña"),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Por favor ingrese su contraseña';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 50),
-                        // Botón "Iniciar sesión"
-                        Container(
-                          width: 200,
-                          decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: TextButton(
-                            onPressed: _login,
-                            child: const Text(
-                              "Iniciar sesión",
-                              style: TextStyle(color: Colors.white, fontSize: 20),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        // Enlace "¿Olvidaste tu contraseña?"
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            "¿Olvidaste tu contraseña?",
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        // Enlace "¿Deseas registrarte?"
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const RegisterScreen()));
-                          },
-                          child: const Text(
-                            "¿Deseas registrarte?",
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ),
-                      ],
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                      ),
+                      child: _isloading
+                          ? const CircularProgressIndicator()
+                          : const Text("Iniciar sesión"),
                     ),
                   ),
-                ),
+                  const SizedBox(height: 20.0),
+                  const Text(
+                    "O inicie con ",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  const SizedBox(height: 20.0),
+                  TextButton(
+                    onPressed: () {},
+                    child: const Text(
+                      "Olvidó su password",
+                      style: TextStyle(color: Colors.green),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/registro');
+                    },
+                    child: const Text(
+                      "No tiene una cuenta? Registrarse",
+                      style: TextStyle(color: Colors.green),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

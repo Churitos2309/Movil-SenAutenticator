@@ -38,7 +38,7 @@ class _CameraPageState extends State<CameraPage> {
   Future<void> _takePicture() async {
     final picker = ImagePicker();
     // ignore: deprecated_member_use
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
