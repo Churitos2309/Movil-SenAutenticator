@@ -85,7 +85,7 @@ class _InstructorHomeState extends State<InstructorHome> {
 
   static final List<Widget> _widgetOptions = <Widget>[
     const InicioScreen(),
-    ReportesScreen(),
+    const ReportesScreen(),
   ];
 
   void _onItemTapped(int index) {

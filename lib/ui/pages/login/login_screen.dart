@@ -12,15 +12,67 @@ class PaginadeInicio extends StatefulWidget {
 }
 
 class _PaginadeInicioState extends State<PaginadeInicio> {
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  
+  Color _emailTextColor = Colors.grey;
+  Color _passwordTextColor = Colors.grey;
+  
   bool _isloading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailFocusNode.addListener(_onEmailFocusChange);
+    _passwordFocusNode.addListener(_onPasswordFocusChange);
+  }
+
+  @override
+  void dispose() {
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _onEmailFocusChange() {
+    setState(() {
+      _emailTextColor = _emailFocusNode.hasFocus ? Colors.green : Colors.grey;
+    });
+  }
+
+  void _onPasswordFocusChange() {
+    setState(() {
+      _passwordTextColor = _passwordFocusNode.hasFocus ? Colors.green : Colors.grey;
+    });
+  }
 
   Future<void> _login() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
-    if (email.isEmpty || password.isEmpty) {
+
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (email.isEmpty && password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Por favor, ingrese un correo electrónico y contraseña"),
+      ));
+      return;
+    } else if (!emailRegex.hasMatch(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Por favor, ingrese un correo electrónico válido"),
+      ));
+      return;
+    } else if (password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Por favor, ingrese la contraseña"),
+      ));
+      return;
+    } else if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Por favor, ingrese un correo electrónico y contraseña"),
       ));
@@ -38,14 +90,24 @@ class _PaginadeInicioState extends State<PaginadeInicio> {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, String>{
-          "nombre": "DatoFucticio",
           "email": email,
           "password": password,
         }),
       );
 
+      if (!mounted) return;
+
       if (responselogin.statusCode == 200) {
         final jsonData = jsonDecode(responselogin.body);
+        print('Respuesta de la API: $jsonData');
+
+        final user = jsonData['user'];
+        final nombre = user != null ? user['nombre'] : null;
+        print('Nombre extraido: $nombre');
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Bienvenido $nombre"),
+        ));
         if (jsonData['token'] != null) {
           if (mounted) {
             Navigator.push(
@@ -89,7 +151,6 @@ class _PaginadeInicioState extends State<PaginadeInicio> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 10, 10, 10),
       // backgroundColor: const Color(0xFFF7FAFC),
-
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
@@ -120,11 +181,12 @@ class _PaginadeInicioState extends State<PaginadeInicio> {
                   ),
                   const SizedBox(height: 30),
                   TextField(
+                    focusNode: _emailFocusNode,
                     controller: _emailController,
                     decoration: InputDecoration(
                       labelText: 'Digita Email',
-                      labelStyle: const TextStyle(color: Colors.green),
-                      prefixIcon: const Icon(Icons.email, color: Colors.green),
+                      labelStyle: TextStyle(color: _emailTextColor),
+                      prefixIcon: Icon(Icons.email, color: _emailTextColor),
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.green),
                         borderRadius: BorderRadius.circular(10.0),
@@ -138,12 +200,13 @@ class _PaginadeInicioState extends State<PaginadeInicio> {
                   ),
                   const SizedBox(height: 15),
                   TextField(
+                    focusNode: _passwordFocusNode,
                     controller: _passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      labelStyle: const TextStyle(color: Colors.green),
-                      prefixIcon: const Icon(Icons.lock, color: Colors.green),
+                      labelStyle: TextStyle(color: _passwordTextColor),
+                      prefixIcon: Icon(Icons.lock, color: _passwordTextColor),
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.green),
                         borderRadius: BorderRadius.circular(10.0),
@@ -182,8 +245,8 @@ class _PaginadeInicioState extends State<PaginadeInicio> {
                   TextButton(
                     onPressed: () {},
                     child: const Text(
-                      "Olvidó su password",
-                      style: TextStyle(color: Colors.green),
+                      "Olvidó su contraseña?",
+                      style: TextStyle(color: Colors.grey),
                     ),
                   ),
                   TextButton(

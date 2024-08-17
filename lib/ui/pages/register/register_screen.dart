@@ -1,174 +1,371 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:reconocimiento_app/controllers/users.dart';
+import 'package:http/http.dart' as http;
 
 class PaginadeRegistro extends StatefulWidget {
-  const PaginadeRegistro({super.key});
-
   @override
-  State<PaginadeRegistro> createState() => _PaginadeRegistroState();
+  _PaginadeRegistroState createState() => _PaginadeRegistroState();
 }
 
 class _PaginadeRegistroState extends State<PaginadeRegistro> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nombreController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _confirmEmailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
-  void _clearControllers() {
-    _nombreController.clear();
-    _emailController.clear();
-    _passwordController.clear();
+  final FocusNode _nameFocusNode = FocusNode();
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _confirmEmailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+  final FocusNode _confirmPasswordFocusNode = FocusNode();
+
+  Color _nameTextColor = Colors.grey;
+  Color _emailTextColor = Colors.grey;
+  Color _confirmEmailTextColor = Colors.grey;
+  Color _passwordTextColor = Colors.grey;
+  Color _confirmPasswordTextColor = Colors.grey;
+
+  bool _isloading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameFocusNode.addListener(_onNameFocusChange);
+    _emailFocusNode.addListener(_onEmailFocusChange);
+    _confirmEmailFocusNode.addListener(_onEmailFocusChange);
+    _passwordFocusNode.addListener(_onPasswordFocusChange);
+    _confirmPasswordFocusNode.addListener(_onPasswordFocusChange);
   }
 
-  void _navigateToLogin() {
-    Navigator.pushNamed(context, '/inicio');
+  @override
+  void dispose() {
+    _nameFocusNode.dispose();
+    _emailFocusNode.dispose();
+    _confirmEmailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _confirmPasswordFocusNode.dispose();
+
+    _nombreController.dispose();
+    _emailController.dispose();
+    _confirmEmailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  void _onNameFocusChange() {
+    setState(() {
+      _nameTextColor = _nameFocusNode.hasFocus ? Colors.green : Colors.grey;
+    });
+  }
+
+  void _onEmailFocusChange() {
+    setState(() {
+      _emailTextColor = _emailFocusNode.hasFocus ? Colors.green : Colors.grey;
+    });
+  }
+
+  void _onConfirmEmailFocusChange() {
+    setState(() {
+      _confirmEmailTextColor = _confirmEmailFocusNode.hasFocus ? Colors.green : Colors.grey;
+    });
+  }
+
+  void _onPasswordFocusChange() {
+    setState(() {
+      _passwordTextColor =
+          _passwordFocusNode.hasFocus ? Colors.green : Colors.grey;
+    });
+  }
+
+  void _onConfirmPasswordFocusChange() {
+    setState(() {
+      _confirmPasswordTextColor = _confirmPasswordFocusNode.hasFocus ? Colors.green : Colors.grey;
+    });
+  }
+
+  Future<void> _register() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    final nombre = _nombreController.text.trim();
+    final email = _emailController.text.trim();
+    final confirmEmail = _confirmEmailController.text.trim();
+    final password = _passwordController.text.trim();
+    final confirmPassword = _confirmPasswordController.text.trim();
+
+    // if (email == confirmEmail) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(content: Text('Los correos electrónicos no coinciden')),
+    //   );
+    //   return;
+    // }
+
+    // if (password == confirmPassword) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(content: Text('Las contraseñas no coinciden')),
+    //   );
+    //   return;
+    // }
+
+    setState(() {
+      _isloading = true;
+    });
+
+    try {
+      final response = await http.post(
+        Uri.parse('https://apimercadolibreochoa.onrender.com/api/users'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'nombre': nombre,
+          'email': email,
+          'password': password,
+        }),
+      );
+
+      if (!mounted) return;
+
+      if (response.statusCode == 201) {
+        final responseData = jsonDecode(response.body);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Registro exitoso: ${responseData['message']}')),
+        );
+        Navigator.pushNamed(context, '/vistaLogin');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Error al registrar el usuario: ${response.body}')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error de red: $e')),
+      );
+    } finally {
+      setState(() {
+        _isloading = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 10, 10, 10),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Form(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: SizedBox(
+            width: 300,
+            child: SingleChildScrollView(
+              child: Form(
                 key: _formKey,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
                       'images/login/LogoReconocimientoFacialBlanco.png',
                       width: 100,
                       height: 100,
+                      color: Colors.green,
                     ),
                     const SizedBox(height: 16.0),
                     const Text(
-                      "Crear una nueva cuenta",
+                      "Bienvenido a SENAuthenticator",
                       style: TextStyle(
-                          fontSize: 24.0,
+                          fontSize: 18.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.white),
                     ),
-                    const SizedBox(height: 24.0),
+                    const SizedBox(height: 16.0),
+                    const Text(
+                      "Regístrate para continuar..",
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(height: 30),
                     TextFormField(
+                      focusNode: _nameFocusNode,
                       controller: _nombreController,
                       decoration: InputDecoration(
-                        labelText: "Nombre completo",
-                        labelStyle: const TextStyle(color: Colors.green),
-                        prefixIcon: const Icon(Icons.person_3_rounded, color: Colors.green),
+                        labelText: 'Nombre',
+                        labelStyle: TextStyle(color: _nameTextColor),
+                        prefixIcon: Icon(Icons.person, color: _nameTextColor),
                         focusedBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.green),
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
                       style: const TextStyle(color: Colors.white),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Ingrese nombre completo";
+                          return 'Por favor, ingrese su nombre';
                         }
                         return null;
                       },
                     ),
-                    const SizedBox(height: 12.0),
-                    TextField(
+                    const SizedBox(height: 15),
+
+                    TextFormField(
+                      focusNode: _emailFocusNode,
                       controller: _emailController,
                       decoration: InputDecoration(
-                        labelText: "Email",
-                        labelStyle: const TextStyle(color: Colors.green),
-                        prefixIcon: const Icon(Icons.email_sharp, color: Colors.green),
+                        labelText: 'Correo',
+                        labelStyle: TextStyle(color: _emailTextColor),
+                        prefixIcon: Icon(Icons.email, color: _emailTextColor),
                         focusedBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.green),
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
                       style: const TextStyle(color: Colors.white),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, ingrese su correo electrónico';
+                        }
+                        final emailRegex =
+                            RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                        if (!emailRegex.hasMatch(value)) {
+                          return 'Por favor, ingrese un correo electrónico válido';
+                        }
+                        return null;
+                      },
                     ),
-                    const SizedBox(height: 12.0),
-                    TextField(
+                    const SizedBox(height: 15),
+                    
+                    TextFormField(
+                      focusNode: _confirmEmailFocusNode,
+                      controller: _confirmEmailController,
+                      decoration: InputDecoration(
+                        labelText: 'Confirmar Correo',
+                        labelStyle: TextStyle(color: _confirmEmailTextColor),
+                        prefixIcon:
+                            Icon(Icons.email, color: _confirmEmailTextColor),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.green),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      style: const TextStyle(color: Colors.white),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, confirme su correo electrónico';
+                        }
+                        if (value != _emailController.text) {
+                          print(_emailController.text);
+                          return 'Los correos electrónicos no coinciden, por favor verifique $_emailController.text';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 15),
+                    TextFormField(
+                      focusNode: _passwordFocusNode,
                       controller: _passwordController,
+                      obscureText: true,
                       decoration: InputDecoration(
-                        labelText: "Password",
-                        labelStyle: const TextStyle(color: Colors.green),
-                        prefixIcon: const Icon(Icons.lock, color: Colors.green),
+                        labelText: 'Contraseña',
+                        labelStyle: TextStyle(color: _passwordTextColor),
+                        prefixIcon: Icon(Icons.lock, color: _passwordTextColor),
                         focusedBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.green),
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
                       style: const TextStyle(color: Colors.white),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, ingrese su contraseña';
+                        }
+                        return null;
+                      },
                     ),
-                    const SizedBox(height: 12.0),
-                    TextField(
+                    const SizedBox(height: 15),
+
+                    TextFormField(
+                      focusNode: _confirmPasswordFocusNode,
+                      controller: _confirmPasswordController,
+                      obscureText: true,
                       decoration: InputDecoration(
-                        labelText: "Confirmar Password",
-                        labelStyle: const TextStyle(color: Colors.green),
-                        prefixIcon: const Icon(Icons.lock, color: Colors.green),
+                        labelText: 'Confirmar Contraseña',
+                        labelStyle: TextStyle(color: _confirmPasswordTextColor),
+                        prefixIcon:
+                            Icon(Icons.lock, color: _confirmPasswordTextColor),
                         focusedBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.green),
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
                       style: const TextStyle(color: Colors.white),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, confirme su contraseña';
+                        }
+                        if (value != _passwordController.text) {
+
+                          print(_passwordController.text);
+
+                          return 'Las contraseñas no coinciden, por favor verifique ${_passwordController.text}';
+                        }
+                        return null;
+                      },
                     ),
-                    const SizedBox(height: 24.0),
+                    const SizedBox(height: 15),
+
+                    const SizedBox(height: 30.0),
                     SizedBox(
                       width: double.infinity,
-                      height: 50.0,
                       child: ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            setState(
-                              () {
-                                if (_formKey.currentState?.validate() ?? false) {
-                                  setState(() {
-                                    createUsers(
-                                      _nombreController.text,
-                                      _emailController.text,
-                                      _passwordController.text,
-                                    );
-                                  });
-                                }
-                              },
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('Registro exitoso')),
-                            );
-                            _clearControllers();
-                            _navigateToLogin();
-                          }
-                        },
+                        onPressed: _isloading ? null : _register,
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            )),
-                        child: const Text("Registrarse"),
+                          padding: const EdgeInsets.symmetric(vertical: 15.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: _isloading
+                            ? const CircularProgressIndicator()
+                            : const Text("Registrarse"),
                       ),
                     ),
-                    const SizedBox(height: 16.0),
+                    const SizedBox(height: 20.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
-                          "Tienes una cuenta?",
+                          "¿Tienes una cuenta?",
                           style: TextStyle(color: Colors.white),
                         ),
                         TextButton(
@@ -183,10 +380,208 @@ class _PaginadeRegistroState extends State<PaginadeRegistro> {
                       ],
                     ),
                   ],
-                )),
+                ),
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 }
+
+
+
+
+// import 'package:flutter/material.dart';
+// import 'package:reconocimiento_app/controllers/users.dart';
+
+// class PaginadeRegistro extends StatefulWidget {
+//   const PaginadeRegistro({super.key});
+
+//   @override
+//   State<PaginadeRegistro> createState() => _PaginadeRegistroState();
+// }
+
+// class _PaginadeRegistroState extends State<PaginadeRegistro> {
+//   final _formKey = GlobalKey<FormState>();
+//   final TextEditingController _nombreController = TextEditingController();
+//   final TextEditingController _emailController = TextEditingController();
+//   final TextEditingController _passwordController = TextEditingController();
+
+//   void _clearControllers() {
+//     _nombreController.clear();
+//     _emailController.clear();
+//     _passwordController.clear();
+//   }
+
+//   void _navigateToLogin() {
+//     Navigator.pushNamed(context, '/inicio');
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: const Color.fromARGB(255, 10, 10, 10),
+//       body: Center(
+//         child: Padding(
+//           padding: const EdgeInsets.all(16.0),
+//           child: SingleChildScrollView(
+//             child: Form(
+//                 key: _formKey,
+//                 child: Column(
+//                   children: [
+//                     Image.asset(
+//                       'images/login/LogoReconocimientoFacialBlanco.png',
+//                       width: 100,
+//                       height: 100,
+//                     ),
+//                     const SizedBox(height: 16.0),
+//                     const Text(
+//                       "Crear una nueva cuenta",
+//                       style: TextStyle(
+//                           fontSize: 24.0,
+//                           fontWeight: FontWeight.bold,
+//                           color: Colors.white),
+//                     ),
+//                     const SizedBox(height: 24.0),
+//                     TextFormField(
+//                       controller: _nombreController,
+//                       decoration: InputDecoration(
+//                         labelText: "Nombre completo",
+//                         labelStyle: const TextStyle(color: Colors.green),
+//                         prefixIcon: const Icon(Icons.person_3_rounded, color: Colors.green),
+//                         focusedBorder: OutlineInputBorder(
+//                           borderSide: const BorderSide(color: Colors.green),
+//                           borderRadius: BorderRadius.circular(8.0),
+//                         ),
+//                         enabledBorder: OutlineInputBorder(
+//                           borderSide: const BorderSide(color: Colors.grey),
+//                           borderRadius: BorderRadius.circular(8.0),
+//                         ),
+//                       ),
+//                       style: const TextStyle(color: Colors.white),
+//                       validator: (value) {
+//                         if (value == null || value.isEmpty) {
+//                           return "Ingrese nombre completo";
+//                         }
+//                         return null;
+//                       },
+//                     ),
+//                     const SizedBox(height: 12.0),
+//                     TextField(
+//                       controller: _emailController,
+//                       decoration: InputDecoration(
+//                         labelText: "Email",
+//                         labelStyle: const TextStyle(color: Colors.green),
+//                         prefixIcon: const Icon(Icons.email_sharp, color: Colors.green),
+//                         focusedBorder: OutlineInputBorder(
+//                           borderSide: const BorderSide(color: Colors.green),
+//                           borderRadius: BorderRadius.circular(8.0),
+//                         ),
+//                         enabledBorder: OutlineInputBorder(
+//                           borderSide: const BorderSide(color: Colors.grey),
+//                           borderRadius: BorderRadius.circular(8.0),
+//                         ),
+//                       ),
+//                       style: const TextStyle(color: Colors.white),
+//                     ),
+//                     const SizedBox(height: 12.0),
+//                     TextField(
+//                       controller: _passwordController,
+//                       decoration: InputDecoration(
+//                         labelText: "Password",
+//                         labelStyle: const TextStyle(color: Colors.green),
+//                         prefixIcon: const Icon(Icons.lock, color: Colors.green),
+//                         focusedBorder: OutlineInputBorder(
+//                           borderSide: const BorderSide(color: Colors.green),
+//                           borderRadius: BorderRadius.circular(8.0),
+//                         ),
+//                         enabledBorder: OutlineInputBorder(
+//                           borderSide: const BorderSide(color: Colors.grey),
+//                           borderRadius: BorderRadius.circular(8.0),
+//                         ),
+//                       ),
+//                       style: const TextStyle(color: Colors.white),
+//                     ),
+//                     const SizedBox(height: 12.0),
+//                     TextField(
+//                       decoration: InputDecoration(
+//                         labelText: "Confirmar Password",
+//                         labelStyle: const TextStyle(color: Colors.green),
+//                         prefixIcon: const Icon(Icons.lock, color: Colors.green),
+//                         focusedBorder: OutlineInputBorder(
+//                           borderSide: const BorderSide(color: Colors.green),
+//                           borderRadius: BorderRadius.circular(8.0),
+//                         ),
+//                         enabledBorder: OutlineInputBorder(
+//                           borderSide: const BorderSide(color: Colors.grey),
+//                           borderRadius: BorderRadius.circular(8.0),
+//                         ),
+//                       ),
+//                       style: const TextStyle(color: Colors.white),
+//                     ),
+//                     const SizedBox(height: 24.0),
+//                     SizedBox(
+//                       width: double.infinity,
+//                       height: 50.0,
+//                       child: ElevatedButton(
+//                         onPressed: () {
+//                           if (_formKey.currentState!.validate()) {
+//                             setState(
+//                               () {
+//                                 if (_formKey.currentState?.validate() ?? false) {
+//                                   setState(() {
+//                                     createUsers(
+//                                       _nombreController.text,
+//                                       _emailController.text,
+//                                       _passwordController.text,
+//                                     );
+//                                   });
+//                                 }
+//                               },
+//                             );
+//                             ScaffoldMessenger.of(context).showSnackBar(
+//                               const SnackBar(
+//                                   content: Text('Registro exitoso')),
+//                             );
+//                             _clearControllers();
+//                             _navigateToLogin();
+//                           }
+//                         },
+//                         style: ElevatedButton.styleFrom(
+//                             backgroundColor: Colors.green,
+//                             foregroundColor: Colors.white,
+//                             shape: RoundedRectangleBorder(
+//                               borderRadius: BorderRadius.circular(8.0),
+//                             )),
+//                         child: const Text("Registrarse"),
+//                       ),
+//                     ),
+//                     const SizedBox(height: 16.0),
+//                     Row(
+//                       mainAxisAlignment: MainAxisAlignment.center,
+//                       children: [
+//                         const Text(
+//                           "Tienes una cuenta?",
+//                           style: TextStyle(color: Colors.white),
+//                         ),
+//                         TextButton(
+//                           onPressed: () {
+//                             Navigator.pushNamed(context, '/vistaLogin');
+//                           },
+//                           child: const Text(
+//                             "Iniciar sesión",
+//                             style: TextStyle(color: Colors.green),
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ],
+//                 )),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

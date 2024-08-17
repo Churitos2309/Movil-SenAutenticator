@@ -4,7 +4,6 @@ import 'package:reconocimiento_app/ui/pages/home/home_page.dart';
 import 'package:reconocimiento_app/ui/pages/instructor/main.dart';
 import 'package:reconocimiento_app/ui/pages/login/login_screen.dart';
 import 'package:reconocimiento_app/ui/pages/register/register_screen.dart';
-//import 'package:reconocimiento_app/ui/pages/register/register_screen.dart';
 
 // Punto de entrada de la aplicacion.|
 void main() {
@@ -22,7 +21,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       // Desactiva la etiqueta de depuracion.
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'SENAuthenticator',
       // Define el tema de la aplicacion.
       theme: ThemeData(
         // Configura el tema de los iconos en la aplicacipn.
@@ -43,11 +42,11 @@ class MyApp extends StatelessWidget {
       ),
       // Establece la pagina de inicio de la aplicacion como MyHomePage.
       // Este widget sera la pantalla principal que se muestra cuando la aplicación se inicia.
-      home:  const PaginadeInicio(),
+      home: const PaginadeInicio(),
       routes: {
         // '/login': (context) => const RegisterScreen(),
         '/home': (context) => const MyHomePage(),
-        '/registro': (context) => const PaginadeRegistro(),
+        '/registro': (context) => PaginadeRegistro(),
         '/vistaLogin': (context) => const PaginadeInicio(),
         '/instructor': (context) => const InstructorApp(),
         '/admin': (context) => const AdminScreen(),
