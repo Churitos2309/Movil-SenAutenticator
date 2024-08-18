@@ -72,15 +72,21 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.add_circle_outline),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, '/fichas');
+            },
           ),
           IconButton(
             icon: const Icon(Icons.favorite_border),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, '/objetos');
+            },
           ),
           IconButton(
             icon: const Icon(Icons.chat_bubble_outline),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, '/ingresos');
+            },
           ),
         ],
       ),

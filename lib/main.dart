@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:reconocimiento_app/ui/pages/administrador/main.dart';
+import 'package:reconocimiento_app/ui/pages/fichas/fichas_pagina.dart';
 import 'package:reconocimiento_app/ui/pages/home/home_page.dart';
+import 'package:reconocimiento_app/ui/pages/ingreso/ingreso_page.dart';
 import 'package:reconocimiento_app/ui/pages/instructor/main.dart';
 import 'package:reconocimiento_app/ui/pages/login/login_screen.dart';
+import 'package:reconocimiento_app/ui/pages/objetos/objetos_page.dart';
 import 'package:reconocimiento_app/ui/pages/register/register_screen.dart';
+import 'package:reconocimiento_app/ui/pages/tutores/tutores_page.dart';
+import 'package:reconocimiento_app/ui/pages/usuarios/usuarios_page.dart';
 
 // Punto de entrada de la aplicacion.|
 void main() {
@@ -44,12 +49,18 @@ class MyApp extends StatelessWidget {
       // Este widget sera la pantalla principal que se muestra cuando la aplicación se inicia.
       home: const PaginadeInicio(),
       routes: {
-        // '/login': (context) => const RegisterScreen(),
         '/home': (context) => const MyHomePage(),
         '/registro': (context) => PaginadeRegistro(),
         '/vistaLogin': (context) => const PaginadeInicio(),
         '/instructor': (context) => const InstructorApp(),
         '/admin': (context) => const AdminScreen(),
+
+
+        '/fichas': (context) => const FichasPage(),
+        '/objetos': (context) => const ObjetosPage(),
+        '/ingresos': (context) => const IngresoPage(),
+        '/usuarios': (context) => const UsuariosPage(),
+        '/tutores': (context) => const TutoresPage(),
       },
     );
   }

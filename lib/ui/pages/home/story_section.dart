@@ -46,6 +46,7 @@ class StorySection extends StatelessWidget {
                     radius: 32,
                     // Imagen de perfil.
                     backgroundImage: AssetImage(profileImages[index]),
+                    
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -54,7 +55,8 @@ class StorySection extends StatelessWidget {
                   "profile name",
                   // Estilo del texto del nombre de perfil.
                   style: TextStyle(fontSize: 12, color: Colors.black87),
-                )
+                ),
+                
               ],
             ),
           ),

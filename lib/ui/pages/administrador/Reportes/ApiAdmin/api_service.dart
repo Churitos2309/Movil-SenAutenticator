@@ -1,5 +1,6 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 
 class ApiService {
   final String _baseUrl = 'http://127.0.0.1:8000/senauthenticator/usuario/';
@@ -14,4 +15,5 @@ class ApiService {
       throw Exception('Error al cargar datos de la API');
     }
   }
+
 }

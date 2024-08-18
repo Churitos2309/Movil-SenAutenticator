@@ -49,24 +49,33 @@ class PostItem extends StatelessWidget {
           children: [
             // Boton de "Me gusta".
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                // navigateTo(context, const AdminScreen());
+                Navigator.pushNamed(context, '/instructor');
+              },
               icon: const Icon(Icons.favorite_border),
             ),
             // Boton de comentarios.
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, '/admin');
+              },
               icon: const Icon(Icons.chat_bubble_outline),
             ),
             // Boton para etiquetar.
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, '/programa');
+              },
               icon: const Icon(Icons.label_outline),
             ),
             // Espaciador para empujar el siguiente boton hacia la derecha.
             const Spacer(),
             // Boton de guardar.
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, '/usuarios');
+              },
               icon: const Icon(Icons.bookmark_add_outlined),
             ),
           ],
@@ -115,6 +124,7 @@ class PostItem extends StatelessWidget {
                 'View all 12 comments',
                 style: TextStyle(color: Colors.black38),
               ),
+              
             ],
           ),
         ),

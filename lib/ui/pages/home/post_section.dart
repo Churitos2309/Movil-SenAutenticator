@@ -45,6 +45,7 @@ class PostSection extends StatelessWidget {
           postImage: posts[index],
         ),
       ),
+      
     );
   }
 }
