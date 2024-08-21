@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'Inicio/inicio_screen.dart';
-import 'Reportes/reportes_screen.dart';
-import 'Graficas/Graficas_screen.dart';
+import '../pages/administrador/Graficas/Graficas_screen.dart';
+import '../pages/administrador/Inicio/inicio_screen.dart';
+import '../pages/administrador/Reportes/reportes_screen.dart';
+// import 'Inicio/inicio_screen.dart';
+// import 'Reportes/reportes_screen.dart';
+// import 'Graficas/Graficas_screen.dart';
 
 class AdminScreen extends StatefulWidget {
   const AdminScreen({super.key});

@@ -41,4 +41,17 @@ class ApiService {
     }
   }
 
+  // agrego el metodo fetch para obtener todos los usuarios 
+
+  Future<List<dynamic>> fetchUsuarios(String ficha, String documento, String tiempo) async {
+    final queryParameters = {
+      'ficha': ficha,
+      'documento': documento,
+      'tiempo': tiempo,
+    };
+    final uri = Uri.parse(baseUrl + 'usuario/').replace(queryParameters: queryParameters);
+    final response = await http.get(uri);
+    return _processResponse(response);
+  }
+
 }

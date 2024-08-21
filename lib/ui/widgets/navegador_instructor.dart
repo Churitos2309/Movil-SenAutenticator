@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-
-import 'Inicio/inicio_screen.dart';
-import 'Reportes/reportes_screen.dart';
+import '../pages/instructor/Inicio/inicio_screen.dart';
+import '../pages/instructor/Reportes/reportes_screen.dart';
+// import 'Inicio/inicio_screen.dart';
+// import 'Reportes/reportes_screen.dart';
 
 void main() {
   runApp(const InstructorApp());
@@ -16,9 +17,11 @@ class InstructorApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Instructor',
       theme: ThemeData(
-        primaryColor: const Color.fromARGB(255, 5, 223, 5), // Verde institucional SENA
+        primaryColor:
+            const Color.fromARGB(255, 5, 223, 5), // Verde institucional SENA
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color.fromARGB(255, 5, 223, 5), // Verde institucional SENA
+          backgroundColor:
+              Color.fromARGB(255, 5, 223, 5), // Verde institucional SENA
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
               bottom: Radius.circular(20.0), // Bordes inferiores del AppBar
@@ -26,17 +29,20 @@ class InstructorApp extends StatelessWidget {
           ),
         ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: Colors.transparent, // Fondo transparente para aplicar borde
+          backgroundColor:
+              Colors.transparent, // Fondo transparente para aplicar borde
           selectedItemColor: Colors.white, // Color del ítem seleccionado
           unselectedItemColor: Colors.white54, // Color del ítem no seleccionado
           showUnselectedLabels: true,
           showSelectedLabels: true,
           elevation: 0, // Eliminar sombra para no interferir con el borde
           selectedLabelStyle: TextStyle(
-            fontWeight: FontWeight.bold, // Negrita para la etiqueta seleccionada
+            fontWeight:
+                FontWeight.bold, // Negrita para la etiqueta seleccionada
           ),
           unselectedLabelStyle: TextStyle(
-            fontWeight: FontWeight.normal, // Normal para la etiqueta no seleccionada
+            fontWeight:
+                FontWeight.normal, // Normal para la etiqueta no seleccionada
           ),
         ),
       ),
@@ -119,17 +125,21 @@ class _InstructorHomeState extends State<InstructorHome> {
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0), // Márgenes laterales y verticales
+        margin: const EdgeInsets.symmetric(
+            horizontal: 16.0, vertical: 8.0), // Márgenes laterales y verticales
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 5, 223, 5), // Fondo del BottomNavigationBar
-          borderRadius: BorderRadius.circular(16.0), // Bordes redondeados en todos los lados
+          color: const Color.fromARGB(
+              255, 5, 223, 5), // Fondo del BottomNavigationBar
+          borderRadius: BorderRadius.circular(
+              16.0), // Bordes redondeados en todos los lados
           border: Border.all(
             color: Colors.white, // Color del borde
             width: 2.0, // Ancho del borde
           ),
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(16.0), // Bordes redondeados del BottomNavigationBar
+          borderRadius: BorderRadius.circular(
+              16.0), // Bordes redondeados del BottomNavigationBar
           child: BottomNavigationBar(
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
@@ -143,7 +153,8 @@ class _InstructorHomeState extends State<InstructorHome> {
             ],
             currentIndex: _selectedIndex,
             onTap: _onItemTapped,
-            backgroundColor: Colors.transparent, // Fondo transparente para aplicar borde
+            backgroundColor:
+                Colors.transparent, // Fondo transparente para aplicar borde
           ),
         ),
       ),
