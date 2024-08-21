@@ -47,11 +47,11 @@ class MyApp extends StatelessWidget {
       ),
       // Establece la pagina de inicio de la aplicacion como MyHomePage.
       // Este widget sera la pantalla principal que se muestra cuando la aplicación se inicia.
-      home: PaginadeRegistro (),
+      home: RegisterScreen(),
       routes: {
         '/home': (context) => const MyHomePage(),
-        '/registro': (context) => PaginadeRegistro(),
-        '/vistaLogin': (context) => const PaginadeInicio(),
+        '/registro': (context) => RegisterScreen(),
+        '/vistaLogin': (context) => LoginScreen(),
         '/instructor': (context) => const InstructorApp(),
         '/admin': (context) => const AdminScreen(),
 
@@ -60,6 +60,7 @@ class MyApp extends StatelessWidget {
         '/objetos': (context) => const ObjetosPage(),
         '/ingresos': (context) => const IngresoPage(),
         '/usuarios': (context) => const UsuariosPage(),
+        '/paginaUsuario': (context) => const UsuariosPage(),
         '/tutores': (context) => const TutoresPage(),
       },
     );
