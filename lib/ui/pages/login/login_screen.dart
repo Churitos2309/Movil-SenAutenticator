@@ -85,7 +85,7 @@ class _PaginadeInicioState extends State<PaginadeInicio> {
     });
 
     try {
-      final responseData = await apiService.post('inicio_sesion', {
+      final responseData = await apiService.post('inicio_sesion/', {
         'numero_documento_usuario': email,
         'password': password,
       });

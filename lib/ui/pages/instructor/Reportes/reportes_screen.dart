@@ -12,6 +12,7 @@ class ReportesScreen extends StatefulWidget {
 }
 
 class _ReportesScreenState extends State<ReportesScreen> {
+
   final ApiService apiService = ApiService();
   List<dynamic> usuarios = [];
   String ficha = '';
@@ -23,30 +24,41 @@ class _ReportesScreenState extends State<ReportesScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchUsuarios();
+    fetchUsuarios();
   }
 
-  Future<void> _fetchUsuarios() async {
-    setState(() {
-      isLoading = true;
-      errorMessage = '';
-    });
-
+  void fetchUsuarios() async {
     try {
-      final data = await apiService.fetchUsuarios(ficha, documento, tiempo);
+      final data = await apiService.get('usuario/');
       setState(() {
         usuarios = data;
       });
     } catch (e) {
-      setState(() {
-        errorMessage = 'Error al cargar datos: ${e.toString()}';
-      });
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
+      print('Error Obteniendo Usuarios: $e');
     }
   }
+
+  // Future<void> _fetchUsuarios() async {
+  //   setState(() {
+  //     isLoading = true;
+  //     errorMessage = '';
+  //   });
+
+  //   try {
+  //     final data = await apiService.fetchUsuarios(ficha, documento, tiempo);
+  //     setState(() {
+  //       usuarios = data;
+  //     });
+  //   } catch (e) {
+  //     setState(() {
+  //       errorMessage = 'Error al cargar datos: ${e.toString()}';
+  //     });
+  //   } finally {
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +75,7 @@ class _ReportesScreenState extends State<ReportesScreen> {
                     setState(() {
                       ficha = value;
                     });
-                    _fetchUsuarios();
+                    fetchUsuarios();
                   }),
                 ),
                 const SizedBox(width: 8),
@@ -72,7 +84,7 @@ class _ReportesScreenState extends State<ReportesScreen> {
                     setState(() {
                       documento = value;
                     });
-                    _fetchUsuarios();
+                    fetchUsuarios();
                   }),
                 ),
                 const SizedBox(width: 8),
@@ -81,7 +93,7 @@ class _ReportesScreenState extends State<ReportesScreen> {
                     setState(() {
                       tiempo = value;
                     });
-                    _fetchUsuarios();
+                    fetchUsuarios();
                   }),
                 ),
               ],
@@ -111,7 +123,7 @@ class _ReportesScreenState extends State<ReportesScreen> {
                                     headingRowHeight: 50.0,
                                     headingRowColor:
                                         MaterialStateColor.resolveWith(
-                                            (states) => Colors.green[700]!),
+                                            (states) => const Color.fromARGB(255, 16, 255, 28)!),
                                     dataRowColor:
                                         MaterialStateProperty.resolveWith(
                                             (states) => Colors.white),
