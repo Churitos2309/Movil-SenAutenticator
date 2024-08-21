@@ -96,9 +96,9 @@ class _ReportesScreenState extends State<ReportesScreen> {
                             dataRowMaxHeight: 50.0, // Altura de las filas
                             // dataRowMinHeight: 50.0, // Altura de las filas
                             headingRowHeight: 50.0, // Altura de las cabeceras
-                            headingRowColor: MaterialStateProperty.resolveWith(
+                            headingRowColor: WidgetStateProperty.resolveWith(
                                 (states) => Colors.green[700]!),
-                            dataRowColor: MaterialStateProperty.resolveWith(
+                            dataRowColor: WidgetStateProperty.resolveWith(
                                 (states) => Colors.white),
                             columns: const <DataColumn>[
                               DataColumn(
@@ -150,10 +150,10 @@ class _ReportesScreenState extends State<ReportesScreen> {
                               return numeroDocumento.startsWith(documento);
                             }).map<DataRow>((usuario) {
                               return DataRow(
-                                color: MaterialStateProperty.resolveWith<Color?>(
-                                  (Set<MaterialState> states) {
+                                color: WidgetStateProperty.resolveWith<Color?>(
+                                  (Set<WidgetState> states) {
                                     // Alterna el color de las filas
-                                    if (states.contains(MaterialState.selected)) {
+                                    if (states.contains(WidgetState.selected)) {
                                       return Colors.green[100];
                                     }
                                     return Colors.grey[100]; // Color de las filas

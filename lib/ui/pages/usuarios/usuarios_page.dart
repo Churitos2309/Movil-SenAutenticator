@@ -34,7 +34,7 @@ class _UsuariosPageState extends State<UsuariosPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Usuarios'),
+        title: const Text('Usuarios'),
       ),
       body: ListView.builder(
         itemCount: usuarios.length,

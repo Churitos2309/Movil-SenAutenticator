@@ -29,6 +29,7 @@ class _ProgramaPageState extends State<ProgramaPage> {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

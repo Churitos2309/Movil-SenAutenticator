@@ -1,7 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:reconocimiento_app/services/api_services.dart';
 
 class PaginadeRegistro extends StatefulWidget {
   @override
@@ -10,35 +8,49 @@ class PaginadeRegistro extends StatefulWidget {
 
 class _PaginadeRegistroState extends State<PaginadeRegistro> {
   final _formKey = GlobalKey<FormState>();
+
+  final ApiService apiService = ApiService();
+
   final TextEditingController _nombreController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _confirmEmailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _numeroIdentificacionConroller = TextEditingController();
 
   final FocusNode _nameFocusNode = FocusNode();
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _confirmEmailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
   final FocusNode _confirmPasswordFocusNode = FocusNode();
+  final FocusNode _numeroIdentificacionFocusNode = FocusNode();
+
 
   Color _nameTextColor = Colors.grey;
   Color _emailTextColor = Colors.grey;
   Color _confirmEmailTextColor = Colors.grey;
   Color _passwordTextColor = Colors.grey;
   Color _confirmPasswordTextColor = Colors.grey;
+  Color _numeroIdentificacionTextColor = Colors.grey;
+
+  String selectedTipoDocumento = 'Cedula de ciudadania';
 
   bool _isloading = false;
+
+  final List<String> _tiposDocumentos = [
+    'Cedula de ciudadania',
+    'Tarjeta de Identidad',
+    'Cedula de extranjeria',
+  ];
 
   @override
   void initState() {
     super.initState();
     _nameFocusNode.addListener(_onNameFocusChange);
     _emailFocusNode.addListener(_onEmailFocusChange);
-    _confirmEmailFocusNode.addListener(_onEmailFocusChange);
+    _confirmEmailFocusNode.addListener(_onConfirmEmailFocusChange);
     _passwordFocusNode.addListener(_onPasswordFocusChange);
-    _confirmPasswordFocusNode.addListener(_onPasswordFocusChange);
+    _confirmPasswordFocusNode.addListener(_onConfirmPasswordFocusChange);
   }
 
   @override
@@ -71,7 +83,8 @@ class _PaginadeRegistroState extends State<PaginadeRegistro> {
 
   void _onConfirmEmailFocusChange() {
     setState(() {
-      _confirmEmailTextColor = _confirmEmailFocusNode.hasFocus ? Colors.green : Colors.grey;
+      _confirmEmailTextColor =
+          _confirmEmailFocusNode.hasFocus ? Colors.green : Colors.grey;
     });
   }
 
@@ -84,22 +97,24 @@ class _PaginadeRegistroState extends State<PaginadeRegistro> {
 
   void _onConfirmPasswordFocusChange() {
     setState(() {
-      _confirmPasswordTextColor = _confirmPasswordFocusNode.hasFocus ? Colors.green : Colors.grey;
+      _confirmPasswordTextColor =
+          _confirmPasswordFocusNode.hasFocus ? Colors.green : Colors.grey;
     });
   }
 
   Future<void> _register() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-
+    // if (!_formKey.currentState!.validate()) {
+    //   return;
+    // }
     final nombre = _nombreController.text.trim();
     final email = _emailController.text.trim();
-    final confirmEmail = _confirmEmailController.text.trim();
     final password = _passwordController.text.trim();
     final confirmPassword = _confirmPasswordController.text.trim();
+    final numeroIdentificacion = _numeroIdentificacionConroller.text.trim();
 
-    // if (email == confirmEmail) {
+    // final confirmEmail = _confirmEmailController.text.trim();
+
+    // if (email == confirmPassword) {
     //   ScaffoldMessenger.of(context).showSnackBar(
     //     const SnackBar(content: Text('Los correos electrónicos no coinciden')),
     //   );
@@ -118,36 +133,22 @@ class _PaginadeRegistroState extends State<PaginadeRegistro> {
     });
 
     try {
-      final response = await http.post(
-        Uri.parse('https://apimercadolibreochoa.onrender.com/api/users'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, String>{
-          'nombre': nombre,
-          'email': email,
-          'password': password,
-        }),
-      );
-
+      final responseData = await apiService.post('usuario/', {
+        'nombre': nombre,
+        'email': email,
+        'password': password,
+        'tipo_documento_usuario': selectedTipoDocumento,
+        'numero_identificacion_usuario': numeroIdentificacion,
+      });
       if (!mounted) return;
 
-      if (response.statusCode == 201) {
-        final responseData = jsonDecode(response.body);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text('Registro exitoso: ${responseData['message']}')),
-        );
-        Navigator.pushNamed(context, '/vistaLogin');
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text('Error al registrar el usuario: ${response.body}')),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Registro exitoso')),
+      );
+      Navigator.pushNamed(context, '/vistaLogin');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error de red: $e')),
+        SnackBar(content: Text('Error al registrar: $e')),
       );
     } finally {
       setState(() {
@@ -219,12 +220,11 @@ class _PaginadeRegistroState extends State<PaginadeRegistro> {
                       },
                     ),
                     const SizedBox(height: 15),
-
                     TextFormField(
                       focusNode: _emailFocusNode,
                       controller: _emailController,
                       decoration: InputDecoration(
-                        labelText: 'Correo',
+                        labelText: 'Correo Electronico',
                         labelStyle: TextStyle(color: _emailTextColor),
                         prefixIcon: Icon(Icons.email, color: _emailTextColor),
                         focusedBorder: OutlineInputBorder(
@@ -249,8 +249,9 @@ class _PaginadeRegistroState extends State<PaginadeRegistro> {
                         return null;
                       },
                     ),
+
                     const SizedBox(height: 15),
-                    
+
                     TextFormField(
                       focusNode: _confirmEmailFocusNode,
                       controller: _confirmEmailController,
@@ -280,7 +281,70 @@ class _PaginadeRegistroState extends State<PaginadeRegistro> {
                         return null;
                       },
                     ),
+
                     const SizedBox(height: 15),
+
+                    DropdownButtonFormField<String>(
+                      value: selectedTipoDocumento,
+                      decoration: InputDecoration(
+                        labelText: 'Tipo de Documento',
+                        labelStyle: const TextStyle(color: Colors.grey),
+                        prefixIcon:const Icon(Icons.document_scanner, color: Colors.grey),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.green),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        filled: true,
+                        fillColor: const Color.fromARGB(255, 20, 20, 20),
+                      ),
+                      dropdownColor: const Color.fromARGB(255, 20, 20, 20),
+                      items: _tiposDocumentos.map((String tipo) {
+                        return DropdownMenuItem(
+                          value: tipo,
+                          child: Text(tipo),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedTipoDocumento = newValue!;
+                        });
+                      },
+                      style: TextStyle(color: Colors.grey),
+                    ),
+
+                    const SizedBox(height: 15),
+                    
+                    TextFormField(
+                      focusNode: _numeroIdentificacionFocusNode,
+                      controller: _numeroIdentificacionConroller,
+                      decoration: InputDecoration(
+                        labelText: 'Numero de Identificacion',
+                        labelStyle: TextStyle(color: _numeroIdentificacionTextColor),
+                        prefixIcon: Icon(Icons.person, color: _numeroIdentificacionTextColor),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.green),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      style: const TextStyle(color: Colors.white),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, Identificacion';
+                        }
+                        return null;
+                      },
+                    ),
+
+                    const SizedBox(height: 15),
+
                     TextFormField(
                       focusNode: _passwordFocusNode,
                       controller: _passwordController,
@@ -306,6 +370,7 @@ class _PaginadeRegistroState extends State<PaginadeRegistro> {
                         return null;
                       },
                     ),
+
                     const SizedBox(height: 15),
 
                     TextFormField(
@@ -332,7 +397,6 @@ class _PaginadeRegistroState extends State<PaginadeRegistro> {
                           return 'Por favor, confirme su contraseña';
                         }
                         if (value != _passwordController.text) {
-
                           print(_passwordController.text);
 
                           return 'Las contraseñas no coinciden, por favor verifique ${_passwordController.text}';
@@ -341,7 +405,6 @@ class _PaginadeRegistroState extends State<PaginadeRegistro> {
                       },
                     ),
                     const SizedBox(height: 15),
-
                     const SizedBox(height: 30.0),
                     SizedBox(
                       width: double.infinity,

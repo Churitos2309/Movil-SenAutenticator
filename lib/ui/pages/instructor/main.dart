@@ -17,15 +17,15 @@ class InstructorApp extends StatelessWidget {
       title: 'Instructor',
       theme: ThemeData(
         primaryColor: const Color.fromARGB(255, 5, 223, 5), // Verde institucional SENA
-        appBarTheme: AppBarTheme(
-          backgroundColor: const Color.fromARGB(255, 5, 223, 5), // Verde institucional SENA
-          shape: const RoundedRectangleBorder(
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color.fromARGB(255, 5, 223, 5), // Verde institucional SENA
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
               bottom: Radius.circular(20.0), // Bordes inferiores del AppBar
             ),
           ),
         ),
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: Colors.transparent, // Fondo transparente para aplicar borde
           selectedItemColor: Colors.white, // Color del ítem seleccionado
           unselectedItemColor: Colors.white54, // Color del ítem no seleccionado

@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:reconocimiento_app/ui/pages/home/home_page.dart';
+import 'package:reconocimiento_app/services/api_services.dart';
 
 class PaginadeInicio extends StatefulWidget {
   const PaginadeInicio({super.key});
@@ -12,6 +9,10 @@ class PaginadeInicio extends StatefulWidget {
 }
 
 class _PaginadeInicioState extends State<PaginadeInicio> {
+
+  final _formKey = GlobalKey<FormState>();
+  final ApiService apiService = ApiService();
+
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
 
@@ -84,55 +85,41 @@ class _PaginadeInicioState extends State<PaginadeInicio> {
     });
 
     try {
-      final responselogin = await http.post(
-        Uri.parse("https://apimercadolibreochoa.onrender.com/api/login"),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, String>{
-          "email": email,
-          "password": password,
-        }),
+      final responseData = await apiService.post('inicio_sesion', {
+        'numero_documento_usuario': email,
+        'password': password,
+      });
+
+      final token = responseData['token'];
+      final user = responseData['user'];
+
+      if (!mounted) return;{
+        
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login exitoso')),
       );
 
-      if (!mounted) return;
-
-      if (responselogin.statusCode == 200) {
-        final jsonData = jsonDecode(responselogin.body);
-        print('Respuesta de la API: $jsonData');
-
-        final user = jsonData['user'];
-        final nombre = user != null ? user['nombre'] : null;
-        print('Nombre extraido: $nombre');
-
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("Bienvenido $nombre"),
-        ));
-        if (jsonData['token'] != null) {
-          if (mounted) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const MyHomePage()),
-            );
-          }
-        } else {
-          _showError("Contraseña o correo son incorrectos.");
-        }
-      } else if (responselogin.statusCode == 401) {
-        final jsonData = jsonDecode(responselogin.body);
-        if (jsonData['error'] == 'Invalid password') {
-          _showError("La contraseña es incorrecta.");
-        } else if (jsonData['error'] == 'Email not found') {
-          _showError("El correo no existe.");
-        } else {
-          _showError("Por favor verifique su correo y contraseña.");
-        }
+      // Redirigir según el rol del usuario
+      final rolUsuario = user['rol_usuario'];
+      if (rolUsuario == 'Aprendiz') {
+        Navigator.pushNamed(context, '/paginaAprendiz');
+      } else if (rolUsuario == 'Instructor') {
+        Navigator.pushNamed(context, '/paginaInstructor');
+      } else if (rolUsuario == 'Administrador') {
+        Navigator.pushNamed(context, '/paginaAdministrador');
+      } else if (rolUsuario == 'Funcionario') {
+        Navigator.pushNamed(context, '/paginaFuncionario');
+      } else if (rolUsuario == 'Guardia de seguridad') {
+        Navigator.pushNamed(context, '/paginaGuardia');
       } else {
-        _showError("Por favor verifique su correo.");
+        Navigator.pushNamed(context, '/paginaUsuario');
       }
     } catch (e) {
-      _showError(
-          "Ocurrió un error inesperado. Verifique su conexión a Internet e intente nuevamente.");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al iniciar sesión: $e')),
+      );
     } finally {
       setState(() {
         _isloading = false;
@@ -157,108 +144,125 @@ class _PaginadeInicioState extends State<PaginadeInicio> {
           child: SizedBox(
             width: 300,
             child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'images/login/LogoReconocimientoFacialBlanco.png',
-                    width: 100,
-                    height: 100,
-                    color: Colors.green ,
-                  ),
-                  const SizedBox(height: 16.0),
-                  const Text(
-                    "Bienvenido a SENAuthenticator ",
-                    style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                  const SizedBox(height: 16.0),
-                  const Text(
-                    "Iniciar sesión para continuar..",
-                    style: TextStyle(fontSize: 16.0, color: Colors.grey),
-                  ),
-                  const SizedBox(height: 30),
-                  TextField(
-                    focusNode: _emailFocusNode,
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      labelText: 'Digita Email',
-                      labelStyle: TextStyle(color: _emailTextColor),
-                      prefixIcon: Icon(Icons.email, color: _emailTextColor),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.green),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'images/login/LogoReconocimientoFacialBlanco.png',
+                      width: 100,
+                      height: 100,
+                      color: Colors.green ,
                     ),
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  const SizedBox(height: 15),
-                  TextField(
-                    focusNode: _passwordFocusNode,
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      labelStyle: TextStyle(color: _passwordTextColor),
-                      prefixIcon: Icon(Icons.lock, color: _passwordTextColor),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.green),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
+                    const SizedBox(height: 16.0),
+                    const Text(
+                      "Bienvenido a SENAuthenticator ",
+                      style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
                     ),
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  const SizedBox(height: 30.0),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _isloading ? null : _login,
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 15.0),
-                        shape: RoundedRectangleBorder(
+                    const SizedBox(height: 16.0),
+                    const Text(
+                      "Iniciar sesión para continuar..",
+                      style: TextStyle(fontSize: 16.0, color: Colors.grey),
+                    ),
+                    const SizedBox(height: 30),
+                    TextFormField(
+                      focusNode: _emailFocusNode,
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        labelText: 'Cédula o Correo',
+                        labelStyle: TextStyle(color: _emailTextColor),
+                        prefixIcon: Icon(Icons.email, color: _emailTextColor),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.green),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
                       ),
-                      child: _isloading
-                          ? const CircularProgressIndicator()
-                          : const Text("Iniciar sesión"),
+                      style: const TextStyle(color: Colors.white),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, ingrese su cédula o correo electrónico';
+                        }
+                        return null;
+                      },
                     ),
-                  ),
-                  const SizedBox(height: 20.0),
-                  const Text(
-                    "O inicie con ",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  const SizedBox(height: 20.0),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      "Olvidó su contraseña?",
-                      style: TextStyle(color: Colors.grey),
+                    const SizedBox(height: 15),
+                    TextFormField(
+                      focusNode: _passwordFocusNode,
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: 'Contraseña',
+                        labelStyle: TextStyle(color: _passwordTextColor),
+                        prefixIcon: Icon(Icons.lock, color: _passwordTextColor),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.green),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      style: const TextStyle(color: Colors.white),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, ingrese su contraseña';
+                        }
+                        return null;
+                      },
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/registro');
-                    },
-                    child: const Text(
-                      "No tiene una cuenta? Registrarse",
-                      style: TextStyle(color: Colors.green),
+                    const SizedBox(height: 30.0),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _isloading ? null : _login,
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 15.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: _isloading
+                            ? const CircularProgressIndicator()
+                            : const Text("Iniciar sesión"),
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 20.0),
+                    const Text(
+                      "O inicie con ",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    const SizedBox(height: 20.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "¿No tienes una cuenta?",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/registro');
+                          },
+                          child: const Text(
+                            "Regístrate",
+                            style: TextStyle(color: Colors.green),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
