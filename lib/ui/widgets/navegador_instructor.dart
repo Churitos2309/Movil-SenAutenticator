@@ -18,10 +18,10 @@ class InstructorApp extends StatelessWidget {
       title: 'Instructor',
       theme: ThemeData(
         primaryColor:
-            const Color.fromARGB(255, 5, 223, 5), // Verde institucional SENA
+            const Color(0xFF39a900), // Verde institucional SENA
         appBarTheme: const AppBarTheme(
           backgroundColor:
-              Color.fromARGB(255, 5, 223, 5), // Verde institucional SENA
+              Color(0xFF39a900), // Verde institucional SENA
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
               bottom: Radius.circular(20.0), // Bordes inferiores del AppBar
@@ -88,10 +88,16 @@ class _InstructorHomeState extends State<InstructorHome> {
               height: 40, // Ajusta el tamaño del logo según sea necesario
             ),
             const SizedBox(width: 8), // Espacio entre el logo y el texto
-            Text(_titles[_selectedIndex]),
+            Text(
+              _titles[_selectedIndex],
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold
+              ),
+            ),
           ],
         ),
-        backgroundColor: const Color.fromARGB(255, 5, 223, 5), // Verde del SENA
+        backgroundColor: const Color(0xFF39a900), // Verde del SENA
         toolbarHeight: 80,
         elevation: 0,
         shape: const RoundedRectangleBorder(
@@ -128,8 +134,7 @@ class _InstructorHomeState extends State<InstructorHome> {
         margin: const EdgeInsets.symmetric(
             horizontal: 16.0, vertical: 8.0), // Márgenes laterales y verticales
         decoration: BoxDecoration(
-          color: const Color.fromARGB(
-              255, 5, 223, 5), // Fondo del BottomNavigationBar
+          color: const Color(0xFF39a900), // Fondo del BottomNavigationBar
           borderRadius: BorderRadius.circular(
               16.0), // Bordes redondeados en todos los lados
           border: Border.all(

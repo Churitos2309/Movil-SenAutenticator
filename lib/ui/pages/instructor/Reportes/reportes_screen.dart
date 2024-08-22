@@ -12,9 +12,9 @@ class ReportesScreen extends StatefulWidget {
 }
 
 class _ReportesScreenState extends State<ReportesScreen> {
-
   final ApiService apiService = ApiService();
   List<dynamic> usuarios = [];
+
   String ficha = '';
   String documento = '';
   String tiempo = '';
@@ -101,7 +101,7 @@ class _ReportesScreenState extends State<ReportesScreen> {
             const SizedBox(height: 16),
             Expanded(
               child: isLoading
-                  ? Center(child: CircularProgressIndicator())
+                  ? const Center(child: CircularProgressIndicator())
                   : errorMessage.isNotEmpty
                       ? Center(child: Text(errorMessage))
                       : usuarios.isEmpty
@@ -123,49 +123,57 @@ class _ReportesScreenState extends State<ReportesScreen> {
                                     headingRowHeight: 50.0,
                                     headingRowColor:
                                         MaterialStateColor.resolveWith(
-                                            (states) => const Color.fromARGB(255, 16, 255, 28)!),
+                                      (states) => const Color(
+                                          0xFF39A900), // Color hexadecimal
+                                    ),
                                     dataRowColor:
                                         MaterialStateProperty.resolveWith(
-                                            (states) => Colors.white),
+                                      (states) => Colors.white,
+                                    ),
                                     columns: const <DataColumn>[
                                       DataColumn(
                                         label: Text(
                                           'ID',
                                           style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white),
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
                                       DataColumn(
                                         label: Text(
                                           'Nombre',
                                           style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white),
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
                                       DataColumn(
                                         label: Text(
                                           'Fecha',
                                           style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white),
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
                                       DataColumn(
                                         label: Text(
                                           'Estado',
                                           style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white),
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
                                       DataColumn(
                                         label: Text(
                                           'Documentos',
                                           style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white),
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -184,18 +192,18 @@ class _ReportesScreenState extends State<ReportesScreen> {
                                         cells: <DataCell>[
                                           DataCell(Text(
                                             usuario['id'].toString(),
-                                            style: TextStyle(
-                                                color: Colors.green[800]),
+                                            style: const TextStyle(
+                                                color: Colors.black),
                                           )),
                                           DataCell(Text(
                                             usuario['first_name'] ?? '',
-                                            style: TextStyle(
-                                                color: Colors.green[800]),
+                                            style: const TextStyle(
+                                                color: Colors.black),
                                           )),
                                           DataCell(Text(
                                             usuario['date_joined'] ?? '',
-                                            style: TextStyle(
-                                                color: Colors.green[800]),
+                                            style: const TextStyle(
+                                                color: Colors.black),
                                           )),
                                           DataCell(Text(
                                             (usuario['is_active'] ?? false)
@@ -204,7 +212,7 @@ class _ReportesScreenState extends State<ReportesScreen> {
                                             style: TextStyle(
                                               color: (usuario['is_active'] ??
                                                       false)
-                                                  ? Colors.green[800]
+                                                  ? Colors.black
                                                   : Colors.red[800],
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -213,8 +221,8 @@ class _ReportesScreenState extends State<ReportesScreen> {
                                             Text(
                                                 usuario['numero_documento_usuario'] ??
                                                     '',
-                                                style: TextStyle(
-                                                    color: Colors.green[800])),
+                                                style: const TextStyle(
+                                                    color: Colors.black)),
                                           ),
                                         ],
                                       );
@@ -235,19 +243,19 @@ class _ReportesScreenState extends State<ReportesScreen> {
       onChanged: onChanged,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: Colors.green),
+        labelStyle: TextStyle(color: Colors.grey[600]),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
-          borderSide: const BorderSide(color: Colors.green, width: 1.5),
+          borderSide: BorderSide(color: Colors.grey[600] ?? Colors.grey, width: 1.5),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
-          borderSide: const BorderSide(color: Colors.green, width: 2.0),
+          borderSide: BorderSide(color: Colors.grey[600] ?? Colors.grey, width: 1.5),
         ),
         contentPadding:
             const EdgeInsets.symmetric(vertical: 14.0, horizontal: 12.0),
       ),
-      cursorColor: Colors.green,
+      cursorColor: Colors.grey[600],
     );
   }
 }
