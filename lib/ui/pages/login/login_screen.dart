@@ -79,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final responseData = await apiService.post('inicio_sesion', {
-        'numero_documento_usuario': email,
+        'numero_documento_usuario': numeroIdentificacion, //email
         'password': password,
       });
 

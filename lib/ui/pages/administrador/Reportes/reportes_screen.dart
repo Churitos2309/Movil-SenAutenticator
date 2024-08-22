@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'ApiAdmin/api_service.dart';
+// import 'ApiAdmin/api_service.dart';
+import 'package:reconocimiento_app/services/api_services.dart';
 
 class ReportesScreen extends StatefulWidget {
   const ReportesScreen({super.key});
@@ -18,20 +19,32 @@ class _ReportesScreenState extends State<ReportesScreen> {
   @override
   void initState() {
     super.initState();
+    fetchUsuarios();
     // Inicialmente, la tabla estará vacía hasta que se busquen datos
   }
 
-  Future<void> _fetchUsuarios() async {
+  void fetchUsuarios() async {
     try {
-      final data = await apiService.fetchUsuarios(ficha, documento, tiempo);
+      final data = await apiService.get('usuario/');
       setState(() {
         usuarios = data;
       });
     } catch (e) {
-      // Manejo de errores
-      print(e);
+      print('Error Obteniendo Usuarios: $e');
     }
   }
+
+  // Future<void> _fetchUsuarios() async {
+  //   try {
+  //     final data = await apiService.fetchUsuarios(ficha, documento, tiempo);
+  //     setState(() {
+  //       usuarios = data;
+  //     });
+  //   } catch (e) {
+  //     // Manejo de errores
+  //     print(e);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +61,7 @@ class _ReportesScreenState extends State<ReportesScreen> {
                   setState(() {
                     ficha = value;
                   });
-                  _fetchUsuarios();
+                  fetchUsuarios();
                 }),
               ),
               const SizedBox(width: 8),
@@ -57,7 +70,7 @@ class _ReportesScreenState extends State<ReportesScreen> {
                   setState(() {
                     documento = value;
                   });
-                  _fetchUsuarios();
+                  fetchUsuarios();
                 }),
               ),
               const SizedBox(width: 8),
@@ -66,7 +79,7 @@ class _ReportesScreenState extends State<ReportesScreen> {
                   setState(() {
                     tiempo = value;
                   });
-                  _fetchUsuarios();
+                  fetchUsuarios();
                 }),
               ),
             ],
@@ -77,7 +90,8 @@ class _ReportesScreenState extends State<ReportesScreen> {
             child: usuarios.isEmpty
                 ? Center(
                     child: Text('No hay datos disponibles',
-                        style: TextStyle(fontSize: 16, color: Colors.grey[600])))
+                        style:
+                            TextStyle(fontSize: 16, color: Colors.grey[600])))
                 : SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: DataTable(
