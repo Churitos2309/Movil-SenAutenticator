@@ -1,48 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:reconocimiento_app/services/api_services.dart';
 
-class PaginadeInicio extends StatefulWidget {
-  const PaginadeInicio({super.key});
-
+class LoginScreen extends StatefulWidget {
   @override
-  State<PaginadeInicio> createState() => _PaginadeInicioState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _PaginadeInicioState extends State<PaginadeInicio> {
-
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final ApiService apiService = ApiService();
 
-  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _numeroIdentificacionFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
 
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _numeroIdentificacionController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  
-  Color _emailTextColor = Colors.grey;
+
+  Color _numeroIdentificacionTextColor = Colors.grey;
   Color _passwordTextColor = Colors.grey;
-  
-  bool _isloading = false;
+
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    _emailFocusNode.addListener(_onEmailFocusChange);
+    _numeroIdentificacionFocusNode.addListener(_onNumeroIdentificacionFocusChange);
     _passwordFocusNode.addListener(_onPasswordFocusChange);
   }
 
   @override
   void dispose() {
-    _emailFocusNode.dispose();
+    _numeroIdentificacionFocusNode.removeListener(_onNumeroIdentificacionFocusChange);
+    _passwordFocusNode.removeListener(_onPasswordFocusChange);
+
+    _numeroIdentificacionFocusNode.dispose();
     _passwordFocusNode.dispose();
-    _emailController.dispose();
+    _numeroIdentificacionController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  void _onEmailFocusChange() {
+  void _onNumeroIdentificacionFocusChange() {
     setState(() {
-      _emailTextColor = _emailFocusNode.hasFocus ? Colors.green : Colors.grey;
+      _numeroIdentificacionTextColor = _numeroIdentificacionFocusNode.hasFocus ? Colors.green : Colors.grey;
     });
   }
 
@@ -53,19 +53,12 @@ class _PaginadeInicioState extends State<PaginadeInicio> {
   }
 
   Future<void> _login() async {
-    final email = _emailController.text.trim();
+    final numeroIdentificacion = _numeroIdentificacionController.text.trim();
     final password = _passwordController.text.trim();
 
-
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if (email.isEmpty && password.isEmpty) {
+    if (numeroIdentificacion.isEmpty && password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Por favor, ingrese un correo electrónico y contraseña"),
-      ));
-      return;
-    } else if (!emailRegex.hasMatch(email)) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Por favor, ingrese un correo electrónico válido"),
       ));
       return;
     } else if (password.isEmpty) {
@@ -73,7 +66,7 @@ class _PaginadeInicioState extends State<PaginadeInicio> {
         content: Text("Por favor, ingrese la contraseña"),
       ));
       return;
-    } else if (email.isEmpty || password.isEmpty) {
+    } else if (numeroIdentificacion.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Por favor, ingrese un correo electrónico y contraseña"),
       ));
@@ -81,11 +74,11 @@ class _PaginadeInicioState extends State<PaginadeInicio> {
     }
 
     setState(() {
-      _isloading = true;
+      _isLoading = true;
     });
 
     try {
-      final responseData = await apiService.post('inicio_sesion/', {
+      final responseData = await apiService.post('inicio_sesion', {
         'numero_documento_usuario': email,
         'password': password,
       });
@@ -93,15 +86,12 @@ class _PaginadeInicioState extends State<PaginadeInicio> {
       final token = responseData['token'];
       final user = responseData['user'];
 
-      if (!mounted) return;{
-        
-      }
+      if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Login exitoso')),
       );
 
-      // Redirigir según el rol del usuario
       final rolUsuario = user['rol_usuario'];
       if (rolUsuario == 'Aprendiz') {
         Navigator.pushNamed(context, '/paginaAprendiz');
@@ -122,22 +112,15 @@ class _PaginadeInicioState extends State<PaginadeInicio> {
       );
     } finally {
       setState(() {
-        _isloading = false;
+        _isLoading = false;
       });
     }
-  }
-
-  void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(message),
-    ));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 10, 10, 10),
-      // backgroundColor: const Color(0xFFF7FAFC),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
@@ -153,11 +136,11 @@ class _PaginadeInicioState extends State<PaginadeInicio> {
                       'images/login/LogoReconocimientoFacialBlanco.png',
                       width: 100,
                       height: 100,
-                      color: Colors.green ,
+                      color: Colors.green,
                     ),
                     const SizedBox(height: 16.0),
                     const Text(
-                      "Bienvenido a SENAuthenticator ",
+                      "Bienvenido a SENAuthenticator",
                       style: TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold,
@@ -170,12 +153,12 @@ class _PaginadeInicioState extends State<PaginadeInicio> {
                     ),
                     const SizedBox(height: 30),
                     TextFormField(
-                      focusNode: _emailFocusNode,
-                      controller: _emailController,
+                      focusNode: _numeroIdentificacionFocusNode,
+                      controller: _numeroIdentificacionController,
                       decoration: InputDecoration(
                         labelText: 'Cédula o Correo',
-                        labelStyle: TextStyle(color: _emailTextColor),
-                        prefixIcon: Icon(Icons.email, color: _emailTextColor),
+                        labelStyle: TextStyle(color: _numeroIdentificacionTextColor),
+                        prefixIcon: Icon(Icons.email, color: _numeroIdentificacionTextColor),
                         focusedBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.green),
                           borderRadius: BorderRadius.circular(10.0),
@@ -223,7 +206,7 @@ class _PaginadeInicioState extends State<PaginadeInicio> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: _isloading ? null : _login,
+                        onPressed: _isLoading ? null : _login,
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 15.0),
                           shape: RoundedRectangleBorder(
@@ -232,7 +215,7 @@ class _PaginadeInicioState extends State<PaginadeInicio> {
                           backgroundColor: Colors.green,
                           foregroundColor: Colors.white,
                         ),
-                        child: _isloading
+                        child: _isLoading
                             ? const CircularProgressIndicator()
                             : const Text("Iniciar sesión"),
                       ),
