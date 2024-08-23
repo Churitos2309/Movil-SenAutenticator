@@ -5,7 +5,13 @@ import 'package:http/http.dart' as http;
 class ApiService {
   final String baseUrl = 'https://backendsenauthenticator.onrender.com/api/';
 
-  Future<dynamic> get(String endpoint) async {
+  Future<http.Response> getUrl(String endpoint) async {
+    // final url = Uri.parse(baseUrl + endpoint);
+    final response = await http.get(Uri.parse(baseUrl + endpoint));
+    return response;
+  }
+
+  Future<List> get(String endpoint) async {
     final response = await http.get(Uri.parse(baseUrl + endpoint));
     return _processResponse(response);
   }
