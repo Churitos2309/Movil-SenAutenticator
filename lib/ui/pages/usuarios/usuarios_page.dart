@@ -9,7 +9,6 @@ class UsuariosPage extends StatefulWidget {
 }
 
 class _UsuariosPageState extends State<UsuariosPage> {
-
   final ApiService apiService = ApiService();
   List<dynamic> usuarios = [];
 
@@ -40,12 +39,12 @@ class _UsuariosPageState extends State<UsuariosPage> {
         itemCount: usuarios.length,
         itemBuilder: (context, index) {
           final usuario = usuarios[index];
-          final nombreUsuario = usuario['username'] ?? ' Nombre no disponible';
+          final nombreUsuario =
+              usuario['numero_documento_usuario'] ?? ' Nombre no disponible';
           return ListTile(
             // title: Text(usuarios[index]['Nombre_Usuario']),
             title: Text(nombreUsuario),
           );
-
         },
       ),
     );

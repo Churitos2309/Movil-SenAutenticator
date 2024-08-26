@@ -9,10 +9,8 @@ class ObjetosPage extends StatefulWidget {
 }
 
 class _ObjetosPageState extends State<ObjetosPage> {
-
   final ApiService apiService = ApiService();
   List<dynamic> objetos = [];
-
 
   @override
   void initState() {
@@ -21,7 +19,7 @@ class _ObjetosPageState extends State<ObjetosPage> {
   }
 
   void fetchObjectos() async {
-    try{
+    try {
       final data = await apiService.get('objeto/');
       setState(() {
         objetos = data;
