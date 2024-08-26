@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:reconocimiento_app/services/api_services.dart';
 
 class ObjetosPage extends StatefulWidget {
+  
+
   const ObjetosPage({super.key});
 
   @override

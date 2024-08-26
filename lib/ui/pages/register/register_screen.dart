@@ -85,7 +85,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _onNombreFocusChange() {
     setState(() {
-      _nombreTextColor = _nombreFocusNode.hasFocus ? Colors.green : Colors.grey;
+      _nombreTextColor = _nombreFocusNode.hasFocus ? const Color.fromARGB(255, 76, 175, 80) : Colors.grey;
     });
   }
 
@@ -128,7 +128,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         'username': numeroIdentificacion,
       };
 
-      final responseData = await apiService.post('usuario/', requestData);
+      // final responseData = await apiService.post('usuario/');
 
 
       if (!mounted) return;
