@@ -1,68 +1,28 @@
 import 'package:flutter/material.dart';
+import '../pages/administrador/Graficas/Graficas_screen.dart';
+import '../pages/administrador/Inicio/inicio_screen.dart';
+import '../pages/administrador/Reportes/reportes_screen.dart';
 
-import 'Inicio/inicio_screen.dart';
-import 'Reportes/reportes_screen.dart';
-
-void main() {
-  runApp(const InstructorApp());
-}
-
-class InstructorApp extends StatelessWidget {
-  const InstructorApp({super.key});
+class AdminScreen extends StatefulWidget {
+  const AdminScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Instructor',
-      theme: ThemeData(
-        primaryColor: const Color.fromARGB(255, 5, 223, 5), // Verde institucional SENA
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color.fromARGB(255, 5, 223, 5), // Verde institucional SENA
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(20.0), // Bordes inferiores del AppBar
-            ),
-          ),
-        ),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: Colors.transparent, // Fondo transparente para aplicar borde
-          selectedItemColor: Colors.white, // Color del ítem seleccionado
-          unselectedItemColor: Colors.white54, // Color del ítem no seleccionado
-          showUnselectedLabels: true,
-          showSelectedLabels: true,
-          elevation: 0, // Eliminar sombra para no interferir con el borde
-          selectedLabelStyle: TextStyle(
-            fontWeight: FontWeight.bold, // Negrita para la etiqueta seleccionada
-          ),
-          unselectedLabelStyle: TextStyle(
-            fontWeight: FontWeight.normal, // Normal para la etiqueta no seleccionada
-          ),
-        ),
-      ),
-      home: const InstructorHome(),
-    );
-  }
+  _AdminScreenState createState() => _AdminScreenState();
 }
 
-class InstructorHome extends StatefulWidget {
-  const InstructorHome({super.key});
-
-  @override
-  _InstructorHomeState createState() => _InstructorHomeState();
-}
-
-class _InstructorHomeState extends State<InstructorHome> {
+class _AdminScreenState extends State<AdminScreen> {
   int _selectedIndex = 0;
-
-  static final List<Widget> _widgetOptions = <Widget>[
-    const InicioScreen(),
-    const ReportesScreen(),
-  ];
 
   static const List<String> _titles = <String>[
     'Inicio',
     'Reportes',
+    'Graficas',
+  ];
+
+  static final List<Widget> _pages = <Widget>[
+    const InicioScreen(),
+    const ReportesScreen(),
+    const GraficasScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -117,19 +77,21 @@ class _InstructorHomeState extends State<InstructorHome> {
           ),
         ],
       ),
-      body: _widgetOptions.elementAt(_selectedIndex),
+      body: _pages[_selectedIndex],
       bottomNavigationBar: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0), // Márgenes laterales y verticales
+        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 5, 223, 5), // Fondo del BottomNavigationBar
-          borderRadius: BorderRadius.circular(16.0), // Bordes redondeados en todos los lados
+          color: const Color.fromARGB(
+              255, 5, 223, 5), // Fondo del BottomNavigationBar
+          borderRadius: BorderRadius.circular(16.0),
           border: Border.all(
             color: Colors.white, // Color del borde
             width: 2.0, // Ancho del borde
           ),
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(16.0), // Bordes redondeados del BottomNavigationBar
+          borderRadius: BorderRadius.circular(
+              16.0), // Bordes redondeados del BottomNavigationBar
           child: BottomNavigationBar(
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
@@ -140,10 +102,20 @@ class _InstructorHomeState extends State<InstructorHome> {
                 icon: Icon(Icons.report),
                 label: 'Reportes',
               ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.list),
+                label: 'Graficas',
+              ),
             ],
             currentIndex: _selectedIndex,
+            selectedItemColor: Colors.white, // Color del ítem seleccionado
+            unselectedItemColor:
+                Colors.white54, // Color del ítem no seleccionado
             onTap: _onItemTapped,
-            backgroundColor: Colors.transparent, // Fondo transparente para aplicar borde
+            type: BottomNavigationBarType.fixed,
+            showUnselectedLabels: true,
+            backgroundColor:
+                Colors.transparent, // Fondo transparente para aplicar borde
           ),
         ),
       ),

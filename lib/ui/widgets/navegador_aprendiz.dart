@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
-import 'Inicio/inicio_screen.dart';
-import 'Reportes/reportes_screen.dart';
-import 'Graficas/Graficas_screen.dart';
+import '../pages/aprendiz/Inicio/inicio_screen.dart';
+import '../pages/aprendiz/Objetos/objetos_screen.dart';
+import '../pages/aprendiz/Historial/historial_screen.dart'; // Importa la nueva pantalla
 
-class AdminScreen extends StatefulWidget {
-  const AdminScreen({super.key});
+
+class AprendizScreen extends StatefulWidget {
+  const AprendizScreen({super.key});
 
   @override
-  _AdminScreenState createState() => _AdminScreenState();
+  _AprendizScreenState createState() => _AprendizScreenState();
 }
 
-class _AdminScreenState extends State<AdminScreen> {
+class _AprendizScreenState extends State<AprendizScreen> {
   int _selectedIndex = 0;
 
   static const List<String> _titles = <String>[
     'Inicio',
-    'Reportes',
-    'Graficas',
+    'Objetos',
+    'Historial', // Título para la nueva pantalla
   ];
 
   static final List<Widget> _pages = <Widget>[
     const InicioScreen(),
-    const ReportesScreen(),
-    const GraficasScreen(),
+    const ObjetosScreen(),
+    const HistorialScreen(), // Nueva pantalla
   ];
 
   void _onItemTapped(int index) {
@@ -45,7 +46,7 @@ class _AdminScreenState extends State<AdminScreen> {
             Text(_titles[_selectedIndex]),
           ],
         ),
-        backgroundColor: const Color.fromARGB(255, 5, 223, 5), // Verde del SENA
+        backgroundColor: const Color(0xFF39A900), // Verde del SENA
         toolbarHeight: 80,
         elevation: 0,
         shape: const RoundedRectangleBorder(
@@ -81,8 +82,7 @@ class _AdminScreenState extends State<AdminScreen> {
       bottomNavigationBar: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         decoration: BoxDecoration(
-          color: const Color.fromARGB(
-              255, 5, 223, 5), // Fondo del BottomNavigationBar
+          color: const Color(0xFF39A900), // Fondo del BottomNavigationBar
           borderRadius: BorderRadius.circular(16.0),
           border: Border.all(
             color: Colors.white, // Color del borde
@@ -99,12 +99,12 @@ class _AdminScreenState extends State<AdminScreen> {
                 label: 'Inicio',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.report),
-                label: 'Reportes',
+                icon: Icon(Icons.category), // Cambia el icono según sea necesario
+                label: 'Objetos',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.list),
-                label: 'Graficas',
+                icon: Icon(Icons.history), // Icono para Historial
+                label: 'Historial',
               ),
             ],
             currentIndex: _selectedIndex,
