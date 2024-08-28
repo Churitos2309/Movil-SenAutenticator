@@ -169,7 +169,7 @@
 import 'package:flutter/material.dart';
 import '../pages/instructor/Inicio/inicio_screen.dart';
 import '../pages/instructor/Reportes/reportes_screen.dart';
-import '../pages/instructor/Graficas/graficas_screen.dart'; // Asegúrate de tener esta ruta correcta
+import '../pages/instructor/Graficas/graficas_screen.dart';
 
 void main() {
   runApp(const InstructorApp());

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:reconocimiento_app/ui/pages/aprendiz/Objetos/objetos_screen.dart';
+// import 'package:reconocimiento_app/ui/pages/aprendiz/Objetos/objetos_screen.dart';
 // import 'package:reconocimiento_app/ui/pages/administrador/main.dart';
 import 'package:reconocimiento_app/ui/pages/fichas/fichas_pagina.dart';
 import 'package:reconocimiento_app/ui/pages/home/home_page.dart';
+import 'package:reconocimiento_app/ui/widgets/navegador_admin.dart';
 import 'package:reconocimiento_app/ui/pages/ingreso/ingreso_page.dart';
-import 'package:reconocimiento_app/ui/pages/instructor/main.dart';
+import 'package:reconocimiento_app/ui/widgets/navegador_aprendiz.dart';
+import 'package:reconocimiento_app/ui/widgets/navegador_instructor.dart';
+import 'package:reconocimiento_app/ui/widgets/navegador_admin.dart';
+import 'package:reconocimiento_app/ui/pages/instructor/reportes_instructor/reportes_instructor.dart';
 import 'package:reconocimiento_app/ui/pages/login/login_screen.dart';
 import 'package:reconocimiento_app/ui/pages/objetos/objetos_page.dart';
 import 'package:reconocimiento_app/ui/pages/register/register_screen.dart';
@@ -48,7 +52,7 @@ class MyApp extends StatelessWidget {
       ),
       // Establece la pagina de inicio de la aplicacion como MyHomePage.
       // Este widget sera la pantalla principal que se muestra cuando la aplicación se inicia.
-      home: RegisterScreen(),
+      home: InstructorApp(),
       routes: {
         '/home': (context) => const MyHomePage(),
         '/registro': (context) => RegisterScreen(),

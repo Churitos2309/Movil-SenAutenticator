@@ -13,7 +13,6 @@ class _GraficasScreenState extends State<GraficasScreen> {
   late Future<Map<String, dynamic>> _graficaData;
 
   final ApiService apiService = ApiService();
-  List<dynamic> usuarios = [];
 
   @override
   void initState() {
@@ -24,6 +23,12 @@ class _GraficasScreenState extends State<GraficasScreen> {
   Future<Map<String, dynamic>> fetchData() async {
     try {
       final data = await apiService.get('usuario/');
+
+      // Verifica si data es una lista y tiene elementos
+      if (data.isEmpty || data is! List) {
+        return {};
+      }
+
       Map<String, int> generoCounts = {
         'Masculino': 0,
         'Femenino': 0,
@@ -49,7 +54,7 @@ class _GraficasScreenState extends State<GraficasScreen> {
       List<Map<String, dynamic>> pieData = generoCounts.entries.map((entry) {
         return {
           'color': entry.key == 'Masculino' ? 0xFF4CAF50 : 0xFFFF5722,
-          'value': (entry.value / total) * 100,
+          'value': total > 0 ? (entry.value / total) * 100 : 0,
           'radius': 50.0,
         };
       }).toList();
@@ -75,7 +80,7 @@ class _GraficasScreenState extends State<GraficasScreen> {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData) {
+          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             final data = snapshot.data!;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,

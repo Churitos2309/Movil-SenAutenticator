@@ -124,7 +124,7 @@ class _ReportesScreenState extends State<ReportesScreen> {
                                     headingRowColor:
                                         MaterialStateColor.resolveWith(
                                       (states) => const Color(
-                                          0xFF39A900), // Color hexadecimal
+                                          0xFF39A900), 
                                     ),
                                     dataRowColor:
                                         MaterialStateProperty.resolveWith(
