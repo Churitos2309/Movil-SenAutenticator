@@ -1,11 +1,8 @@
-// ignore_for_file: avoid_print
-
 import 'package:flutter/material.dart';
-// import 'ApiReportes/api_service.dart';
 import 'package:reconocimiento_app/services/api_services.dart';
 
 class ReportesScreen extends StatefulWidget {
-  const ReportesScreen({super.key});
+  const ReportesScreen({Key? key}) : super(key: key);
 
   @override
   _ReportesScreenState createState() => _ReportesScreenState();
@@ -28,212 +25,157 @@ class _ReportesScreenState extends State<ReportesScreen> {
   }
 
   void fetchUsuarios() async {
+    setState(() {
+      isLoading = true;
+      errorMessage = '';
+    });
+
     try {
       final data = await apiService.get('usuario/');
       setState(() {
         usuarios = data;
       });
     } catch (e) {
-      print('Error Obteniendo Usuarios: $e');
+      setState(() {
+        errorMessage = 'Error obteniendo usuarios: $e';
+      });
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
-
-  // Future<void> _fetchUsuarios() async {
-  //   setState(() {
-  //     isLoading = true;
-  //     errorMessage = '';
-  //   });
-
-  //   try {
-  //     final data = await apiService.fetchUsuarios(ficha, documento, tiempo);
-  //     setState(() {
-  //       usuarios = data;
-  //     });
-  //   } catch (e) {
-  //     setState(() {
-  //       errorMessage = 'Error al cargar datos: ${e.toString()}';
-  //     });
-  //   } finally {
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            height: 4.0, // Altura de la barra de progreso
+            color: Colors.green, // Color de la barra de progreso
+            width: isLoading ? MediaQuery.of(context).size.width : 0, // Solo visible cuando se está cargando
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildFilterInput('Fichas', (value) {
+                          setState(() {
+                            ficha = value;
+                          });
+                          fetchUsuarios();
+                        }),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _buildFilterInput('Documentos', (value) {
+                          setState(() {
+                            documento = value;
+                          });
+                          fetchUsuarios();
+                        }),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _buildFilterInput('Tiempo', (value) {
+                          setState(() {
+                            tiempo = value;
+                          });
+                          fetchUsuarios();
+                        }),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Expanded(
+                    child: errorMessage.isNotEmpty
+                        ? Center(child: Text(errorMessage))
+                        : usuarios.isEmpty
+                            ? Center(
+                                child: Text('No hay datos disponibles',
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.grey[600])))
+                            : GridView.builder(
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2, // Dos tarjetas por fila
+                                  crossAxisSpacing: 16.0, // Espacio horizontal entre tarjetas
+                                  mainAxisSpacing: 16.0, // Espacio vertical entre tarjetas
+                                  childAspectRatio: 1.0, // Relación de aspecto de cada tarjeta
+                                ),
+                                itemCount: usuarios.length,
+                                itemBuilder: (context, index) {
+                                  return _buildUserCard(usuarios[index]);
+                                },
+                              ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUserCard(dynamic usuario) {
+    return Card(
+      margin: EdgeInsets.zero, // Sin margen adicional
+      elevation: 4.0,
+      child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: _buildFilterInput('Fichas', (value) {
-                    setState(() {
-                      ficha = value;
-                    });
-                    fetchUsuarios();
-                  }),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _buildFilterInput('Documentos', (value) {
-                    setState(() {
-                      documento = value;
-                    });
-                    fetchUsuarios();
-                  }),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _buildFilterInput('Tiempo', (value) {
-                    setState(() {
-                      tiempo = value;
-                    });
-                    fetchUsuarios();
-                  }),
-                ),
-              ],
+            _buildUserInfoRow('ID:', usuario['id'].toString()),
+            _buildUserInfoRow('Nombre:', usuario['first_name'] ?? 'N/A'),
+            _buildUserInfoRow('Fecha:', usuario['date_joined'] ?? 'N/A'),
+            _buildUserInfoRow(
+              'Estado:',
+              (usuario['is_active'] ?? false) ? 'Activo' : 'Inactivo',
+              color: (usuario['is_active'] ?? false)
+                  ? Colors.black
+                  : Colors.red[800],
             ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : errorMessage.isNotEmpty
-                      ? Center(child: Text(errorMessage))
-                      : usuarios.isEmpty
-                          ? Center(
-                              child: Text('No hay datos disponibles',
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.grey[600])))
-                          : SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  minWidth: MediaQuery.of(context).size.width,
-                                ),
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.vertical,
-                                  child: DataTable(
-                                    columnSpacing: 16.0,
-                                    dataRowMaxHeight: 50.0,
-                                    headingRowHeight: 50.0,
-                                    headingRowColor:
-                                        MaterialStateColor.resolveWith(
-                                      (states) => const Color(
-                                          0xFF39A900), 
-                                    ),
-                                    dataRowColor:
-                                        MaterialStateProperty.resolveWith(
-                                      (states) => Colors.white,
-                                    ),
-                                    columns: const <DataColumn>[
-                                      DataColumn(
-                                        label: Text(
-                                          'ID',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                      DataColumn(
-                                        label: Text(
-                                          'Nombre',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                      DataColumn(
-                                        label: Text(
-                                          'Fecha',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                      DataColumn(
-                                        label: Text(
-                                          'Estado',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                      DataColumn(
-                                        label: Text(
-                                          'Documentos',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                    rows: usuarios.map<DataRow>((usuario) {
-                                      return DataRow(
-                                        color: MaterialStateProperty
-                                            .resolveWith<Color?>(
-                                          (Set<MaterialState> states) {
-                                            if (states.contains(
-                                                MaterialState.selected)) {
-                                              return Colors.green[100];
-                                            }
-                                            return Colors.grey[100];
-                                          },
-                                        ),
-                                        cells: <DataCell>[
-                                          DataCell(Text(
-                                            usuario['id'].toString(),
-                                            style: const TextStyle(
-                                                color: Colors.black),
-                                          )),
-                                          DataCell(Text(
-                                            usuario['first_name'] ?? '',
-                                            style: const TextStyle(
-                                                color: Colors.black),
-                                          )),
-                                          DataCell(Text(
-                                            usuario['date_joined'] ?? '',
-                                            style: const TextStyle(
-                                                color: Colors.black),
-                                          )),
-                                          DataCell(Text(
-                                            (usuario['is_active'] ?? false)
-                                                ? 'Activo'
-                                                : 'Inactivo',
-                                            style: TextStyle(
-                                              color: (usuario['is_active'] ??
-                                                      false)
-                                                  ? Colors.black
-                                                  : Colors.red[800],
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          )),
-                                          DataCell(
-                                            Text(
-                                                usuario['numero_documento_usuario'] ??
-                                                    '',
-                                                style: const TextStyle(
-                                                    color: Colors.black)),
-                                          ),
-                                        ],
-                                      );
-                                    }).toList(),
-                                  ),
-                                ),
-                              ),
-                            ),
-            ),
+            _buildUserInfoRow('Documentos:', usuario['numero_documento_usuario'] ?? 'N/A'),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildUserInfoRow(String label, String value, {Color? color}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              value,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: color ?? Colors.black,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -252,8 +194,7 @@ class _ReportesScreenState extends State<ReportesScreen> {
           borderRadius: BorderRadius.circular(12.0),
           borderSide: BorderSide(color: Colors.grey[600] ?? Colors.grey, width: 1.5),
         ),
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 14.0, horizontal: 12.0),
+        contentPadding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 12.0),
       ),
       cursorColor: Colors.grey[600],
     );
