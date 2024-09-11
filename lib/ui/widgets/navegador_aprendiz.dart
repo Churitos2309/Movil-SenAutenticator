@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../pages/aprendiz/Inicio/inicio_screen.dart';
 import '../pages/aprendiz/Objetos/objetos_screen.dart';
-import '../pages/aprendiz/Historial/historial_screen.dart'; // Importa la nueva pantalla
-
+import '../pages/aprendiz/Historial/historial_screen.dart';
+import 'package:reconocimiento_app/ui/pages/login/login_screen.dart';
 
 class AprendizScreen extends StatefulWidget {
   const AprendizScreen({super.key});
@@ -13,6 +13,8 @@ class AprendizScreen extends StatefulWidget {
 
 class _AprendizScreenState extends State<AprendizScreen> {
   int _selectedIndex = 0;
+  final GlobalKey<ScaffoldState> _scaffoldKey =
+      GlobalKey<ScaffoldState>(); // Clave para manejar el Drawer
 
   static const List<String> _titles = <String>[
     'Inicio',
@@ -35,6 +37,7 @@ class _AprendizScreenState extends State<AprendizScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey, // Asignamos la clave al Scaffold
       appBar: AppBar(
         title: Row(
           children: [
@@ -57,24 +60,7 @@ class _AprendizScreenState extends State<AprendizScreen> {
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
-                border: Border.all(
-                  color: Colors.grey.shade300,
-                  width: 2,
-                ),
-              ),
-              child: Center(
-                child: Icon(
-                  Icons.person,
-                  color: Colors.grey.shade600,
-                ),
-              ),
-            ),
+            child: ProfileCard(), // Aquí integramos el ProfileCard
           ),
         ],
       ),
@@ -99,7 +85,8 @@ class _AprendizScreenState extends State<AprendizScreen> {
                 label: 'Inicio',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.category), // Cambia el icono según sea necesario
+                icon:
+                    Icon(Icons.category), // Cambia el icono según sea necesario
                 label: 'Objetos',
               ),
               BottomNavigationBarItem(
@@ -117,6 +104,63 @@ class _AprendizScreenState extends State<AprendizScreen> {
             backgroundColor:
                 Colors.transparent, // Fondo transparente para aplicar borde
           ),
+        ),
+      ),
+    );
+  }
+}
+
+// Clase ProfileCard adaptada
+class ProfileCard extends StatelessWidget {
+  const ProfileCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<String>(
+      onSelected: (value) {
+        if (value == 'Cerrar sesión') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => LoginScreen()),
+          );
+        }
+      },
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+        const PopupMenuItem<String>(
+          value: 'Perfil',
+          child: Text('Perfil'),
+        ),
+        const PopupMenuItem<String>(
+          value: 'Cerrar sesión',
+          child: Text('Cerrar sesión'),
+        ),
+      ],
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16.0,
+          vertical: 8.0,
+        ),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10.0),
+          border: Border.all(color: Colors.grey.shade300),
+        ),
+        child: Row(
+          children: [
+            const CircleAvatar(
+              backgroundImage: AssetImage('assets/images/profile_pic.png'),
+              radius: 16,
+            ),
+            const SizedBox(width: 8),
+            const Text(
+              'Angelina Jolie',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Icon(Icons.keyboard_arrow_down),
+          ],
         ),
       ),
     );

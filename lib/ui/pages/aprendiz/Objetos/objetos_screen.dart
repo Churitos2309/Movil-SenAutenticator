@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'dart:io';
-import 'package:image/image.dart' as img;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ObjetosScreen extends StatefulWidget {
   const ObjetosScreen({Key? key}) : super(key: key);
@@ -16,37 +16,71 @@ class _ObjetosScreenState extends State<ObjetosScreen> {
   final TextEditingController _marcaController = TextEditingController();
   final TextEditingController _modeloController = TextEditingController();
   final TextEditingController _descripcionController = TextEditingController();
-  File? _image;
+  final TextEditingController _usuarioController = TextEditingController();
+  XFile? _image;
   bool _isLoading = false;
 
-  Future<void> _pickImage() async {
+  Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(
-      source: ImageSource.gallery,
-      maxWidth: 800,
-      maxHeight: 800,
-    );
+    try {
+      final pickedFile = await picker.pickImage(
+        source: source,
+        maxWidth: 800,
+        maxHeight: 800,
+      );
 
-    if (pickedFile != null) {
-      final File imageFile = File(pickedFile.path);
-
-      // Redimensionar la imagen
-      final img.Image image = img.decodeImage(imageFile.readAsBytesSync())!;
-      final img.Image resizedImage = img.copyResize(image, width: 800);
-
-      final File resizedFile = File(pickedFile.path)
-        ..writeAsBytesSync(img.encodeJpg(resizedImage, quality: 85));
-
-      setState(() {
-        _image = resizedFile;
-      });
+      if (pickedFile != null) {
+        setState(() {
+          _image = pickedFile;
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No se seleccionó ninguna imagen.')),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al seleccionar la imagen: $error')),
+      );
     }
   }
 
+  // Mostrar un diálogo para seleccionar entre cámara o galería
+  Future<void> _selectImageSource() async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Seleccionar imagen desde:'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cámara'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Cerrar el diálogo
+                _pickImage(ImageSource.camera); // Abrir la cámara
+              },
+            ),
+            TextButton(
+              child: const Text('Galería'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Cerrar el diálogo
+                _pickImage(ImageSource.gallery); // Abrir la galería
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> _submitData() async {
-    if (_image == null) {
+    if (_marcaController.text.isEmpty ||
+        _modeloController.text.isEmpty ||
+        _descripcionController.text.isEmpty ||
+        _usuarioController.text.isEmpty ||
+        _image == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Por favor, selecciona una imagen')),
+        const SnackBar(content: Text('Por favor, completa todos los campos e incluye una imagen')),
       );
       return;
     }
@@ -55,28 +89,38 @@ class _ObjetosScreenState extends State<ObjetosScreen> {
       _isLoading = true;
     });
 
-    final String url = 'https://backendsenauthenticator.onrender.com/api/objeto/';
+    const String url = 'https://senauthenticator.onrender.com/api/objeto/';
 
-    final request = http.MultipartRequest('POST', Uri.parse(url));
-    request.fields['marca_objeto'] = _marcaController.text;
-    request.fields['modelo_objeto'] = _modeloController.text;
-    request.fields['descripcion_objeto'] = _descripcionController.text;
+    final request = http.MultipartRequest('POST', Uri.parse(url))
+      ..fields['marca_objeto'] = _marcaController.text
+      ..fields['modelo_objeto'] = _modeloController.text
+      ..fields['descripcion_objeto'] = _descripcionController.text
+      ..fields['usuario_objeto'] = _usuarioController.text;
 
-    request.files.add(await http.MultipartFile.fromPath(
-      'foto_objeto',
-      _image!.path,
-    ));
+    if (!kIsWeb) {
+      request.files.add(await http.MultipartFile.fromPath(
+        'foto_objeto',
+        _image!.path,
+      ));
+    } else {
+      request.files.add(http.MultipartFile.fromBytes(
+        'foto_objeto',
+        await _image!.readAsBytes(),
+        filename: _image!.name,
+      ));
+    }
 
     try {
       final response = await request.send();
 
       if (response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Objeto creado exitosamente')),
+          const SnackBar(content: Text('Objeto creado exitosamente')),
         );
         _marcaController.clear();
         _modeloController.clear();
         _descripcionController.clear();
+        _usuarioController.clear();
         setState(() {
           _image = null;
         });
@@ -225,38 +269,50 @@ class _ObjetosScreenState extends State<ObjetosScreen> {
           ),
         ),
         const SizedBox(height: 16.0),
-        if (_image != null)
-          Image.file(
-            _image!,
-            height: 150,
-            width: 150,
-            fit: BoxFit.cover,
-          ),
-        const SizedBox(height: 8.0),
-        ElevatedButton(
-          onPressed: _pickImage,
-          child: const Text('Seleccionar Imagen'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF39A900),
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            textStyle: TextStyle(fontSize: isWideScreen ? 18 : 16),
+        TextField(
+          controller: _descripcionController,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Ingrese una descripción del objeto',
           ),
         ),
-        const SizedBox(height: 24.0),
-        if (_isLoading)
-          Center(child: CircularProgressIndicator()),
-        if (!_isLoading)
-          Center(
-            child: ElevatedButton(
-              onPressed: _submitData,
-              child: const Text('Aceptar'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF39A900),
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                textStyle: TextStyle(fontSize: isWideScreen ? 18 : 16),
-              ),
-            ),
+        const SizedBox(height: 16.0),
+        TextField(
+          controller: _usuarioController,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Ingrese el usuario del objeto',
           ),
+        ),
+        const SizedBox(height: 16.0),
+        if (_image != null)
+          kIsWeb
+              ? Image.network(
+                  _image!.path,
+                  height: 150,
+                  width: 150,
+                  fit: BoxFit.cover,
+                )
+              : Image.file(
+                  File(_image!.path),
+                  height: 150,
+                  width: 150,
+                  fit: BoxFit.cover,
+                ),
+        const SizedBox(height: 16.0),
+        ElevatedButton(
+          onPressed: _selectImageSource,
+          child: Text(_image == null ? 'Seleccionar imagen' : 'Cambiar imagen'),
+        ),
+        const SizedBox(height: 16.0),
+        ElevatedButton(
+          onPressed: _isLoading ? null : _submitData,
+          child: _isLoading
+              ? const CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                )
+              : const Text('Enviar'),
+        ),
       ],
     );
   }

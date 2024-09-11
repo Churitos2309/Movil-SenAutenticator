@@ -15,6 +15,7 @@ import 'package:reconocimiento_app/ui/pages/register/register_screen.dart';
 import 'package:reconocimiento_app/ui/pages/tutores/tutores_page.dart';
 import 'package:reconocimiento_app/ui/pages/usuarios/usuarios_page.dart';
 
+
 // Punto de entrada de la aplicacion.|
 void main() {
   runApp(const MyApp());
@@ -52,7 +53,7 @@ class MyApp extends StatelessWidget {
       ),
       // Establece la pagina de inicio de la aplicacion como MyHomePage.
       // Este widget sera la pantalla principal que se muestra cuando la aplicación se inicia.
-      home: InstructorApp(),
+      home: AprendizScreen(),
       routes: {
         '/home': (context) => const MyHomePage(),
         '/registro': (context) => RegisterScreen(),
