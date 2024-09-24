@@ -4,7 +4,7 @@ class AuthProvider {
   // Simulación de una función para obtener todos los usuarios
   Future<List<Map<String, dynamic>>> getAllUsers() async {
     // Aquí iría la lógica para obtener los usuarios, por ejemplo, una llamada a una API
-    await Future.delayed(Duration(seconds: 2)); // Simulación de tiempo de espera
+    await Future.delayed(const Duration(seconds: 2)); // Simulación de tiempo de espera
     return [
       {
         'first_name': 'Juan',

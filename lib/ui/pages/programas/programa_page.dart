@@ -20,7 +20,7 @@ class _ProgramaPageState extends State<ProgramaPage> {
 
   void fetchProgramas() async {
     try {
-      final data = await apiService.get('programa/');
+      final data = await apiService.getList('programa/');
       setState(() {
         programas = data;
       });

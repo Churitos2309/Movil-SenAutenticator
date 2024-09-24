@@ -7,7 +7,7 @@ class UserService {
   final ApiService apiService = ApiService();
 
   Future<List<User>> fetchActiveUsers() async {
-    final response = await apiService.getUrl('usuario/');
+    final response = await apiService.get('usuario/');
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
       return data.map((json) => User.fromJson(json)).where((user) => user.isActive).toList();
@@ -18,7 +18,7 @@ class UserService {
   }
 
   Future<List<User>> fetchUsersByRole(String role) async {
-    final response = await apiService.getUrl('usuario/');
+    final response = await apiService.get('usuario/');
     print('Response status: ${response.statusCode}');
     print('Response status: ${response.body}');
     if (response.statusCode == 200) {

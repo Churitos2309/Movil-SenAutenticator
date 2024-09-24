@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
 
 class GraficasScreen extends StatelessWidget {
-  const GraficasScreen({Key? key}) : super(key: key);
+  const GraficasScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class GraficasScreen extends StatelessWidget {
                           borderData: FlBorderData(
                             show: false,
                           ),
-                          gridData: FlGridData(show: true),
+                          gridData: const FlGridData(show: true),
                           titlesData: FlTitlesData(
                             show: true,
                             bottomTitles: AxisTitles(

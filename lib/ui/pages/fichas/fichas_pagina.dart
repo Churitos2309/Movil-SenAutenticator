@@ -20,7 +20,7 @@ class _FichasPageState extends State<FichasPage> {
 
   void fetchFichas() async {
     try {
-      final data = await apiService.get('ficha/');
+      final data = await apiService.getList('ficha/');
       setState(() {
         fichas = data;
       });

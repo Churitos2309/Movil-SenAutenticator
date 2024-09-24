@@ -63,7 +63,7 @@ class _ReportesInstructorState extends State<ReportesInstructor> {
         // title: const Text('Reportes Instructor'),
         backgroundColor: Colors.white,
         elevation: 0,
-        flexibleSpace: Navbar(
+        flexibleSpace: const Navbar(
           item1: 'inicio',
           item2: 'Reportes',
           ruta1: '/inicioInstructor',

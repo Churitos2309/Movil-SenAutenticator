@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\SENAuthenticator\movil\windows\CMakeFiles\f8fbdea868a9b3f2a264a921385dfbee\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{46B9F18C-53B2-3F14-BA32-1B22C73870B3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

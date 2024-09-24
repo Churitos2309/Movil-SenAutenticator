@@ -20,7 +20,7 @@ class _TutoresPageState extends State<TutoresPage> {
 
   void fetchTutores() async {
     try {
-      final date = await apiService.get('tutor/');
+      final date = await apiService.getList('tutor/');
       setState(() {
         tutores = date;
       });
