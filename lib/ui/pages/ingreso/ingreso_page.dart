@@ -20,7 +20,7 @@ class _IngresoPageState extends State<IngresoPage> {
 
   void fetchIngreso() async {
     try {
-      final data = await apiService.get('ingresos/');
+      final data = await apiService.getList('ingresos/');
       setState(() {
         ingreso = data;
       });

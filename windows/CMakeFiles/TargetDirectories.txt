@@ -1,0 +1,13 @@
+C:/SENAuthenticator/movil/windows/CMakeFiles/INSTALL.dir
+C:/SENAuthenticator/movil/windows/CMakeFiles/ALL_BUILD.dir
+C:/SENAuthenticator/movil/windows/CMakeFiles/ZERO_CHECK.dir
+C:/SENAuthenticator/movil/windows/flutter/CMakeFiles/flutter_wrapper_plugin.dir
+C:/SENAuthenticator/movil/windows/flutter/CMakeFiles/flutter_wrapper_app.dir
+C:/SENAuthenticator/movil/windows/flutter/CMakeFiles/flutter_assemble.dir
+C:/SENAuthenticator/movil/windows/flutter/CMakeFiles/INSTALL.dir
+C:/SENAuthenticator/movil/windows/runner/CMakeFiles/movil.dir
+C:/SENAuthenticator/movil/windows/runner/CMakeFiles/INSTALL.dir
+C:/SENAuthenticator/movil/windows/runner/CMakeFiles/ALL_BUILD.dir
+C:/SENAuthenticator/movil/windows/plugins/file_selector_windows/CMakeFiles/file_selector_windows_plugin.dir
+C:/SENAuthenticator/movil/windows/plugins/file_selector_windows/CMakeFiles/INSTALL.dir
+C:/SENAuthenticator/movil/windows/plugins/file_selector_windows/CMakeFiles/ALL_BUILD.dir

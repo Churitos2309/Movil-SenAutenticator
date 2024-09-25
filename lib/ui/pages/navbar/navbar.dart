@@ -6,7 +6,7 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
   final String ruta1;
   final String color2;
 
-  Navbar({
+  const Navbar({super.key, 
     required this.item1,
     required this.item2,
     required this.ruta1,
@@ -34,5 +34,5 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

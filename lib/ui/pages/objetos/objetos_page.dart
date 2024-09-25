@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:reconocimiento_app/services/api_services.dart';
 
 class ObjetosPage extends StatefulWidget {
-  
-
   const ObjetosPage({super.key});
 
   @override
@@ -22,7 +20,7 @@ class _ObjetosPageState extends State<ObjetosPage> {
 
   void fetchObjectos() async {
     try {
-      final data = await apiService.get('objeto/');
+      final data = await apiService.getList('objeto/');
       setState(() {
         objetos = data;
       });
@@ -37,17 +35,21 @@ class _ObjetosPageState extends State<ObjetosPage> {
       appBar: AppBar(
         title: const Text('Objetos'),
       ),
-      body: ListView.builder(
-        itemCount: objetos.length,
-        itemBuilder: (context, index) {
-          final objeto = objetos[index];
-          final nombreObjeto = objeto['ObjetosPage'] ?? ' Nombre no disponible';
-          return ListTile(
-            // title: Text(objetos[index]['Nombre_Objeto'],),
-            title: Text(nombreObjeto),
-          );
-        },
-      ),
+      body: objetos.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: objetos.length,
+              itemBuilder: (context, index) {
+                final objeto = objetos[index];
+                final nombreObjeto =
+                    objeto['marca_objeto'] ?? ' Nombre no disponible';
+                return ListTile(
+                  // title: Text(objetos[index]['Nombre_Objeto'],),
+                  title: Text(nombreObjeto),
+                );
+              },
+            ),
     );
   }
 }
+

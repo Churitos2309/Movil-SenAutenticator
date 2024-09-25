@@ -3,7 +3,7 @@ import 'package:reconocimiento_app/ui/pages/camera/camera_page.dart';
 import 'package:reconocimiento_app/ui/pages/history/history_page.dart';
 import 'package:reconocimiento_app/ui/pages/home/post_section.dart';
 import 'package:reconocimiento_app/ui/pages/home/story_section.dart';
-import 'package:reconocimiento_app/ui/pages/objets/objets_page.dart';
+import 'package:reconocimiento_app/ui/pages/objetos/objetos_page.dart';
 import 'package:reconocimiento_app/ui/pages/profile/profile_page.dart';
 import 'package:reconocimiento_app/ui/pages/report/report_page.dart';
 import 'package:reconocimiento_app/ui/pages/search/search_page.dart';
@@ -27,7 +27,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> pages = [
     const HomePage(),
     const SearchPage(),
-    const ObjetsPage(),
+    const ObjetosPage(),
     const CameraPage(),
     const HistoryPage(),
     const ProfilePage(),

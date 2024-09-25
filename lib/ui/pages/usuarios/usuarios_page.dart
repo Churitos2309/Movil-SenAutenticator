@@ -1,3 +1,4 @@
+import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:reconocimiento_app/services/api_services.dart';
 
@@ -10,7 +11,7 @@ class UsuariosPage extends StatefulWidget {
 
 class _UsuariosPageState extends State<UsuariosPage> {
   final ApiService apiService = ApiService();
-  List<dynamic> usuarios = [];
+  List usuarios = [];
 
   @override
   void initState() {
@@ -20,7 +21,7 @@ class _UsuariosPageState extends State<UsuariosPage> {
 
   void fetchUsuarios() async {
     try {
-      final data = await apiService.get('usuario/');
+      final data = await apiService.getList('usuario/');
       setState(() {
         usuarios = data;
       });
@@ -35,18 +36,24 @@ class _UsuariosPageState extends State<UsuariosPage> {
       appBar: AppBar(
         title: const Text('Usuarios'),
       ),
-      body: ListView.builder(
-        itemCount: usuarios.length,
-        itemBuilder: (context, index) {
-          final usuario = usuarios[index];
-          final nombreUsuario =
-              usuario['numero_documento_usuario'] ?? ' Nombre no disponible';
-          return ListTile(
-            // title: Text(usuarios[index]['Nombre_Usuario']),
-            title: Text(nombreUsuario),
-          );
-        },
-      ),
+      body: usuarios.isEmpty
+          ? const CardLoading(
+              height: 100,
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              margin: EdgeInsets.all(100),
+            )
+          : ListView.builder(
+              itemCount: usuarios.length,
+              itemBuilder: (context, index) {
+                final usuario = usuarios[index];
+                final nombreUsuario =
+                    usuario['username'] ?? ' Nombre no disponible';
+                return ListTile(
+                  // title: Text(usuarios[index]['Nombre_Usuario']),
+                  title: Text(nombreUsuario),
+                );
+              },
+            ),
     );
   }
 }
