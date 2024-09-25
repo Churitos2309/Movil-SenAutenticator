@@ -8,7 +8,9 @@ import 'package:reconocimiento_app/ui/pages/administrador/widgets/bottom_nav_bar
 import 'package:reconocimiento_app/ui/pages/fichas/fichas_pagina.dart';
 import 'package:reconocimiento_app/ui/pages/guarda_seguridad/main.dart';
 import 'package:reconocimiento_app/ui/pages/ingreso/ingreso_page.dart';
-import 'package:reconocimiento_app/ui/pages/instructor/main.dart';
+import 'package:reconocimiento_app/ui/widgets/navegador_aprendiz.dart';
+import 'package:reconocimiento_app/ui/widgets/navegador_instructor.dart';
+import 'package:reconocimiento_app/ui/widgets/navegador_admin.dart';
 import 'package:reconocimiento_app/ui/pages/instructor/reportes_instructor/reportes_instructor.dart';
 import 'package:reconocimiento_app/ui/pages/login/login_screen.dart';
 import 'package:reconocimiento_app/ui/pages/objetos/objetos_page.dart';
