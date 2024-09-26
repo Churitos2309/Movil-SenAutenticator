@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:particles_flutter/component/particle/particle.dart';
 import 'package:particles_flutter/particles_engine.dart';
 import 'package:reconocimiento_app/services/api_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   final ApiService apiService;
@@ -24,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
       TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  Color _numeroIdentificacionTextColor = Colors.yellow;
+  Color _numeroIdentificacionTextColor = Colors.grey;
   Color _passwordTextColor = Colors.grey;
 
   bool _isLoading = false;
@@ -72,86 +73,57 @@ class _LoginScreenState extends State<LoginScreen> {
           _passwordFocusNode.hasFocus ? Colors.green : Colors.grey;
     });
   }
+  
 
   void _login() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      final responseData = await widget.apiService.post('inicioSesion/', {
-        'numero_documento_usuario':
-            int.tryParse(_numeroIdentificacionController.text) ?? 0,
-        'password': _passwordController.text,
-      });
-
-      try {
-        // Acceder a getList usando la instancia apiService
-        final responseToken = await widget.apiService.getList('validarToken/');
-        setState(() {
-          token =
-              responseToken; // Asegúrate de que estás guardando el valor correcto aquí.
-        });
-      } catch (e) {
-        print('Error Obteniendo Usuarios: $e');
-      }
-
-      if (responseData != null) {
-        final token = responseData['token'];
-        final user = responseData['user'];
-
-        if (token == null) {
-          throw Exception('Token no proporcionados por el servidor');
-        }
-        if (user == null) {
-          throw Exception('Usuario no proporcionados por el servidor');
-        }
-        // Continua con el manejo del login exitoso...
-      } else {
-        throw Exception('Error: Respuesta vacía del servidor');
-      }
-    } catch (e) {
-      final errorMessage = e is Exception ? e.toString() : 'Error desconocido';
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al iniciar sesión: $errorMessage')),
-      );
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
+  if (!_formKey.currentState!.validate()) {
+    return;
   }
 
-  void _validarToken(String token) async {
-    setState(() {
-      _isLoading = true;
+  setState(() {
+    _isLoading = true;
+  });
+
+  try {
+    // Enviar datos correctos al backend
+    final responseData = await widget.apiService.post('inicio-sesion/', {
+      'numero_documento_usuario': _numeroIdentificacionController.text,
+      'password': _passwordController.text,
     });
 
-    try {
-      final responseData =
-          await widget.apiService.getWithHeaders('validarToken/', headers: {
-        'Authorization': 'Bearer $token',
-      });
+    print('Response Data: $responseData');
 
-      if (responseData != null && responseData['status'] == 'success') {
-        // Token válido, puedes continuar con el flujo de la app
-      } else {
-        throw Exception('Token inválido o no autorizado');
-      }
-    } catch (e) {
-      final errorMessage = e is Exception ? e.toString() : 'Error desconocido';
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al validar token: $errorMessage')),
-      );
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
+    if (responseData != null && responseData['token'] != null) {
+      final token = responseData['token'];
+      print('Token recibido: $token');
+
+      // Si todo está bien, continuar con el flujo del login
+      _validarToken(token);
+    } else {
+      throw Exception('Error: Token no proporcionado por el servidor');
     }
+  } catch (e) {
+    print('Error al iniciar sesión: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error al iniciar sesión: $e')),
+    );
+  } finally {
+    setState(() {
+      _isLoading = false;
+    });
   }
+}
+
+void _validarToken(String token) async {
+  // Guardar el token en el almacenamiento local
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('token', token);
+
+  // Redirigir al usuario a la pantalla principal después del inicio de sesión
+  Navigator.pushReplacementNamed(context, '/home'); // Asegúrate de que la ruta '/home' esté definida
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -201,6 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Flexible(
+                                  flex: 1,
                                   fit: FlexFit.loose,
                                   child: Image.asset(
                                     'images/login/LogoReconocimientoFacialBlanco.png',

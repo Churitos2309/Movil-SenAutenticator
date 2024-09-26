@@ -31,7 +31,6 @@ class _BottomNavBarAdminState extends State<BottomNavBarAdmin> {
     // }
   }
 
-
   @override
   Widget build(BuildContext context) {
     final scrollProvider = Provider.of<ScrollProvider>(context);
@@ -538,7 +537,6 @@ class _BottomNavBarAdminState extends State<BottomNavBarAdmin> {
                 Container(
                   width: double.infinity,
                   height: 300,
-                  color: Colors.green,
                   child: Column(
                     children: [
                       const Text(
@@ -649,108 +647,136 @@ class _BottomNavBarAdminState extends State<BottomNavBarAdmin> {
                 ),
                 Column(
                   children: [
-                    const Text(
-                      'Ultimas Noticias',
-                      style: TextStyle(
-                          fontSize: 25,
-                          fontStyle: FontStyle.italic,
-                          decoration: TextDecoration.underline),
-                    ),
                     Container(
-                      height: 300,
-                      color: Colors.amber,
-                      child: const Flexible(
-                        fit: FlexFit.loose,
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.vertical,
-                            child: Column(
-                              children: [
-                                Card(
-                                  elevation: 4,
-                                  margin: EdgeInsets.all(8.0),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(16.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Actualización de Seguridad',
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        SizedBox(height: 8),
-                                        Text(
-                                          'Hemos lanzado una nueva actualización que mejora aún más la precisión del reconocimiento facial y agrega nuevas funcionalidades para una mayor seguridad.',
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Card(
-                                  elevation: 4,
-                                  margin: EdgeInsets.all(8.0),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(16.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Segundo! Socio Estratégico',
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        SizedBox(height: 8),
-                                        Text(
-                                          'Estamos emocionados de anunciar nuestra colaboración con un nuevo socio estratégico que ampliará nuestras capacidades y ofrecerá más valor a nuestros clientes.',
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Card(
-                                  elevation: 4,
-                                  margin: EdgeInsets.all(8.0),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(16.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Nuevo Socio Estratégico',
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        SizedBox(height: 8),
-                                        Text(
-                                          'Estamos emocionados de anunciar nuestra colaboración con un nuevo socio estratégico que ampliará nuestras capacidades y ofrecerá más valor a nuestros clientes.',
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
+                      padding: const EdgeInsets.all(
+                          16.0), // Puedes ajustar el padding según sea necesario
+                      decoration: BoxDecoration(
+                        color: Colors
+                            .white, // Cambia esto según el fondo que desees
+                        borderRadius: BorderRadius.circular(
+                            8.0), // Para bordes redondeados, si quieres
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(
+                                0.5), // Sombra para dar un efecto de elevación
+                            blurRadius: 4.0,
+                            spreadRadius: 1.0,
+                            offset: const Offset(0, 2), // Sombra en el eje Y
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment:
+                            CrossAxisAlignment.start, // Alineación del texto
+                        children: [
+                          const Text(
+                            'Últimas Noticias',
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontStyle: FontStyle.italic,
+                              decoration: TextDecoration.underline,
                             ),
                           ),
-                        ),
+                          const SizedBox(
+                              height:
+                                  16), // Espacio entre el título y el contenido
+                          Container(
+                            height: 300,
+                            child: const Flexible(
+                              fit: FlexFit.loose,
+                              child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.vertical,
+                                  child: Column(
+                                    children: [
+                                      Card(
+                                        elevation: 4,
+                                        margin: EdgeInsets.all(8.0),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(16.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Actualización de Seguridad',
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              SizedBox(height: 8),
+                                              Text(
+                                                'Hemos lanzado una nueva actualización que mejora aún más la precisión del reconocimiento facial y agrega nuevas funcionalidades para una mayor seguridad.',
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Card(
+                                        elevation: 4,
+                                        margin: EdgeInsets.all(8.0),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(16.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Segundo Socio Estratégico',
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              SizedBox(height: 8),
+                                              Text(
+                                                'Estamos emocionados de anunciar nuestra colaboración con un nuevo socio estratégico que ampliará nuestras capacidades y ofrecerá más valor a nuestros clientes.',
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Card(
+                                        elevation: 4,
+                                        margin: EdgeInsets.all(8.0),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(16.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Nuevo Socio Estratégico',
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              SizedBox(height: 8),
+                                              Text(
+                                                'Estamos emocionados de anunciar nuestra colaboración con un nuevo socio estratégico que ampliará nuestras capacidades y ofrecerá más valor a nuestros clientes.',
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(
+                SizedBox(
                   height: 10,
                 ),
                 Container(

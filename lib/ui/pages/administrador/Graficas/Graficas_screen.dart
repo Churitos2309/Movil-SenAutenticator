@@ -22,7 +22,7 @@ class _GraficasScreenState extends State<GraficasScreen> {
 
   Future<Map<String, dynamic>> fetchData() async {
     try {
-      final data = await apiService.get('usuario/');
+      final data = await apiService.getList('usuario/');
       Map<String, int> generoCounts = {
         'Masculino': 0,
         'Femenino': 0,

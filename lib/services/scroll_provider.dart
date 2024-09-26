@@ -10,15 +10,19 @@ class ScrollProvider extends ChangeNotifier {
   final ScrollController scrollController = ScrollController();
 
   List<Color> primaryColors = [
-    const Color(0xFF27A900), // Verde principal
-    const Color(0xFF3C8DBC), // Azul claro
-    Colors.white,
-  ];
-  List<Color> secuntaryColors = [
-    const Color(0xFF27A900),
-    const Color(0xFFF0F0F0), // Gris claro
-    const Color(0xFF3C8DBC),
-  ];
+  const Color(0xFF00695C), // Verde Selva (profundo y elegante)
+  const Color(0xFF43A047), // Verde Pasto (fresco y vibrante)
+  const Color(0xFFB2DFDB), // Verde Claro (suave y luminoso)
+];
+
+
+List<Color> secondaryColors = [
+  const Color(0xFF1B5E20), // Verde Bosque (oscuro y elegante)
+  const Color(0xFF4DB6AC), // Verde Aguamarina (tranquilo y moderno)
+  const Color(0xFF009688), // Verde Teal (dinámico y equilibrado)
+];
+
+
 
   // double get homePosition => _homePosition;
   // double get sobreNosotrosPosition => _sobreNosotrosPosition;

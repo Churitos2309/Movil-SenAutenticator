@@ -42,7 +42,7 @@ class _BottonNavScreenState extends State<BottonNavScreen> {
       secondaryBeginGeometry: const AlignmentDirectional(2, 0),
       secondaryEndGeometry: const AlignmentDirectional(0, -0.8),
       primaryColors: scrollProvider.primaryColors,
-      secondaryColors: scrollProvider.secuntaryColors,
+      secondaryColors: scrollProvider.secondaryColors,
       child: CurvedNavigationBar(
         key: _bottomNavigationKey,
         index: _currentIndex,
@@ -55,9 +55,9 @@ class _BottonNavScreenState extends State<BottonNavScreen> {
           Icon(Icons.comment_outlined,
               size: 30, color: Color(0xFF27A900)), // Verde
         ],
-        color: const Color.fromARGB(225, 224, 224, 224), // Fondo gris claro
+        color: const Color.fromARGB(164, 224, 224, 224), // Fondo gris claro
         buttonBackgroundColor: Colors.white,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white70,
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 300),
         onTap: (index) {

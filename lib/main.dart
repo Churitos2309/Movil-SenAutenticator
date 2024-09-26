@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 import 'package:reconocimiento_app/services/api_services.dart';
 import 'package:reconocimiento_app/services/scroll_provider.dart';
-import 'package:reconocimiento_app/ui/pages/administrador/main.dart';
+// import 'package:reconocimiento_app/ui/pages/administrador/main.dart';
 import 'package:reconocimiento_app/ui/pages/administrador/widgets/bottom_nav_bar_admin.dart';
 import 'package:reconocimiento_app/ui/pages/fichas/fichas_pagina.dart';
 import 'package:reconocimiento_app/ui/pages/guarda_seguridad/main.dart';
 import 'package:reconocimiento_app/ui/pages/ingreso/ingreso_page.dart';
-import 'package:reconocimiento_app/ui/widgets/navegador_aprendiz.dart';
-import 'package:reconocimiento_app/ui/widgets/navegador_instructor.dart';
-import 'package:reconocimiento_app/ui/widgets/navegador_admin.dart';
 import 'package:reconocimiento_app/ui/pages/instructor/reportes_instructor/reportes_instructor.dart';
 import 'package:reconocimiento_app/ui/pages/login/login_screen.dart';
 import 'package:reconocimiento_app/ui/pages/objetos/objetos_page.dart';
@@ -78,15 +74,16 @@ class MyApp extends StatelessWidget {
         // '/registro': (context) => const RegisterScreen(screenState: RegisterScreenState()),
         // '/registro': (context) => RegisterScreen(screenState: RegisterScreenState()),
         '/registro': (context) {
-          final screenState = MockRegisterScreenState();
-          return RegisterScreen(screenState: screenState);
+          // final screenState = MockRegisterScreenState();
+          // return RegisterScreen(screenState: MockRegisterScreenState(),);
+          return RegisterScreen();
         },
         '/vistaLogin': (context) => LoginScreen(
               apiService: ApiService(),
             ),
-        '/instructor': (context) => BottomNavBarInstructor(),
+        // '/instructor': (context) => BottomNavBarInstructor(),
         '/guardaseguridad': (context) => BottomNavBarGuardaSeguridad(),
-        '/admin': (context) => const AdminPage(),
+        // '/admin': (context) => const AdminPage(),
         '/home': (context) => BottomNavBar(),
         '/usuario': (context) => BottomNavBar(),
 
@@ -128,12 +125,12 @@ class AuthCheck extends StatelessWidget {
   }
 }
 
-class MockRegisterScreenState extends Mock implements RegisterScreenState {
-  @override
-  Future<void> _register() async {
-    // Implementación de la función _register
-  }
-}
+// class MockRegisterScreenState extends Mock implements RegisterScreenState {
+//   @override
+//   Future<void> _register() async {
+//     // Implementación de la función _register
+//   }
+// }
 
 Future<void> _checkAuth(BuildContext context, String route) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();

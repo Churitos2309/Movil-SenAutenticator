@@ -23,7 +23,7 @@ class _ReportesScreenState extends State<ReportesScreen> {
 
   void fetchUsuarios() async {
     try {
-      final data = await apiService.get('usuario/');
+      final data = await apiService.getList('usuario/');
       setState(() {
         usuarios = data;
       });

@@ -31,7 +31,7 @@ class _ReportesScreenState extends State<ReportesScreen> {
     });
 
     try {
-      final data = await apiService.get('usuario/');
+      final data = await apiService.getList('usuario/');
       setState(() {
         usuarios = data;
       });
