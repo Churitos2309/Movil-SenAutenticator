@@ -11,20 +11,20 @@ abstract class RegisterScreenState {
 }
 
 class RegisterScreen extends StatefulWidget {
-  final RegisterScreenState screenState;
+  // final RegisterScreenState screenState;
 
-  const RegisterScreen({super.key, required this.screenState});
+  // const RegisterScreen({super.key, required this.screenState});
 
   @override
   State<RegisterScreen> createState() =>
-      _RegisterScreenState(screenState: screenState);
+      _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  RegisterScreenState _screenState;
+  // RegisterScreenState _screenState;
 
-  _RegisterScreenState({required RegisterScreenState screenState})
-      : _screenState = screenState;
+  // _RegisterScreenState({required RegisterScreenState screenState})
+  //     : _screenState = screenState;
 
   // _RegisterScreenState({required _RegisterScreenState screenState}) : _screenState = screenState;
 
