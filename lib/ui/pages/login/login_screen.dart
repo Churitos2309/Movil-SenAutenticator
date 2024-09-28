@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:particles_flutter/component/particle/particle.dart';
 import 'package:particles_flutter/particles_engine.dart';
 import 'package:reconocimiento_app/services/api_services.dart';
+import 'package:reconocimiento_app/ui/pages/custom_app_bar_lobby.dart';
+import 'package:reconocimiento_app/ui/router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -73,63 +75,84 @@ class _LoginScreenState extends State<LoginScreen> {
           _passwordFocusNode.hasFocus ? Colors.green : Colors.grey;
     });
   }
-  
+
+  void _validarToken(String token, String? rol) async {
+    // Guardar el token en el almacenamiento local
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', token);
+
+    if (rol != null && rol.isNotEmpty) {
+      // Verifica que el rol no esté vacío
+      await prefs.setString('rol', rol);
+      // Redireccionar basado en el rol
+      switch (rol) {
+        case 'Administrador':
+          Navigator.pushReplacementNamed(context, '/');
+          break;
+        case 'Instructor':
+          Navigator.pushReplacementNamed(context, '/fichas');
+          break;
+        case 'Aprendiz':
+          Navigator.pushReplacementNamed(context, '/objetos');
+          break;
+        case 'Guardia de seguridad':
+          Navigator.pushReplacementNamed(context, '/usuarios');
+          break;
+        default:
+          Navigator.pushReplacementNamed(context, '/home');
+      }
+    } else {
+      print(
+          'Error: el rol recibido es null o vacío. Redirigiendo a la página de error.');
+      await prefs.setString('rol', '');
+      Navigator.pushReplacementNamed(context, '/error');
+    }
+  }
 
   void _login() async {
-  if (!_formKey.currentState!.validate()) {
-    return;
-  }
-
-  setState(() {
-    _isLoading = true;
-  });
-
-  try {
-    // Enviar datos correctos al backend
-    final responseData = await widget.apiService.post('inicio-sesion/', {
-      'numero_documento_usuario': _numeroIdentificacionController.text,
-      'password': _passwordController.text,
-    });
-
-    print('Response Data: $responseData');
-
-    if (responseData != null && responseData['token'] != null) {
-      final token = responseData['token'];
-      print('Token recibido: $token');
-
-      // Si todo está bien, continuar con el flujo del login
-      _validarToken(token);
-    } else {
-      throw Exception('Error: Token no proporcionado por el servidor');
+    if (!_formKey.currentState!.validate()) {
+      return;
     }
-  } catch (e) {
-    print('Error al iniciar sesión: $e');
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Error al iniciar sesión: $e')),
-    );
-  } finally {
+
     setState(() {
-      _isLoading = false;
+      _isLoading = true; // Indicar que se está cargando
     });
+
+    try {
+      // Enviar datos al backend
+      final responseData = await widget.apiService.post('inicio-sesion/', {
+        'numero_documento_usuario': _numeroIdentificacionController.text,
+        'password': _passwordController.text,
+      });
+
+      if (responseData['token'] != null) {
+        final token = responseData['token'];
+        final rol = responseData['user']?['rol_usuario'];
+        print('Token recibido: $token');
+        print('Rol recibido: $rol');
+
+        _validarToken(token, rol);
+      } else {
+        throw Exception('Error: Token no proporcionado por el servidor');
+      }
+    } catch (e) {
+      print('Error de conexión: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al iniciar sesión: $e')),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false; // Restablecer el estado de carga
+      });
+    }
   }
-}
-
-void _validarToken(String token) async {
-  // Guardar el token en el almacenamiento local
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.setString('token', token);
-
-  // Redirigir al usuario a la pantalla principal después del inicio de sesión
-  Navigator.pushReplacementNamed(context, '/home'); // Asegúrate de que la ruta '/home' esté definida
-}
-
-
 
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      appBar: const CustomAppBarLobby(title: 'Inicio de sesión'),
       body: Stack(
         children: [
           Container(
@@ -296,7 +319,7 @@ void _validarToken(String token) async {
                                       TextButton(
                                         onPressed: () {
                                           Navigator.pushNamed(
-                                              context, '/registro');
+                                              context, Routes.register);
                                         },
                                         child: const Text(
                                           "Regístrate",

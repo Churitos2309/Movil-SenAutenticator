@@ -1,186 +1,156 @@
-import 'dart:convert';
-import 'dart:io'; // Para manejar el archivo de imagen
+import 'dart:io';
 
-import 'package:http/http.dart' as http;
-import 'package:path/path.dart'; // Para obtener el nombre del archivo
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 class ApiService {
-  final http.Client client;
   final String baseUrl = 'https://backendsenauthenticator.up.railway.app/api/';
+  final Dio _dio = Dio();
 
-  ApiService({http.Client? client}) : client = client ?? http.Client();
-
-  // Método para procesar la respuesta de la API
-  dynamic _processResponse(http.Response response) {
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      // Decodificar la respuesta JSON
-      var decodedResponse = jsonDecode(response.body);
-      if (decodedResponse is Map<String, dynamic>) {
-        return decodedResponse;
-      } else if (decodedResponse is List) {
-        return decodedResponse;
-      } else {
-        throw Exception('Formato de respuesta no reconocido');
-      }
-    } else {
-      throw Exception(
-          'Error en la solicitud: ${response.statusCode} - ${response.body}');
-    }
+  ApiService() {
+    _dio.options.baseUrl = baseUrl;
+    _dio.options.headers['Content-Type'] = 'application/json';
+    _dio.options.validateStatus = (status) {
+      return status! <
+          500; // Considera errores solo si el código de estado es menor a 500
+    };
+    _dio.interceptors.add(TokenInterceptor(this));
   }
 
-  // Método para realizar solicitudes POST con una imagen
-  Future<dynamic> postWithImage(String endpoint, File imageFile) async {
-    try {
-      // Crear una solicitud multipart para subir archivos
-      var request =
-          http.MultipartRequest('POST', Uri.parse(baseUrl + endpoint));
+  void setTokens(String accessToken, String refreshToken) {
+    _dio.options.headers['Authorization'] = 'Bearer $accessToken';
+  }
 
-      // Añadir encabezados si es necesario
-      request.headers.addAll({
-        'Content-Type': 'multipart/form-data',
-        // Añade más encabezados aquí si es necesario
+  Future<Map<String, dynamic>> post(String path, Map<String, dynamic> data) async {
+  try {
+    final response = await _dio.post(path, data: data);
+    if (kDebugMode) {
+      print('Response data: ${response.data}');
+    }
+    return response.data;
+  } on DioException catch (e) {
+    _handleDioError(e);
+  }
+  throw Exception('Failed to complete post request');
+}
+
+  Future<Map<String, dynamic>> postRegister(
+      String endpoint, Map<String, dynamic> data) async {
+    return post(endpoint, data);
+  }
+
+  Future<Map<String, dynamic>> registerFace({
+    required String nombreCompleto,
+    required String numeroDocumento,
+    required File faceImage,
+  }) async {
+    try {
+      final formData = FormData.fromMap({
+        'nombre_completo': nombreCompleto,
+        'numero_documento': numeroDocumento,
+        'face_image': await MultipartFile.fromFile(faceImage.path),
       });
 
-      // Adjuntar el archivo de imagen
-      request.files.add(await http.MultipartFile.fromPath(
-        'face_login', // Este es el nombre esperado en el backend
-        imageFile.path,
-        filename: basename(imageFile.path), // Nombre del archivo
-      ));
+      final response = await _dio.post('/register-face/', data: formData);
+      return response.data;
+    } on DioException catch (e) {
+      _handleDioError(e);
+    }
+    throw Exception('Failed to register face');
+  }
 
-      // Hacer la solicitud
-      var response = await request.send();
+  Future<void> createObjeto(Map<String, dynamic> data) async {
+    try {
+      await _dio.post('/objetos/', data: data);
+    } on DioException catch (e) {
+      _handleDioError(e);
+    }
+  }
 
-      // Procesar la respuesta
+  Future<List<dynamic>> fetchObjetos() async {
+    try {
+      final response = await _dio.get('/objetos/');
+      return response.data;
+    } on DioException catch (e) {
+      _handleDioError(e);
+    }
+    throw Exception('Failed to fetch objetos');
+  }
+
+  Future<Map<String, dynamic>> loginFace({required File faceImage}) async {
+    try {
+      final formData = FormData.fromMap({
+        'face_image': await MultipartFile.fromFile(faceImage.path),
+      });
+
+      final response = await _dio.post('/login-face/', data: formData);
+      return response.data;
+    } on DioException catch (e) {
+      _handleDioError(e);
+    }
+    throw Exception('Failed to login face');
+  }
+
+  Future<void> refreshToken(String refreshToken) async {
+    try {
+      final response =
+          await _dio.post('/refresh-token/', data: {'refresh': refreshToken});
       if (response.statusCode == 200) {
-        var responseData = await response.stream.bytesToString();
-        return jsonDecode(responseData);
+        final newAccessToken = response.data['access'];
+        _dio.options.headers['Authorization'] = 'Bearer $newAccessToken';
       } else {
-        throw Exception('Error en la solicitud: ${response.statusCode}');
+        throw Exception('Failed to refresh token');
       }
-    } catch (e) {
-      throw Exception('Error en la solicitud POST con imagen: $e');
+    } on DioException catch (e) {
+      _handleDioError(e);
     }
   }
 
-  // Método para realizar solicitudes GET
-  Future<http.Response> get(String endpoint) async {
-    final response = await client.get(Uri.parse(baseUrl + endpoint));
-    return _processResponse(response);
-  }
 
-  Future<dynamic> getWithHeaders(String endpoint,
-      {Map<String, String>? headers}) async {
-    try {
-      final response = await client.get(
-        Uri.parse(baseUrl + endpoint),
-        headers: headers,
-      );
-      return _processResponse(response);
-    } catch (e) {
-      throw Exception('Error en la solicitud GET: $e');
-    }
-  }
-
-  // Método para obtener una lista de datos de un endpoint
-  Future<dynamic> getList(String endpoint) async {
-    try {
-      final response = await client.get(Uri.parse(baseUrl + endpoint));
-
-      // Procesar la respuesta
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        // Decodificar el cuerpo de la respuesta
-        var decodedResponse = jsonDecode(response.body);
-
-        // Comprobar si el resultado es una lista
-        if (decodedResponse is List<dynamic>) {
-          return decodedResponse; // Retorna la lista decodificada
-        } else {
-          throw Exception(
-              'Se esperaba una lista, pero se recibió: $decodedResponse');
-        }
-      } else {
-        throw Exception(
-            'Error en la solicitud: ${response.statusCode} - ${response.body}');
+  void _handleDioError(DioException e) {
+    if (e.response != null) {
+      if (kDebugMode) {
+        print('Error: ${e.response?.data}');
       }
-    } catch (e) {
-      throw Exception('Error en la solicitud GET: $e');
-    }
-  }
-
-  // Método para obtener el perfil de usuario
-  Future<Map<String, dynamic>> getProfile(String endpoint) async {
-    final response = await client.get(Uri.parse(baseUrl + endpoint));
-    final data = _processResponse(response);
-    if (data is List && data.isNotEmpty) {
-      return data[0]
-          as Map<String, dynamic>; // Cambiar de 1 a 0 si es el primer elemento
+      if (kDebugMode) {
+        print('Status code: ${e.response?.statusCode}');
+      }
     } else {
-      throw Exception('La respuesta no contiene datos válidos');
-    }
-  }
-
-  // Método para realizar solicitudes POST
-  // Future<dynamic> post(String endpoint, Map<String, dynamic> data) async {
-  //   try {
-  //     final response = await client
-  //         .post(
-  //           Uri.parse(baseUrl + endpoint),
-  //           headers: {'Content-Type': 'application/json'},
-  //           body: jsonEncode({
-  //             'key': 'value',
-  //           }),
-  //         )
-  //         .timeout(const Duration(seconds: 10));
-
-  //     if (response.body.isEmpty) {
-  //       throw Exception('La respuesta del servidor es vacía');
-  //     }
-
-  //     // Decodificar la respuesta antes de usarla
-  //     var decodedResponse = jsonDecode(response.body);
-  //     return decodedResponse;
-  //   } catch (e) {
-  //     throw Exception('Error en la solicitud POST: $e');
-  //   }
-  // }
-
-  Future<dynamic> post(String endpoint, Map<String, dynamic> data) async {
-    print('Endpoint: $endpoint');
-    print('Data: $data');
-    try {
-      final response = await client
-          .post(
-            Uri.parse(baseUrl + endpoint),
-            headers: {'Content-Type': 'application/json'},
-            body: jsonEncode(data), // Aquí enviamos los datos correctos
-          )
-          .timeout(const Duration(seconds: 10));
-
-      if (response.body.isEmpty) {
-        throw Exception('La respuesta del servidor es vacía');
+      if (kDebugMode) {
+        print('Error: ${e.message}');
       }
-
-      var decodedResponse = jsonDecode(response.body);
-      return decodedResponse;
-    } catch (e) {
-      throw Exception('Error en la solicitud POST: $e');
     }
+    throw Exception('Failed to complete request: ${e.message}');
   }
+}
 
-  // Método para realizar solicitudes PUT
-  Future<dynamic> put(String endpoint, Map<String, dynamic> data) async {
-    final response = await client.put(
-      Uri.parse(baseUrl + endpoint),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(data),
-    );
-    return _processResponse(response);
-  }
+class TokenInterceptor extends Interceptor {
+  final ApiService _apiService;
 
-  // Método para realizar solicitudes DELETE
-  Future<dynamic> delete(String endpoint) async {
-    final response = await client.delete(Uri.parse(baseUrl + endpoint));
-    return _processResponse(response);
+  TokenInterceptor(this._apiService);
+
+  @override
+  Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
+    if (err.response?.statusCode == 401 &&
+        err.response?.data['code'] == 'token_not_valid') {
+      try {
+        await _apiService.refreshToken(
+            _apiService._dio.options.headers['Authorization'].split(' ').last);
+        final opts = Options(
+          method: err.requestOptions.method,
+          headers: err.requestOptions.headers,
+        );
+        final cloneReq = await _apiService._dio.request(
+          err.requestOptions.path,
+          options: opts,
+          data: err.requestOptions.data,
+          queryParameters: err.requestOptions.queryParameters,
+        );
+        return handler.resolve(cloneReq);
+      } catch (e) {
+        return handler.next(err);
+      }
+    }
+    return handler.next(err);
   }
 }
