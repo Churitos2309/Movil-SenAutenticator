@@ -1,5 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:reconocimiento_app/services/api_services.dart';
+import 'package:particles_flutter/component/particle/particle.dart';
+import 'package:particles_flutter/particles_engine.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // import 'package:card_loading/card_loading.dart';
 // import 'package:flutter/material.dart';
@@ -636,6 +642,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   bool _isLoading = false;
 
+  // Variables para manejo de colores de texto
+  Color _numeroIdentificacionTextColor = Colors.grey;
+  Color _passwordTextColor = Colors.grey;
+  Color _confirmPasswordTextColor = Colors.grey;
+  Color _nombreTextColor = Colors.grey;
+  Color _emailTextColor = Colors.grey;
+
+  // Variables para mostrar/ocultar contraseñas
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+
   @override
   void initState() {
     super.initState();
@@ -645,6 +662,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _confirmPasswordFocusNode.addListener(_onConfirmPasswordFocusChange);
     _nombreFocusNode.addListener(_onNombreFocusChange);
     _emailFocusNode.addListener(_onEmailFocusChange);
+
+    // Opcional: Cargar fichas disponibles
+    // _loadFichas();
   }
 
   @override
@@ -672,31 +692,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _onNumeroIdentificacionFocusChange() {
     setState(() {
-      // Actualiza el estilo del campo cuando se enfoca
+      _numeroIdentificacionTextColor =
+          _numeroIdentificacionFocusNode.hasFocus ? Colors.green : Colors.grey;
     });
   }
 
   void _onPasswordFocusChange() {
     setState(() {
-      // Actualiza el estilo del campo cuando se enfoca
+      _passwordTextColor =
+          _passwordFocusNode.hasFocus ? Colors.green : Colors.grey;
     });
   }
 
   void _onConfirmPasswordFocusChange() {
     setState(() {
-      // Actualiza el estilo del campo cuando se enfoca
+      _confirmPasswordTextColor =
+          _confirmPasswordFocusNode.hasFocus ? Colors.green : Colors.grey;
     });
   }
 
   void _onNombreFocusChange() {
     setState(() {
-      // Actualiza el estilo del campo cuando se enfoca
+      _nombreTextColor = _nombreFocusNode.hasFocus ? Colors.green : Colors.grey;
     });
   }
 
   void _onEmailFocusChange() {
     setState(() {
-      // Actualiza el estilo del campo cuando se enfoca
+      _emailTextColor = _emailFocusNode.hasFocus ? Colors.green : Colors.grey;
     });
   }
 
@@ -728,16 +751,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     try {
       final requestData = {
-        // 'username': _numeroIdentificacionController.text.trim(),
         'password': _passwordController.text.trim(),
         'first_name': _nombreController.text.trim(),
-        // 'last_name': '', // Agrega este campo si es necesario
         'email': _emailController.text.trim(),
         'tipo_documento_usuario': _selectedTipoDocumento,
         'numero_documento_usuario': _numeroIdentificacionController.text,
-        // 'genero_usuario': _selectedGenero,
-        // 'rol_usuario': _selectedRol,
-        // 'ficha_usuario': _selectedFicha,
+        'genero_usuario': _selectedGenero,
+        'rol_usuario': _selectedRol,
+        'ficha_usuario': _selectedFicha,
       };
 
       final responseData = await apiService.post('usuarios/', requestData);
@@ -746,7 +767,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Registro exitoso')),
         );
-        Navigator.pushNamed(context, '/vistaLogin');
+        Navigator.pushReplacementNamed(context, '/vistaLogin');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Error al registrar')),
@@ -763,186 +784,441 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
+  List<Particle> createParticles() {
+    var rng = Random();
+    List<Particle> particles = [];
+    for (int i = 0; i < 50; i++) {
+      particles.add(Particle(
+        color: Colors.green.withOpacity(0.6),
+        size: rng.nextDouble() * 10,
+        velocity: Offset(rng.nextDouble() * 50 * randomSign(),
+            rng.nextDouble() * 50 * randomSign()),
+      ));
+    }
+    return particles;
+  }
+
+  double randomSign() {
+    var rng = Random();
+    return rng.nextBool() ? 1.0 : -1.0;
+  }
+
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Registro de usuario'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              TextFormField(
-                controller: _numeroIdentificacionController,
-                focusNode: _numeroIdentificacionFocusNode,
-                decoration: const InputDecoration(
-                  labelText: 'Número de identificación',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Ingrese su número de identificación';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: _passwordController,
-                focusNode: _passwordFocusNode,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Contraseña',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Ingrese su contraseña';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: _confirmPasswordController,
-                focusNode: _confirmPasswordFocusNode,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Confirmar contraseña',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Confirme su contraseña';
-                  }
-                  if (value != _passwordController.text) {
-                    return 'Las contraseñas no coinciden';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: _nombreController,
-                focusNode: _nombreFocusNode,
-                decoration: const InputDecoration(
-                  labelText: 'Nombre',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Ingrese su nombre';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: _emailController,
-                focusNode: _emailFocusNode,
-                decoration: const InputDecoration(
-                  labelText: 'Correo electrónico',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Ingrese su correo electrónico';
-                  }
-                  if (!value.contains('@')) {
-                    return 'Ingrese un correo electrónico válido';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 16),
-              DropdownButtonFormField(
-                value: _selectedTipoDocumento,
-                items: _tiposDocumento
-                    .map((e) => DropdownMenuItem(
-                          child: Text(e),
-                          value: e,
-                        ))
-                    .toList(),
-                decoration: const InputDecoration(
-                  labelText: 'Tipo de documento',
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedTipoDocumento = value as String;
-                  });
-                },
-              ),
-              SizedBox(height: 16),
-              DropdownButtonFormField(
-                value: _selectedGenero,
-                items: _generos
-                    .map((e) => DropdownMenuItem(
-                          child: Text(e),
-                          value: e,
-                        ))
-                    .toList(),
-                decoration: const InputDecoration(
-                  labelText: 'Género',
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedGenero = value as String;
-                  });
-                },
-              ),
-              SizedBox(height: 16),
-              DropdownButtonFormField(
-                value: _selectedRol,
-                items: _roles
-                    .map((e) => DropdownMenuItem(
-                          child: Text(e),
-                          value: e,
-                        ))
-                    .toList(),
-                decoration: const InputDecoration(
-                  labelText: 'Rol',
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedRol = value as String;
-                  });
-                },
-              ),
-              SizedBox(height: 16),
-              DropdownButtonFormField(
-                value: _selectedFicha,
-                items: _fichas
-                    .map((e) => DropdownMenuItem(
-                          child: Text(e),
-                          value: e,
-                        ))
-                    .toList(),
-                decoration: const InputDecoration(
-                  labelText: 'Ficha',
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedFicha = value as String;
-                  });
-                },
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _isLoading ? null : _register,
-                child: _isLoading
-                    ? const CircularProgressIndicator()
-                    : const Text('Registrar'),
-              ),
-            ],
+      body: Stack(
+        children: [
+          Container(
+            color: const Color.fromARGB(255, 10, 10, 10),
+            child: Particles(
+              awayRadius: 100,
+              particles: createParticles(),
+              height: screenHeight,
+              width: screenWidth,
+              onTapAnimation: true,
+              awayAnimationDuration: const Duration(milliseconds: 500),
+              awayAnimationCurve: Curves.easeInOutCirc,
+              enableHover: true,
+              hoverRadius: 90,
+              connectDots: false,
+            ),
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Center(
+              child: _isLoading
+                  ? const CircularProgressIndicator(
+                      color: Colors.green,
+                    )
+                  : Card(
+                      shadowColor: Colors.green[700],
+                      color: const Color.fromARGB(150, 10, 10, 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: SizedBox(
+                        width: 350, // Ajusta el ancho según tus necesidades
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // Logo
+                                Image.asset(
+                                  'images/login/LogoReconocimientoFacialBlanco.png',
+                                  width: 100,
+                                  height: 100,
+                                  color: Colors.green,
+                                ),
+                                const SizedBox(height: 16.0),
+                                const Text(
+                                  "Registrarse",
+                                  style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                                const SizedBox(height: 16.0),
+                                // Campo Nombre
+                                TextFormField(
+                                  controller: _nombreController,
+                                  focusNode: _nombreFocusNode,
+                                  decoration: InputDecoration(
+                                    labelText: 'Nombre',
+                                    labelStyle:
+                                        TextStyle(color: _nombreTextColor),
+                                    prefixIcon: Padding(
+                                      padding: const EdgeInsets.only(top: 12.0),
+                                      child: FaIcon(
+                                        FontAwesomeIcons.user,
+                                        color: _nombreTextColor,
+                                        size: 20.0,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                          const BorderSide(color: Colors.green),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          const BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                  style: const TextStyle(color: Colors.white),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Ingrese su nombre';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: 16.0),
+                                // Dropdown Tipo de Documento
+                                DropdownButtonFormField<String>(
+                                  value: _selectedTipoDocumento,
+                                  items: _tiposDocumento
+                                      .map((e) => DropdownMenuItem(
+                                            child: Text(e),
+                                            value: e,
+                                          ))
+                                      .toList(),
+                                  decoration: InputDecoration(
+                                    labelText: 'Tipo de documento',
+                                    labelStyle: TextStyle(color: Colors.grey),
+                                    prefixIcon: Padding(
+                                      padding: const EdgeInsets.only(top: 12.0),
+                                      child: FaIcon(
+                                        FontAwesomeIcons.idBadge,
+                                        color: Colors.grey,
+                                        size: 20.0,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                          const BorderSide(color: Colors.green),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          const BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                  style: const TextStyle(color: Colors.white),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _selectedTipoDocumento = value!;
+                                    });
+                                  },
+                                ),
+                                const SizedBox(height: 16.0),
+                                // Campo Número de Identificación
+                                TextFormField(
+                                  key: const Key('identificacionInput'),
+                                  focusNode: _numeroIdentificacionFocusNode,
+                                  controller: _numeroIdentificacionController,
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+                                    labelText: 'Número de identificación',
+                                    labelStyle: TextStyle(
+                                        color: _numeroIdentificacionTextColor),
+                                    prefixIcon: Padding(
+                                      padding: const EdgeInsets.only(top: 12.0),
+                                      child: FaIcon(
+                                        FontAwesomeIcons.idCard,
+                                        color: _numeroIdentificacionTextColor,
+                                        size:
+                                            20.0, // Ajusta el tamaño si es necesario
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                          const BorderSide(color: Colors.green),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          const BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                  style: const TextStyle(color: Colors.white),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Ingrese su número de identificación';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: 16.0),
+                                
+                                // Campo Correo Electrónico
+                                TextFormField(
+                                  controller: _emailController,
+                                  focusNode: _emailFocusNode,
+                                  keyboardType: TextInputType.emailAddress,
+                                  decoration: InputDecoration(
+                                    labelText: 'Correo electrónico',
+                                    labelStyle:
+                                        TextStyle(color: _emailTextColor),
+                                    prefixIcon: Padding(
+                                      padding: const EdgeInsets.only(top: 12.0),
+                                      child: FaIcon(
+                                        FontAwesomeIcons.envelope,
+                                        color: _emailTextColor,
+                                        size: 20.0,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                          const BorderSide(color: Colors.green),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          const BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                  style: const TextStyle(color: Colors.white),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Ingrese su correo electrónico';
+                                    }
+                                    if (!value.contains('@')) {
+                                      return 'Ingrese un correo electrónico válido';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: 16.0),
+                                // Campo Contraseña
+                                TextFormField(
+                                  controller: _passwordController,
+                                  focusNode: _passwordFocusNode,
+                                  obscureText: _obscurePassword,
+                                  decoration: InputDecoration(
+                                    labelText: 'Contraseña',
+                                    labelStyle:
+                                        TextStyle(color: _passwordTextColor),
+                                    prefixIcon: Padding(
+                                      padding: const EdgeInsets.only(top: 12.0),
+                                      child: FaIcon(
+                                        FontAwesomeIcons.lock,
+                                        color: _passwordTextColor,
+                                        size: 20.0,
+                                      ),
+                                    ),
+                                    suffixIcon: IconButton(
+                                      icon: FaIcon(
+                                        _obscurePassword
+                                            ? FontAwesomeIcons.eye
+                                            : FontAwesomeIcons.eyeSlash,
+                                        color: _passwordTextColor,
+                                        size: 20.0,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _obscurePassword = !_obscurePassword;
+                                        });
+                                      },
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                          const BorderSide(color: Colors.green),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          const BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                  style: const TextStyle(color: Colors.white),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Ingrese su contraseña';
+                                    }
+                                    if (value.length < 6) {
+                                      return 'La contraseña debe tener al menos 6 caracteres';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: 16.0),
+                                // Campo Confirmar Contraseña
+                                TextFormField(
+                                  controller: _confirmPasswordController,
+                                  focusNode: _confirmPasswordFocusNode,
+                                  obscureText: _obscureConfirmPassword,
+                                  decoration: InputDecoration(
+                                    labelText: 'Confirmar contraseña',
+                                    labelStyle: TextStyle(
+                                        color: _confirmPasswordTextColor),
+                                    prefixIcon: Padding(
+                                      padding: const EdgeInsets.only(top: 12.0),
+                                      child: FaIcon(
+                                        FontAwesomeIcons.lockOpen,
+                                        color: _confirmPasswordTextColor,
+                                        size: 20.0,
+                                      ),
+                                    ),
+                                    suffixIcon: IconButton(
+                                      icon: FaIcon(
+                                        _obscureConfirmPassword
+                                            ? FontAwesomeIcons.eye
+                                            : FontAwesomeIcons.eyeSlash,
+                                        color: _confirmPasswordTextColor,
+                                        size: 20.0,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _obscureConfirmPassword =
+                                              !_obscureConfirmPassword;
+                                        });
+                                      },
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                          const BorderSide(color: Colors.green),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          const BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                  style: const TextStyle(color: Colors.white),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Confirme su contraseña';
+                                    }
+                                    if (value != _passwordController.text) {
+                                      return 'Las contraseñas no coinciden';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: 16.0),
+                                
+                                // // Dropdown Rol
+                                // DropdownButtonFormField<String>(
+                                //   value: _selectedRol,
+                                //   items: _roles
+                                //       .map((e) => DropdownMenuItem(
+                                //             child: Text(e),
+                                //             value: e,
+                                //           ))
+                                //       .toList(),
+                                //   decoration: InputDecoration(
+                                //     labelText: 'Rol',
+                                //     labelStyle: TextStyle(color: Colors.grey),
+                                //     prefixIcon: Padding(
+                                //       padding: const EdgeInsets.only(top: 12.0),
+                                //       child: FaIcon(
+                                //         FontAwesomeIcons.userTag,
+                                //         color: Colors.grey,
+                                //         size: 20.0,
+                                //       ),
+                                //     ),
+                                //     focusedBorder: OutlineInputBorder(
+                                //       borderSide:
+                                //           const BorderSide(color: Colors.green),
+                                //       borderRadius: BorderRadius.circular(10.0),
+                                //     ),
+                                //     enabledBorder: OutlineInputBorder(
+                                //       borderSide:
+                                //           const BorderSide(color: Colors.grey),
+                                //       borderRadius: BorderRadius.circular(10.0),
+                                //     ),
+                                //   ),
+                                //   style: const TextStyle(color: Colors.white),
+                                //   onChanged: (value) {
+                                //     setState(() {
+                                //       _selectedRol = value!;
+                                //     });
+                                //   },
+                                // ),
+                                const SizedBox(height: 16.0),
+                                // Botón Registrar
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    onPressed: _isLoading ? null : _register,
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 15.0),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ),
+                                      backgroundColor: Colors.green,
+                                      foregroundColor: Colors.white,
+                                    ),
+                                    child: _isLoading
+                                        ? const CircularProgressIndicator(
+                                            color: Colors.white,
+                                          )
+                                        : const Text('Registrar'),
+                                  ),
+                                ),
+                                const SizedBox(height: 16.0),
+                                // Enlaces adicionales
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Text(
+                                      "¿Ya tienes una cuenta?",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pushReplacementNamed(
+                                            context, '/vistaLogin');
+                                      },
+                                      child: const Text(
+                                        "Inicia sesión",
+                                        style: TextStyle(color: Colors.green),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+            ),
+          ),
+        ],
       ),
     );
   }

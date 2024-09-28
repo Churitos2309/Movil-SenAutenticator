@@ -251,7 +251,7 @@ class _BottomNavBarAdminState extends State<BottomNavBarAdmin> {
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ],
-                                    ),
+                                    ),  
                                   ),
                                 ),
                               ),

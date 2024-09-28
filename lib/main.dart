@@ -18,6 +18,13 @@ import 'package:reconocimiento_app/ui/pages/usuarios/usuarios_page.dart';
 import 'package:reconocimiento_app/ui/widgets/curved_navigator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:reconocimiento_app/lib/components/roles/admin/Graficas/graficas_page.dart';
+import 'package:reconocimiento_app/lib/components/roles/admin/Reportes/reportes_page.dart';
+import 'package:reconocimiento_app/lib/components/roles/admin/inicio/admin_menu.dart';
+import 'package:reconocimiento_app/lib/components/roles/admin/navigation_admin.dart';
+import 'package:reconocimiento_app/lib/components/roles/Instructor/navigation_Instructor.dart';
+import 'package:reconocimiento_app/lib/components/roles/usuario/navigation_aprendiz.dart';
+
 // Punto de entrada de la aplicacion.|
 void main() {
   runApp(
@@ -63,7 +70,7 @@ class MyApp extends StatelessWidget {
       // Establece la pagina de inicio de la aplicacion como MyHomePage.
       // Este widget sera la pantalla principal que se muestra cuando la aplicación se inicia.
       // home: BottomNavBar(),
-      initialRoute: '/',
+      initialRoute: '/inicioInstructor',
       routes: {
         // '/home': (context) => _checkAuth(context, '/home'),
         // '/home': (context) => const MyHomePage(),
@@ -98,6 +105,10 @@ class MyApp extends StatelessWidget {
         '/perfilnew': (context) => const UserProfile(),
         '/perfil': (context) => const ProfilePage(),
         // '/camera': (context) => CameraPage(),
+
+        '/inicioadmin': (context) => const NavigationAdmin(),
+        '/inicioInstructor': (context) => const NavigationInstructor(),
+        '/inicioAprendiz': (context) => const NavigationAprendiz(),
       },
     );
   }
