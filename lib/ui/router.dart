@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:reconocimiento_app/services/api_services.dart';
+import 'package:reconocimiento_app/ui/pages/aprendiz/aprendiz_page.dart';
 import 'package:reconocimiento_app/ui/pages/home_page.dart';
 import 'package:reconocimiento_app/ui/pages/login/login_screen.dart';
 import 'package:reconocimiento_app/ui/pages/objetos_page.dart';
 import 'package:reconocimiento_app/ui/pages/register/register_screen.dart';
-import 'package:reconocimiento_app/ui/pages/registro_facial.dart/registro_facial_page.dart';
 
 class Routes {
   static const String home = '/';
@@ -12,6 +12,9 @@ class Routes {
   static const String register = '/register';
   static const String facialRecognition = '/facial-recognition';
   static const String objetos = '/objetos';
+  static const String aprendiz = '/aprendiz';
+  static const String perfil = '/perfil';
+  static const String configuracion = '/configuracion';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -22,8 +25,8 @@ class Routes {
             builder: (_) => LoginScreen(apiService: ApiService()));
       case register:
         return MaterialPageRoute(builder: (_) => RegisterScreen());
-      case facialRecognition:
-        return MaterialPageRoute(builder: (_) => RegisterFacePage());
+      case aprendiz:
+        return MaterialPageRoute(builder: (_) => AprendizScreen());
       case objetos:
         return MaterialPageRoute(builder: (_) => ObjetosPage());
       default:
