@@ -107,6 +107,16 @@ class ApiService {
     }
     throw Exception('Failed to fetch objetos');
   }
+  Future<Map<String, dynamic>> get(String path) async {
+  try {
+    final response = await _dio.get(path);
+    return response.data;
+  } on DioException catch (e) {
+    _handleDioError(e);
+  }
+  throw Exception('Failed to complete get request');
+}
+
 
   Future<List<dynamic>> getObjetos() async {
     try {
