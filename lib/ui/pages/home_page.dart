@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 10),
                 TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, Routes.baseAprendiz);
+                    Navigator.pushNamed(context, Routes.baseInstructor);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF3C8DBC), // Azul claro

@@ -3,24 +3,24 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reconocimiento_app/services/scroll_provider.dart';
+import 'package:reconocimiento_app/ui/pages/admin/historial_page_admin.dart';
+import 'package:reconocimiento_app/ui/pages/admin/home_page_admin.dart';
+import 'package:reconocimiento_app/ui/pages/admin/objetos_page.dart';
 import 'package:reconocimiento_app/ui/pages/aprendiz/components/custom_app_bar_aprendiz.dart';
-import 'package:reconocimiento_app/ui/pages/aprendiz/historial_page_aprendiz.dart';
-import 'package:reconocimiento_app/ui/pages/aprendiz/home_aprendiz_page.dart';
-import 'package:reconocimiento_app/ui/pages/aprendiz/objetos_page.dart';
 
-class BottomNavbarAprendiz extends StatefulWidget {
+class BottomNavbarAdmin extends StatefulWidget {
   @override
-  _BottomNavbarAprendizState createState() => _BottomNavbarAprendizState();
+  _BottomNavbarAdminState createState() => _BottomNavbarAdminState();
 }
 
-class _BottomNavbarAprendizState extends State<BottomNavbarAprendiz>{
+class _BottomNavbarAdminState extends State<BottomNavbarAdmin>{
   int _currentIndex = 0;
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
   final List<Widget> _screens = [
-    HomeAprendizScreen(),
-    ObjetosAprendizPage(),
-    HistorialAprendizPage(),
+    HomeScreenAdmin(),
+    ObjetosAdminPage(),
+    HistorialAdminPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -34,7 +34,7 @@ class _BottomNavbarAprendizState extends State<BottomNavbarAprendiz>{
     final scrollProvider = Provider.of<ScrollProvider>(context);
 
     return Scaffold(
-      appBar: CustomAppBarAprendiz(title: 'Aprendiz'),
+      appBar: CustomAppBarAprendiz(title: 'Administrador'),
       // AppBar(
       //   title: Text('App Title'),
       // ),
@@ -68,24 +68,6 @@ class _BottomNavbarAprendizState extends State<BottomNavbarAprendiz>{
           onTap: _onItemTapped,
         ),
       ),
-      // BottomNavigationBar(
-      //   currentIndex: _currentIndex,
-      //   items: const <BottomNavigationBarItem>[
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.home_outlined, size: 30),
-      //       label: 'Home',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.build_outlined, size: 30),
-      //       label: 'Build',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.info_outline, size: 30),
-      //       label: 'Info',
-      //     ),
-      //   ],
-      //   onTap: _onItemTapped,
-      // ),
     );
   }
 }
