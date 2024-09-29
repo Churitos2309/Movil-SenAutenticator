@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:particles_flutter/component/particle/particle.dart';
 import 'package:particles_flutter/particles_engine.dart';
@@ -11,9 +12,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LoginScreen extends StatefulWidget {
   final ApiService apiService;
 
-  LoginScreen({Key? key, required this.apiService}) : super(key: key);
+  const LoginScreen({super.key, required this.apiService});
 
   @override
+  // ignore: library_private_types_in_public_api
   _LoginScreenState createState() => _LoginScreenState();
 }
 
@@ -84,28 +86,35 @@ class _LoginScreenState extends State<LoginScreen> {
     if (rol != null && rol.isNotEmpty) {
       // Verifica que el rol no esté vacío
       await prefs.setString('rol', rol);
+
+      if (!mounted) return;
+
       // Redireccionar basado en el rol
       switch (rol) {
         case 'Administrador':
-          Navigator.pushReplacementNamed(context, '/');
+          Navigator.pushReplacementNamed(context, Routes.baseAdmin);
           break;
         case 'Instructor':
-          Navigator.pushReplacementNamed(context, '/fichas');
+          Navigator.pushReplacementNamed(context, Routes.baseInstructor);
           break;
         case 'Aprendiz':
-          Navigator.pushReplacementNamed(context, '/objetos');
+          Navigator.pushReplacementNamed(context, Routes.baseAprendiz);
           break;
         case 'Guardia de seguridad':
           Navigator.pushReplacementNamed(context, '/usuarios');
           break;
         default:
-          Navigator.pushReplacementNamed(context, '/home');
+          Navigator.pushReplacementNamed(context, Routes.home);
       }
     } else {
-      print(
-          'Error: el rol recibido es null o vacío. Redirigiendo a la página de error.');
+      if (kDebugMode) {
+        print(
+            'Error: el rol recibido es null o vacío. Redirigiendo a la página de error.');
+      }
       await prefs.setString('rol', '');
-      Navigator.pushReplacementNamed(context, '/error');
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, '/error');
+      }
     }
   }
 
@@ -128,15 +137,22 @@ class _LoginScreenState extends State<LoginScreen> {
       if (responseData['token'] != null) {
         final token = responseData['token'];
         final rol = responseData['user']?['rol_usuario'];
-        print('Token recibido: $token');
-        print('Rol recibido: $rol');
+        if (kDebugMode) {
+          print('Token recibido: $token');
+        }
+        if (kDebugMode) {
+          print('Rol recibido: $rol');
+        }
 
         _validarToken(token, rol);
       } else {
         throw Exception('Error: Token no proporcionado por el servidor');
       }
     } catch (e) {
-      print('Error de conexión: $e');
+      if (kDebugMode) {
+        print('Error de conexión: $e');
+      }
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al iniciar sesión: $e')),
       );
@@ -296,7 +312,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       foregroundColor: Colors.white,
                                     ),
                                     child: _isLoading
-                                        ? CircularProgressIndicator(
+                                        ? const CircularProgressIndicator(
                                             color: Colors.white,
                                           )
                                         : const Text("Iniciar sesión"),
