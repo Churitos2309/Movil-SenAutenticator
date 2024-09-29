@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ObjetosAprendizPage extends StatelessWidget {
+class ObjetosInstructorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(

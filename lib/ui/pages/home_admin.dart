@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:reconocimiento_app/ui/pages/aprendiz/aprendiz_page.dart';
-class HomeAprendiz extends StatelessWidget {
+import 'package:reconocimiento_app/ui/pages/admin/admin_page.dart';
+class HomeAdmin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return AprendizPage(
+    return AdminPage(
       body: Center(
         child: Text('Esta es la página de inicio'),
       ),

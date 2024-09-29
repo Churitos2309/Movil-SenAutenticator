@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class HistorialPage extends StatelessWidget {
+class HistorialAprendizPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
