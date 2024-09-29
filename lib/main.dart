@@ -16,6 +16,7 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
+        Provider(create: (_) => ApiService()),
         ChangeNotifierProvider<FacialRecognitionProvider>(
             create: (_) => FacialRecognitionProvider(ApiService())),
         ChangeNotifierProvider<FacialLoginProvider>(
