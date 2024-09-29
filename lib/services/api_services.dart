@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:path/path.dart';
 
 class ApiService {
   final String baseUrl = 'https://backendsenauthenticator.up.railway.app/api/';
@@ -21,18 +22,48 @@ class ApiService {
     _dio.options.headers['Authorization'] = 'Bearer $accessToken';
   }
 
-  Future<Map<String, dynamic>> post(String path, Map<String, dynamic> data) async {
-  try {
-    final response = await _dio.post(path, data: data);
-    if (kDebugMode) {
-      print('Response data: ${response.data}');
+  Future<Map<String, dynamic>> post(
+      String path, Map<String, dynamic> data) async {
+    try {
+      final response = await _dio.post(path, data: data);
+      if (kDebugMode) {
+        print('Response data: ${response.data}');
+      }
+      return response.data;
+    } on DioException catch (e) {
+      _handleDioError(e);
     }
-    return response.data;
-  } on DioException catch (e) {
-    _handleDioError(e);
+    throw Exception('Failed to complete post request');
   }
-  throw Exception('Failed to complete post request');
-}
+
+  // Future<Map<String, dynamic>> post(String path, Map<String, dynamic> data) async {
+  //   try {
+  //     final response = await _dio.post(path, data: data);
+  //     if (kDebugMode) {
+  //       print('Response data: ${response.data}');
+  //     }
+  //     return response.data;
+  //   } catch (e) {
+  //     if (kDebugMode) {
+  //       print('Error: $e');
+  //     }
+  //     rethrow;
+  //   }
+  // }
+
+  Future<Map<String, dynamic>> uploadProfile(
+      Map<String, dynamic> data, File? image) async {
+    FormData formData = FormData.fromMap(data);
+    if (image != null) {
+      formData.files.add(MapEntry(
+        'photo',
+        await MultipartFile.fromFile(image.path,
+            filename: basename(image.path)),
+      ));
+    }
+    final response = await _dio.post('usuarios/', data: formData);
+    return response.data;
+  }
 
   Future<Map<String, dynamic>> postRegister(
       String endpoint, Map<String, dynamic> data) async {
@@ -106,7 +137,6 @@ class ApiService {
     }
   }
 
-
   void _handleDioError(DioException e) {
     if (e.response != null) {
       if (kDebugMode) {
@@ -130,7 +160,8 @@ class TokenInterceptor extends Interceptor {
   TokenInterceptor(this._apiService);
 
   @override
-  Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
+  Future<void> onError(
+      DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401 &&
         err.response?.data['code'] == 'token_not_valid') {
       try {

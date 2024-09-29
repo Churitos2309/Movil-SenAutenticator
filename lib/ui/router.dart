@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:reconocimiento_app/services/api_services.dart';
+import 'package:reconocimiento_app/ui/pages/aprendiz/historial_page_aprendiz.dart';
+import 'package:reconocimiento_app/ui/pages/home_aprendiz.dart';
 import 'package:reconocimiento_app/ui/pages/home_page.dart';
 import 'package:reconocimiento_app/ui/pages/login/login_screen.dart';
 import 'package:reconocimiento_app/ui/pages/objetos_page.dart';
+import 'package:reconocimiento_app/ui/pages/perfil.dart';
 import 'package:reconocimiento_app/ui/pages/register/register_screen.dart';
-import 'package:reconocimiento_app/ui/pages/registro_facial.dart/registro_facial_page.dart';
 
 class Routes {
   static const String home = '/';
@@ -12,6 +14,12 @@ class Routes {
   static const String register = '/register';
   static const String facialRecognition = '/facial-recognition';
   static const String objetos = '/objetos';
+  static const String aprendiz = '/aprendiz';
+  static const String perfil = '/perfil';
+  static const String configuracion = '/configuracion';
+  static const String homeAprendiz = '/homeAprendiz';
+  static const String baseAprendiz = '/baseAprendiz';
+  static const String historial = '/historial';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -22,10 +30,18 @@ class Routes {
             builder: (_) => LoginScreen(apiService: ApiService()));
       case register:
         return MaterialPageRoute(builder: (_) => RegisterScreen());
-      case facialRecognition:
-        return MaterialPageRoute(builder: (_) => RegisterFacePage());
+      case aprendiz:
+        return MaterialPageRoute(builder: (_) => HomeAprendiz());
       case objetos:
         return MaterialPageRoute(builder: (_) => ObjetosPage());
+      case homeAprendiz:
+        return MaterialPageRoute(builder: (_) => HomeAprendiz());
+      case historial:
+        return MaterialPageRoute(builder: (_) => HistorialPage());
+      case perfil:
+        return MaterialPageRoute(builder: (_) => ProfilePage());
+      case baseAprendiz:
+        return MaterialPageRoute(builder: (_) => HomeAprendiz());
       default:
         return MaterialPageRoute(builder: (_) => const HomePage());
     }
