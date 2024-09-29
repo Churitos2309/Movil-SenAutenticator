@@ -50,6 +50,7 @@ class ApiService {
   //     rethrow;
   //   }
   // }
+  
 
   Future<Map<String, dynamic>> uploadProfile(
       Map<String, dynamic> data, File? image) async {
@@ -107,10 +108,11 @@ class ApiService {
     }
     throw Exception('Failed to fetch objetos');
   }
-  Future<Map<String, dynamic>> get(String path) async {
+  ///////////////////////////////////////////////////////////////////77
+  Future<List<dynamic>> get(String path) async {
   try {
     final response = await _dio.get(path);
-    return response.data;
+    return response.data; // Asegúrate de que response.data sea una lista
   } on DioException catch (e) {
     _handleDioError(e);
   }

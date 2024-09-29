@@ -378,7 +378,7 @@ class _FichasScreenState extends State<FichasScreen> {
       });
 
       final endpoint = 'fichas/?programa_ficha=${widget.programaId}';
-      final data = await apiService.post(endpoint);
+      final data = await apiService.get(endpoint);
 
       setState(() {
         fichas = data;

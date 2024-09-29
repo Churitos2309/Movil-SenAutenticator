@@ -24,7 +24,7 @@ class _HomeScreenInstructorState extends State<HomeScreenInstructor> {
   // Función para obtener fichas de la API
   void fetchFichas() async {
     try {
-      final data = await apiService.post('fichas/');
+      final data = await apiService.get('fichas/');
       setState(() {
         fichas = data;
       });
