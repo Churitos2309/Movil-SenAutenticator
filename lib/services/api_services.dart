@@ -120,6 +120,15 @@ class ApiService {
 }
 
 
+  Future<List<dynamic>> getObjetos() async {
+    try {
+      final response = await _dio.get('objetos/');
+      return response.data;
+    } catch (e) {
+      print('Error fetching objetos: $e');
+      rethrow;
+    }
+  }
 
   Future<Map<String, dynamic>> loginFace({required File faceImage}) async {
     try {
