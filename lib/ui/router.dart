@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reconocimiento_app/services/api_services.dart';
 import 'package:reconocimiento_app/ui/pages/aprendiz/historial_page_aprendiz.dart';
+import 'package:reconocimiento_app/ui/pages/aprendiz/objetos_page.dart';
 import 'package:reconocimiento_app/ui/pages/home_admin.dart';
 import 'package:reconocimiento_app/ui/pages/home_aprendiz.dart';
 import 'package:reconocimiento_app/ui/pages/home_instructor.dart';
@@ -35,8 +36,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => RegisterScreen());
       case aprendiz:
         return MaterialPageRoute(builder: (_) => ProfilePage());
-      // case objetos:
-      //   return MaterialPageRoute(builder: (_) => ObjetosPage());
+      case objetos:
+        return MaterialPageRoute(builder: (_) => ObjetosAprendizPage());
       case homeAprendiz:
         return MaterialPageRoute(builder: (_) => HomeAprendiz());
       case historial:
