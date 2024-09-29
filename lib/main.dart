@@ -7,6 +7,8 @@ import 'package:reconocimiento_app/services/api_services.dart';
 import 'package:reconocimiento_app/services/auth_provider.dart';
 import 'package:reconocimiento_app/services/scroll_provider.dart';
 import 'package:reconocimiento_app/ui/router.dart';
+//////////////////////////////////
+import 'package:reconocimiento_app/ui/pages/aprendiz/historial_page_aprendiz.dart';
 
 import 'providers/facial_login_provider.dart';
 
