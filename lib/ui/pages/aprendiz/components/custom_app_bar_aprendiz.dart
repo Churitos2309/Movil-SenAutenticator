@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reconocimiento_app/services/auth_provider.dart';
+import 'package:reconocimiento_app/ui/router.dart';
 
 class CustomAppBarAprendiz extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -9,7 +10,7 @@ class CustomAppBarAprendiz extends StatelessWidget implements PreferredSizeWidge
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
+    return AppBar(centerTitle: true,
       automaticallyImplyLeading: false,
       backgroundColor: const Color(0xFF27A900), // Verde institucional
       shadowColor: const Color(0xFF27A900),
@@ -35,7 +36,7 @@ class CustomAppBarAprendiz extends StatelessWidget implements PreferredSizeWidge
             GestureDetector(
               onTap: () {
                 // Navegar a la página de perfil al hacer clic en el avatar
-                Navigator.pushNamed(context, '/profile');
+                Navigator.pushNamed(context, Routes.perfil);
               },
               child: const CircleAvatar(
                 backgroundImage: AssetImage('images/login/LogoReconocimientoFacialBlanco.png'),
@@ -45,10 +46,10 @@ class CustomAppBarAprendiz extends StatelessWidget implements PreferredSizeWidge
               onSelected: (String result) {
                 switch (result) {
                   case 'Perfil':
-                    Navigator.pushNamed(context, '/profile');
+                    Navigator.pushNamed(context, Routes.perfil);
                     break;
                   case 'Configuraciones':
-                    Navigator.pushNamed(context, '/settings');
+                    Navigator.pushNamed(context, Routes.configuracion);
                     break;
                   case 'Salir':
                     Provider.of<AuthProvider>(context, listen: false).logout();
