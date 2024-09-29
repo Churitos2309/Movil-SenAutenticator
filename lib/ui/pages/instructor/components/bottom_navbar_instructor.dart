@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reconocimiento_app/services/scroll_provider.dart';
 import 'package:reconocimiento_app/ui/pages/instructor/components/custom_app_bar_instructor.dart';
-import 'package:reconocimiento_app/ui/pages/instructor/historial_page_instructor.dart';
+// import 'package:reconocimiento_app/ui/pages/instructor/historial_page_instructor.dart';
 import 'package:reconocimiento_app/ui/pages/instructor/home_instructor.dart';
 import 'package:reconocimiento_app/ui/pages/instructor/objetos_intructor_page.dart';
 
@@ -19,8 +19,8 @@ class _BottomNavbarInstructorState extends State<BottomNavbarInstructor>{
 
   final List<Widget> _screens = [
     HomeScreenInstructor(),
-    ObjetosInstructorPage(),
-    HistorialPageInstructor(),
+    ReportesInstructorPage(),
+    // HistorialPageInstructor(),
   ];
 
   void _onItemTapped(int index) {
