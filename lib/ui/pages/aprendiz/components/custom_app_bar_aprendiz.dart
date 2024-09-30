@@ -6,7 +6,7 @@ import 'package:reconocimiento_app/ui/router.dart';
 class CustomAppBarAprendiz extends StatelessWidget implements PreferredSizeWidget {
   final String title;
 
-  CustomAppBarAprendiz({required this.title});
+  const CustomAppBarAprendiz({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {

@@ -1,14 +1,14 @@
-import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:reconocimiento_app/services/api_services.dart';
-import 'Fichas_Instructor/fichas_screen.dart';
+import 'fichas_instructor/fichas_screen.dart';
 
 class ReportesInstructorPage extends StatefulWidget {
 
   const ReportesInstructorPage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ReportesInstructorPageState createState() => _ReportesInstructorPageState();
 }
 
@@ -88,7 +88,7 @@ class _ReportesInstructorPageState extends State<ReportesInstructorPage> {
             CupertinoTextField(
               controller: filterController,
               placeholder: 'Buscar Programa',
-              padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(8.0),
@@ -96,12 +96,12 @@ class _ReportesInstructorPageState extends State<ReportesInstructorPage> {
                   BoxShadow(
                     color: Colors.black.withOpacity(0.1),
                     blurRadius: 8.0,
-                    offset: Offset(0, 4),
+                    offset: const Offset(0, 4),
                   ),
                 ],
               ),
-              prefix: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
+              prefix: const Padding(
+                padding: EdgeInsets.only(left: 8.0),
                 child: Icon(CupertinoIcons.search),
               ),
             ),
@@ -112,7 +112,7 @@ class _ReportesInstructorPageState extends State<ReportesInstructorPage> {
                     ? Center(
                         child: Text(
                           errorMessage,
-                          style: TextStyle(color: Colors.red, fontSize: 16),
+                          style: const TextStyle(color: Colors.red, fontSize: 16),
                         ),
                       )
                     : filteredProgramas.isEmpty
@@ -134,7 +134,7 @@ class _ReportesInstructorPageState extends State<ReportesInstructorPage> {
                                   BoxShadow(
                                     color: Colors.black.withOpacity(0.1),
                                     blurRadius: 10.0,
-                                    offset: Offset(0, 5),
+                                    offset: const Offset(0, 5),
                                   ),
                                 ],
                               ),
@@ -149,12 +149,13 @@ class _ReportesInstructorPageState extends State<ReportesInstructorPage> {
                                     child: DataTable(
                                       showCheckboxColumn: false,
                                       columnSpacing: defaultPadding,
+                                      // ignore: deprecated_member_use
                                       dataRowHeight: 50.0,
                                       headingRowHeight: 50.0,
-                                      headingRowColor: MaterialStateColor.resolveWith(
+                                      headingRowColor: WidgetStateColor.resolveWith(
                                         (states) => Colors.transparent,
                                       ),
-                                      dataRowColor: MaterialStateProperty.resolveWith(
+                                      dataRowColor: WidgetStateProperty.resolveWith(
                                         (states) => Colors.transparent,
                                       ),
                                       border: TableBorder(
@@ -183,7 +184,7 @@ class _ReportesInstructorPageState extends State<ReportesInstructorPage> {
                                             DataCell(
                                               Container(
                                                 alignment: Alignment.centerLeft,
-                                                padding: EdgeInsets.symmetric(
+                                                padding: const EdgeInsets.symmetric(
                                                     vertical: 8.0, horizontal: 16.0),
                                                 decoration: BoxDecoration(
                                                   borderRadius: BorderRadius.circular(12),
@@ -193,13 +194,13 @@ class _ReportesInstructorPageState extends State<ReportesInstructorPage> {
                                                       color: Colors.black.withOpacity(0.05),
                                                       spreadRadius: 2,
                                                       blurRadius: 8,
-                                                      offset: Offset(0, 4),
+                                                      offset: const Offset(0, 4),
                                                     ),
                                                   ],
                                                 ),
                                                 child: Text(
                                                   programa['nombre_programa'] ?? '',
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     color: Colors.black87,
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.w600,

@@ -9,7 +9,10 @@ import 'package:reconocimiento_app/ui/pages/instructor/home_instructor.dart';
 import 'package:reconocimiento_app/ui/pages/instructor/objetos_intructor_page.dart';
 
 class BottomNavbarInstructor extends StatefulWidget {
+  const BottomNavbarInstructor({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _BottomNavbarInstructorState createState() => _BottomNavbarInstructorState();
 }
 
@@ -18,8 +21,8 @@ class _BottomNavbarInstructorState extends State<BottomNavbarInstructor>{
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
   final List<Widget> _screens = [
-    HomeScreenInstructor(),
-    ReportesInstructorPage(),
+    const HomeScreenInstructor(),
+    const ReportesInstructorPage(),
     // HistorialPageInstructor(),
   ];
 
@@ -34,7 +37,7 @@ class _BottomNavbarInstructorState extends State<BottomNavbarInstructor>{
     final scrollProvider = Provider.of<ScrollProvider>(context);
 
     return Scaffold(
-      appBar: CustomAppBarInstructor(title: 'Instructor'),
+      appBar: const CustomAppBarInstructor(title: 'Instructor'),
       // AppBar(
       //   title: Text('App Title'),
       // ),

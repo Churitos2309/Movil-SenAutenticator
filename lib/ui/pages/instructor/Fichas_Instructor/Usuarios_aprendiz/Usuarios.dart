@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:reconocimiento_app/services/api_services.dart';
-import 'Graficas/graficas_screen.dart';
-import './datos_aprendiz/datos_aprendiz.dart';
+
+import 'datos_aprendiz/datos_aprendiz.dart';
+import 'graficas/graficas_screen.dart';
 
 class UsuariosScreen extends StatefulWidget {
   final int fichaId;
@@ -14,6 +15,7 @@ class UsuariosScreen extends StatefulWidget {
   });
 
   @override
+  // ignore: library_private_types_in_public_api
   _UsuariosScreenState createState() => _UsuariosScreenState();
 }
 
@@ -84,7 +86,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
         elevation: 0,
         actions: [
           IconButton(
-            icon: Icon(Icons.search, color: Colors.white),
+            icon: const Icon(Icons.search, color: Colors.white),
             onPressed: () {
               // Implementar búsqueda si es necesario
             },
@@ -98,7 +100,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
             : errorMessage.isNotEmpty
                 ? Center(
                     child: Text(errorMessage,
-                        style: TextStyle(color: Colors.red, fontSize: 14)))
+                        style: const TextStyle(color: Colors.red, fontSize: 14)))
                 : usuarios.isEmpty
                     ? Center(
                         child: Text('No hay usuarios asociados a esta ficha.',
@@ -116,7 +118,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                               color: Colors.grey.withOpacity(0.2),
                               spreadRadius: 2,
                               blurRadius: 6,
-                              offset: Offset(0, 4),
+                              offset: const Offset(0, 4),
                             ),
                           ],
                         ),
@@ -130,34 +132,35 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                               scrollDirection: Axis.vertical,
                               child: DataTable(
                                 columnSpacing: 8.0,
+                                // ignore: deprecated_member_use
                                 dataRowHeight: 50.0,
                                 headingRowHeight: 50.0,
-                                headingRowColor: MaterialStateColor.resolveWith(
+                                headingRowColor: WidgetStateColor.resolveWith(
                                   (states) => Colors.transparent,
                                 ),
-                                dataRowColor: MaterialStateProperty.resolveWith(
+                                dataRowColor: WidgetStateProperty.resolveWith(
                                   (states) => Colors.grey[100]!,
                                 ),
                                 columns: <DataColumn>[
                                   DataColumn(
                                     label: Container(
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                           vertical: 6.0, horizontal: 12.0),
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(20),
                                         border: Border.all(
-                                            color: Color(0xFF2C6B2F), width: 2),
+                                            color: const Color(0xFF2C6B2F), width: 2),
                                         boxShadow: [
                                           BoxShadow(
                                             color: Colors.grey.withOpacity(0.2),
                                             spreadRadius: 2,
                                             blurRadius: 8,
-                                            offset: Offset(0, 4),
+                                            offset: const Offset(0, 4),
                                           ),
                                         ],
                                       ),
-                                      child: Center(
+                                      child: const Center(
                                         child: Text(
                                           'Nombre',
                                           style: TextStyle(
@@ -171,23 +174,23 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                                   ),
                                   DataColumn(
                                     label: Container(
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                           vertical: 6.0, horizontal: 12.0),
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(20),
                                         border: Border.all(
-                                            color: Color(0xFF2C6B2F), width: 2),
+                                            color: const Color(0xFF2C6B2F), width: 2),
                                         boxShadow: [
                                           BoxShadow(
                                             color: Colors.grey.withOpacity(0.2),
                                             spreadRadius: 2,
                                             blurRadius: 8,
-                                            offset: Offset(0, 4),
+                                            offset: const Offset(0, 4),
                                           ),
                                         ],
                                       ),
-                                      child: Center(
+                                      child: const Center(
                                         child: Text(
                                           'Correo',
                                           style: TextStyle(
@@ -201,23 +204,23 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                                   ),
                                   DataColumn(
                                     label: Container(
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                           vertical: 6.0, horizontal: 12.0),
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(20),
                                         border: Border.all(
-                                            color: Color(0xFF2C6B2F), width: 2),
+                                            color: const Color(0xFF2C6B2F), width: 2),
                                         boxShadow: [
                                           BoxShadow(
                                             color: Colors.grey.withOpacity(0.2),
                                             spreadRadius: 2,
                                             blurRadius: 8,
-                                            offset: Offset(0, 4),
+                                            offset: const Offset(0, 4),
                                           ),
                                         ],
                                       ),
-                                      child: Center(
+                                      child: const Center(
                                         child: Text(
                                           'Rol',
                                           style: TextStyle(
@@ -231,23 +234,23 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                                   ),
                                   DataColumn(
                                     label: Container(
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                           vertical: 6.0, horizontal: 12.0),
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(20),
                                         border: Border.all(
-                                            color: Color(0xFF2C6B2F), width: 2),
+                                            color: const Color(0xFF2C6B2F), width: 2),
                                         boxShadow: [
                                           BoxShadow(
                                             color: Colors.grey.withOpacity(0.2),
                                             spreadRadius: 2,
                                             blurRadius: 8,
-                                            offset: Offset(0, 4),
+                                            offset: const Offset(0, 4),
                                           ),
                                         ],
                                       ),
-                                      child: Center(
+                                      child: const Center(
                                         child: Text(
                                           'Gráfica',
                                           style: TextStyle(
@@ -262,12 +265,12 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                                 ],
                                 rows: usuarios.map<DataRow>((usuario) {
                                   return DataRow(
-                                    color: MaterialStateProperty.resolveWith<
+                                    color: WidgetStateProperty.resolveWith<
                                         Color?>(
                                       (states) {
                                         // Alterna el color de fondo de las filas
                                         return (states.contains(
-                                                MaterialState.selected))
+                                                WidgetState.selected))
                                             ? Colors.grey[200]
                                             : null;
                                       },
@@ -278,7 +281,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                                           onTap: () =>
                                               _showUsuarioDetails(usuario),
                                           child: Container(
-                                            padding: EdgeInsets.symmetric(
+                                            padding: const EdgeInsets.symmetric(
                                                 vertical: 4),
                                             decoration: BoxDecoration(
                                               borderRadius:
@@ -290,7 +293,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                                                       .withOpacity(0.2),
                                                   spreadRadius: 1,
                                                   blurRadius: 5,
-                                                  offset: Offset(0, 3),
+                                                  offset: const Offset(0, 3),
                                                 ),
                                               ],
                                             ),
@@ -309,7 +312,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                                       ),
                                       DataCell(Container(
                                         padding:
-                                            EdgeInsets.symmetric(vertical: 4),
+                                            const EdgeInsets.symmetric(vertical: 4),
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(8),
@@ -320,7 +323,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                                                   .withOpacity(0.2),
                                               spreadRadius: 1,
                                               blurRadius: 5,
-                                              offset: Offset(0, 3),
+                                              offset: const Offset(0, 3),
                                             ),
                                           ],
                                         ),
@@ -336,7 +339,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                                       )),
                                       DataCell(Container(
                                         padding:
-                                            EdgeInsets.symmetric(vertical: 4),
+                                            const EdgeInsets.symmetric(vertical: 4),
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(8),
@@ -347,7 +350,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                                                   .withOpacity(0.2),
                                               spreadRadius: 1,
                                               blurRadius: 5,
-                                              offset: Offset(0, 3),
+                                              offset: const Offset(0, 3),
                                             ),
                                           ],
                                         ),
@@ -365,7 +368,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                                         GestureDetector(
                                           onTap: _showGrafica,
                                           child: Container(
-                                            padding: EdgeInsets.symmetric(
+                                            padding: const EdgeInsets.symmetric(
                                                 vertical: 4),
                                             decoration: BoxDecoration(
                                               borderRadius:
@@ -377,13 +380,13 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                                                       .withOpacity(0.2),
                                                   spreadRadius: 1,
                                                   blurRadius: 5,
-                                                  offset: Offset(0, 3),
+                                                  offset: const Offset(0, 3),
                                                 ),
                                               ],
                                             ),
-                                            child: Padding(
+                                            child: const Padding(
                                               padding:
-                                                  const EdgeInsets.all(8.0),
+                                                  EdgeInsets.all(8.0),
                                               child: Icon(Icons.insert_chart,
                                                   color: Color(0xFF39A900)),
                                             ),

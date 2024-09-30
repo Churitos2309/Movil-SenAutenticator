@@ -125,7 +125,9 @@ class ApiService {
       final response = await _dio.get('objetos/');
       return response.data;
     } catch (e) {
-      print('Error fetching objetos: $e');
+      if (kDebugMode) {
+        print('Error fetching objetos: $e');
+      }
       rethrow;
     }
   }

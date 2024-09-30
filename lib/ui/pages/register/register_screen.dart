@@ -10,6 +10,8 @@ import 'package:reconocimiento_app/ui/pages/custom_app_bar_lobby.dart';
 import 'package:reconocimiento_app/ui/router.dart'; // Asegúrate de importar tu archivo de rutas
 
 class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
+
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
@@ -107,20 +109,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
       final responseData = await apiService.post('usuarios/', requestData);
 
       if (responseData['status'] == 'success') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Registro exitoso')),
-        );
-        Navigator.pushNamed(
-            context, Routes.login); // Redirigir a la página de inicio de sesión
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Registro exitoso')),
+          );
+        }
+        if (mounted) {
+          Navigator.pushNamed(context,
+              Routes.login); // Redirigir a la página de inicio de sesión
+        }
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error al registrar')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Error al registrar')),
+          );
+        }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al registrar: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error al registrar: $e')),
+        );
+      }
     } finally {
       setState(() {
         _isLoading = false;

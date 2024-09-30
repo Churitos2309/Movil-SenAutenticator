@@ -9,7 +9,10 @@ import 'package:reconocimiento_app/ui/pages/aprendiz/home_aprendiz_page.dart';
 import 'package:reconocimiento_app/ui/pages/aprendiz/objetos_page.dart';
 
 class BottomNavbarAprendiz extends StatefulWidget {
+  const BottomNavbarAprendiz({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _BottomNavbarAprendizState createState() => _BottomNavbarAprendizState();
 }
 
@@ -18,9 +21,9 @@ class _BottomNavbarAprendizState extends State<BottomNavbarAprendiz>{
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
   final List<Widget> _screens = [
-    HomeAprendizScreen(),
-    ObjetosAprendizPage(),
-    HistorialAprendizPage(),
+    const HomeAprendizScreen(),
+    const ObjetosAprendizPage(),
+    const HistorialAprendizPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -34,7 +37,7 @@ class _BottomNavbarAprendizState extends State<BottomNavbarAprendiz>{
     final scrollProvider = Provider.of<ScrollProvider>(context);
 
     return Scaffold(
-      appBar: CustomAppBarAprendiz(title: 'Aprendiz'),
+      appBar: const CustomAppBarAprendiz(title: 'Aprendiz'),
       // AppBar(
       //   title: Text('App Title'),
       // ),

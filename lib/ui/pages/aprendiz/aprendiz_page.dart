@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reconocimiento_app/ui/pages/aprendiz/components/bottom_navbar_aprendiz.dart';
 import 'package:reconocimiento_app/ui/pages/aprendiz/components/custom_app_bar_aprendiz.dart';
-import 'package:reconocimiento_app/ui/router.dart';
 
 class AprendizPage extends StatefulWidget {
   final Widget body;
@@ -10,6 +9,7 @@ class AprendizPage extends StatefulWidget {
   const AprendizPage({super.key, required this.body, required this.currentIndex});
 
   @override
+  // ignore: library_private_types_in_public_api
   _AprendizPageState createState() => _AprendizPageState();
 }
 
@@ -20,29 +20,13 @@ class _AprendizPageState extends State<AprendizPage> {
     super.initState();
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-    });
-
-    switch (index) {
-      case 0:
-        Navigator.pushReplacementNamed(context, Routes.homeAprendiz);
-        break;
-      case 1:
-        Navigator.pushReplacementNamed(context, Routes.objetos);
-        break;
-      case 2:
-        Navigator.pushReplacementNamed(context, Routes.historial);
-        break;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarAprendiz(title: 'Aprendiz'),
+      appBar: const CustomAppBarAprendiz(title: 'Aprendiz'),
       body: widget.body,
-      bottomNavigationBar: BottomNavbarAprendiz(
+      bottomNavigationBar: const BottomNavbarAprendiz(
         // currentIndex: widget.currentIndex,
         // onItemTapped: _onItemTapped,
       ),

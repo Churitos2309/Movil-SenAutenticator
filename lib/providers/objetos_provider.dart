@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:reconocimiento_app/services/api_services.dart';
 
 class ObjetosProvider with ChangeNotifier {
@@ -18,7 +18,9 @@ class ObjetosProvider with ChangeNotifier {
     try {
       _objetos = await _apiService.fetchObjetos();
     } catch (e) {
-      print('Error al obtener objetos: $e');
+      if (kDebugMode) {
+        print('Error al obtener objetos: $e');
+      }
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -33,7 +35,9 @@ class ObjetosProvider with ChangeNotifier {
       await _apiService.createObjeto(data);
       await fetchObjetos(); // Actualizar la lista de objetos
     } catch (e) {
-      print('Error al crear objeto: $e');
+      if (kDebugMode) {
+        print('Error al crear objeto: $e');
+      }
     } finally {
       _isLoading = false;
       notifyListeners();

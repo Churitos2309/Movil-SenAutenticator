@@ -33,23 +33,23 @@ class Routes {
         return MaterialPageRoute(
             builder: (_) => LoginScreen(apiService: ApiService()));
       case register:
-        return MaterialPageRoute(builder: (_) => RegisterScreen());
+        return MaterialPageRoute(builder: (_) => const RegisterScreen());
       case aprendiz:
-        return MaterialPageRoute(builder: (_) => ProfilePage());
+        return MaterialPageRoute(builder: (_) => const ProfilePage());
       case objetos:
-        return MaterialPageRoute(builder: (_) => ObjetosAprendizPage());
+        return MaterialPageRoute(builder: (_) => const ObjetosAprendizPage());
       case homeAprendiz:
-        return MaterialPageRoute(builder: (_) => HomeAprendiz());
+        return MaterialPageRoute(builder: (_) => const HomeAprendiz());
       case historial:
-        return MaterialPageRoute(builder: (_) => HistorialAprendizPage());
+        return MaterialPageRoute(builder: (_) => const HistorialAprendizPage());
       case perfil:
-        return MaterialPageRoute(builder: (_) => ProfilePage());
+        return MaterialPageRoute(builder: (_) => const ProfilePage());
       case baseAprendiz:
-        return MaterialPageRoute(builder: (_) => HomeAprendiz());
+        return MaterialPageRoute(builder: (_) => const HomeAprendiz());
       case baseAdmin:
-        return MaterialPageRoute(builder: (_) => HomeAdmin());
+        return MaterialPageRoute(builder: (_) => const HomeAdmin());
       case baseInstructor:
-        return MaterialPageRoute(builder: (_) => HomeInstructor());
+        return MaterialPageRoute(builder: (_) => const HomeInstructor());
       default:
         return MaterialPageRoute(builder: (_) => const HomePage());
     }

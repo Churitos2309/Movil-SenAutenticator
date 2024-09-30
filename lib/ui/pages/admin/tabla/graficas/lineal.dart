@@ -224,7 +224,7 @@ class GraficaDeBarras extends StatelessWidget {
   const GraficaDeBarras({super.key});
 
   Future<Map<String, int>?> fetchData() async {
-    final String apiUrl =
+    const String apiUrl =
         'https://backendsenauthenticator.up.railway.app/api/usuarios/';
     final response = await http.get(Uri.parse(apiUrl));
 
@@ -358,7 +358,7 @@ class GraficaDeBarras extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              gridData: FlGridData(
+                              gridData: const FlGridData(
                                 show: true,
                                 horizontalInterval: 1,
                                 drawVerticalLine: false,

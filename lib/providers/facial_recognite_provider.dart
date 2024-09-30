@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:reconocimiento_app/services/api_services.dart';
 
 class FacialRecognitionProvider with ChangeNotifier {
@@ -25,9 +25,13 @@ class FacialRecognitionProvider with ChangeNotifier {
         numeroDocumento: numeroDocumento,
         faceImage: faceImage,
       );
-      print('Registro exitoso: $response');
+      if (kDebugMode) {
+        print('Registro exitoso: $response');
+      }
     } catch (e) {
-      print('Error en el registro facial: $e');
+      if (kDebugMode) {
+        print('Error en el registro facial: $e');
+      }
     } finally {
       _isLoading = false;
       notifyListeners();

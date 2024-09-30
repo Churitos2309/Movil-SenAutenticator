@@ -8,7 +8,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 
 class RegisterFacePage extends StatefulWidget {
+  const RegisterFacePage({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _RegisterFacePageState createState() => _RegisterFacePageState();
 }
 
@@ -75,7 +78,7 @@ class _RegisterFacePageState extends State<RegisterFacePage> {
         print("Rostro registrado exitosamente: ${decodedResponse['message']}");
         // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         // content:
-        Text('Rostro registrado exitosamente.');
+        const Text('Rostro registrado exitosamente.');
         // ));
       } else {
         var errorData = await response.stream.bytesToString();
@@ -96,24 +99,24 @@ class _RegisterFacePageState extends State<RegisterFacePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Registrar Rostro'),
+        title: const Text('Registrar Rostro'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _image == null
-                ? Text('No se ha seleccionado ninguna imagen.')
+                ? const Text('No se ha seleccionado ninguna imagen.')
                 : Image.file(_image!),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _pickImage,
-              child: Text('Tomar Foto'),
+              child: const Text('Tomar Foto'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _registerFace,
-              child: Text('Registrar Rostro'),
+              child: const Text('Registrar Rostro'),
             ),
           ],
         ),

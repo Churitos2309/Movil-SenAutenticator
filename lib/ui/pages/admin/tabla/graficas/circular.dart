@@ -3,7 +3,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:reconocimiento_app/services/api_services.dart';
 
 class GraficaCircular extends StatefulWidget {
+  const GraficaCircular({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _GraficaCircularState createState() => _GraficaCircularState();
 }
 
@@ -90,8 +93,8 @@ class _GraficaCircularState extends State<GraficaCircular> {
             ),
             const SizedBox(height: 16.0),
             isLoading
-                ? CircularProgressIndicator() // Muestra un spinner mientras se cargan los datos
-                : Container(
+                ? const CircularProgressIndicator() // Muestra un spinner mientras se cargan los datos
+                : SizedBox(
                     height: 200, // Ajusta el tamaño según necesites
                     child: PieChart(
                       PieChartData(
