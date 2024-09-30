@@ -148,7 +148,7 @@ class _HomeScreenAdminState extends State<HomeScreenAdmin> {
             left: BorderSide(color: Colors.black, width: 1),
           ),
         ),
-        groupsSpace: 50, // Aumenta el espacio entre grupos de barras
+        groupsSpace: 200, // Aumenta el espacio entre grupos de barras
       ),
     );
   }
@@ -203,11 +203,11 @@ class _HomeScreenAdminState extends State<HomeScreenAdmin> {
                             final roleCounts = snapshot.data!;
                             if (kDebugMode) {
                               print(
-                                'Building BarChart with roleCounts: $roleCounts');
+                                  'Building BarChart with roleCounts: $roleCounts');
                             } // Depuración
 
                             // Calcular el ancho necesario basado en la cantidad de roles
-                            double chartWidth = roleCounts.length * 60.0;
+                            double chartWidth = roleCounts.length * 120.0;
                             double screenWidth =
                                 MediaQuery.of(context).size.width;
                             if (chartWidth < screenWidth) {
@@ -215,7 +215,7 @@ class _HomeScreenAdminState extends State<HomeScreenAdmin> {
                             }
 
                             return Container(
-                              height: 500, // Aumenta la altura de la gráfica
+                              height: 700, // Aumenta la altura de la gráfica
                               margin: const EdgeInsets.only(bottom: 10),
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(

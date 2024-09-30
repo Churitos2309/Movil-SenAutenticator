@@ -181,7 +181,7 @@ class _HomeScreenInstructorState extends State<HomeScreenInstructor> {
                   );
                 }
               },
-              imagePath: 'images/login/SENA1.jpg', // Imagen de fondo
+              imagePath: 'images/login/SENACAUCA.jpg', // Imagen de fondo
             ),
           ],
         ),

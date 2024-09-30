@@ -8,7 +8,6 @@ class FichasScreen extends StatefulWidget {
   const FichasScreen({required this.programaId, super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _FichasScreenState createState() => _FichasScreenState();
 }
 
@@ -54,8 +53,7 @@ class _FichasScreenState extends State<FichasScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            UsuariosScreen(fichaId: fichaId, numeroFicha: numeroFicha),
+        builder: (context) => UsuariosScreen(fichaId: fichaId, numeroFicha: numeroFicha),
       ),
     );
   }
@@ -81,8 +79,7 @@ class _FichasScreenState extends State<FichasScreen> {
                     ? Center(
                         child: Text(
                           'No hay fichas disponibles.',
-                          style:
-                              TextStyle(fontSize: 16, color: Colors.grey[600]),
+                          style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                         ),
                       )
                     : Column(
@@ -103,8 +100,7 @@ class _FichasScreenState extends State<FichasScreen> {
                                       labelText: 'Buscar por número de ficha',
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
-                                        borderSide:
-                                            const BorderSide(color: primaryColor),
+                                        borderSide: const BorderSide(color: primaryColor),
                                       ),
                                       filled: true,
                                       fillColor: Colors.white,
@@ -119,39 +115,19 @@ class _FichasScreenState extends State<FichasScreen> {
                             decoration: BoxDecoration(
                               border: Border.all(
                                   color: Colors.transparent,
-                                  width:
-                                      1), // Sin borde negro, solo color transparente
-                              borderRadius: BorderRadius.circular(
-                                  16), // Borde más redondeado
-                              color: primaryColor, // Color de fondo verde
+                                  width: 1),
+                              borderRadius: BorderRadius.circular(16),
+                              color: primaryColor,
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Expanded(
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 16.0),
+                                    padding: const EdgeInsets.symmetric(vertical: 16.0),
                                     child: const Center(
                                       child: Text(
-                                        'Número Ficha',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18,
-                                          color: Colors
-                                              .white, // Cambiamos el color del texto a blanco
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 16.0),
-                                    child: const Center(
-                                      child: Text(
-                                        'Aprendices Matriculados',
+                                        'Ficha',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 18,
@@ -163,11 +139,10 @@ class _FichasScreenState extends State<FichasScreen> {
                                 ),
                                 Expanded(
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 16.0),
+                                    padding: const EdgeInsets.symmetric(vertical: 16.0),
                                     child: const Center(
                                       child: Text(
-                                        'Aprendices Actuales',
+                                        'Aprendices',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 18,
@@ -179,8 +154,7 @@ class _FichasScreenState extends State<FichasScreen> {
                                 ),
                                 Expanded(
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 16.0),
+                                    padding: const EdgeInsets.symmetric(vertical: 16.0),
                                     child: const Center(
                                       child: Text(
                                         'Jornada',
@@ -204,72 +178,47 @@ class _FichasScreenState extends State<FichasScreen> {
                                 scrollDirection: Axis.horizontal,
                                 child: ConstrainedBox(
                                   constraints: BoxConstraints(
-                                    minWidth:
-                                        screenWidth, // Para hacerlo responsivo
+                                    minWidth: screenWidth,
                                   ),
                                   child: SingleChildScrollView(
                                     scrollDirection: Axis.vertical,
                                     child: DataTable(
                                       showCheckboxColumn: false,
                                       columnSpacing: defaultPadding,
-                                      // ignore: deprecated_member_use
-                                      dataRowHeight:
-                                          50.0, // Filas más compactas
-                                      headingRowHeight:
-                                          0, // Ocultar el encabezado de la tabla (ya no es necesario)
-                                      dataRowColor:
-                                          WidgetStateProperty.resolveWith(
+                                      dataRowHeight: 50.0,
+                                      headingRowHeight: 0,
+                                      dataRowColor: MaterialStateProperty.resolveWith(
                                         (states) => Colors.transparent,
                                       ),
                                       border: TableBorder(
                                         horizontalInside: BorderSide(
                                           color: Colors.grey.withOpacity(0.3),
-                                          width: 1, // Línea fina entre filas
+                                          width: 1,
                                         ),
                                       ),
                                       columns: <DataColumn>[
-                                        DataColumn(
-                                          label:
-                                              Container(), // Columna vacía para que no aparezca encabezado duplicado
-                                        ),
-                                        DataColumn(
-                                          label:
-                                              Container(), // Columna vacía para que no aparezca encabezado duplicado
-                                        ),
-                                        DataColumn(
-                                          label:
-                                              Container(), // Columna vacía para que no aparezca encabezado duplicado
-                                        ),
-                                        DataColumn(
-                                          label:
-                                              Container(), // Columna vacía para que no aparezca encabezado duplicado
-                                        ),
+                                        DataColumn(label: Container()), // Columna vacía para evitar duplicados
+                                        DataColumn(label: Container()),
+                                        DataColumn(label: Container()),
                                       ],
                                       rows: fichas.where((ficha) {
-                                        // Filtrar por número de ficha
                                         return ficha['numero_ficha']
                                             .toString()
                                             .toLowerCase()
-                                            .contains(
-                                                searchQuery.toLowerCase());
+                                            .contains(searchQuery.toLowerCase());
                                       }).map<DataRow>((ficha) {
                                         return DataRow(
                                           cells: <DataCell>[
                                             DataCell(
                                               Container(
                                                 alignment: Alignment.centerLeft,
-                                                padding: const EdgeInsets.symmetric(
-                                                    vertical: 8.0,
-                                                    horizontal: 16.0),
+                                                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                                                 decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                  color: Colors.white
-                                                      .withOpacity(0.5),
+                                                  borderRadius: BorderRadius.circular(12),
+                                                  color: Colors.white.withOpacity(0.5),
                                                   boxShadow: [
                                                     BoxShadow(
-                                                      color: Colors.black
-                                                          .withOpacity(0.05),
+                                                      color: Colors.black.withOpacity(0.05),
                                                       spreadRadius: 2,
                                                       blurRadius: 8,
                                                       offset: const Offset(0, 4),
@@ -289,18 +238,13 @@ class _FichasScreenState extends State<FichasScreen> {
                                             DataCell(
                                               Container(
                                                 alignment: Alignment.centerLeft,
-                                                padding: const EdgeInsets.symmetric(
-                                                    vertical: 8.0,
-                                                    horizontal: 16.0),
+                                                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                                                 decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                  color: Colors.white
-                                                      .withOpacity(0.5),
+                                                  borderRadius: BorderRadius.circular(12),
+                                                  color: Colors.white.withOpacity(0.5),
                                                   boxShadow: [
                                                     BoxShadow(
-                                                      color: Colors.black
-                                                          .withOpacity(0.05),
+                                                      color: Colors.black.withOpacity(0.05),
                                                       spreadRadius: 2,
                                                       blurRadius: 8,
                                                       offset: const Offset(0, 4),
@@ -308,8 +252,7 @@ class _FichasScreenState extends State<FichasScreen> {
                                                   ],
                                                 ),
                                                 child: Text(
-                                                  ficha['aprendices_matriculados_ficha']
-                                                      .toString(),
+                                                  ficha['aprendices_matriculados_ficha'].toString(),
                                                   style: const TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 16,
@@ -321,18 +264,13 @@ class _FichasScreenState extends State<FichasScreen> {
                                             DataCell(
                                               Container(
                                                 alignment: Alignment.centerLeft,
-                                                padding: const EdgeInsets.symmetric(
-                                                    vertical: 8.0,
-                                                    horizontal: 16.0),
+                                                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                                                 decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                  color: Colors.white
-                                                      .withOpacity(0.5),
+                                                  borderRadius: BorderRadius.circular(12),
+                                                  color: Colors.white.withOpacity(0.5),
                                                   boxShadow: [
                                                     BoxShadow(
-                                                      color: Colors.black
-                                                          .withOpacity(0.05),
+                                                      color: Colors.black.withOpacity(0.05),
                                                       spreadRadius: 2,
                                                       blurRadius: 8,
                                                       offset: const Offset(0, 4),
@@ -340,39 +278,7 @@ class _FichasScreenState extends State<FichasScreen> {
                                                   ],
                                                 ),
                                                 child: Text(
-                                                  ficha['aprendices_actuales_ficha']
-                                                      .toString(),
-                                                  style: const TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            DataCell(
-                                              Container(
-                                                alignment: Alignment.centerLeft,
-                                                padding: const EdgeInsets.symmetric(
-                                                    vertical: 8.0,
-                                                    horizontal: 16.0),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                  color: Colors.white
-                                                      .withOpacity(0.5),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black
-                                                          .withOpacity(0.05),
-                                                      spreadRadius: 2,
-                                                      blurRadius: 8,
-                                                      offset: const Offset(0, 4),
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: Text(
-                                                  ficha['jornada'] ?? '',
+                                                  ficha['jornada_ficha'] ?? '', // Cambiado para usar jornada_ficha
                                                   style: const TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 16,
@@ -383,8 +289,7 @@ class _FichasScreenState extends State<FichasScreen> {
                                             ),
                                           ],
                                           onSelectChanged: (selected) {
-                                            showUserDetails(ficha['id'],
-                                                ficha['numero_ficha']);
+                                            showUserDetails(ficha['id'], ficha['numero_ficha']);
                                           },
                                         );
                                       }).toList(),

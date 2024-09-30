@@ -13,18 +13,20 @@ class _ObjetosAdminPageState extends State<ObjetosAdminPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Componente Panel (con texto y tabla)
-            Panel(),
-            // const SizedBox(height: 16),
-            // // Componente Resumen
-            // const Resumen(),
-          ],
+    return SingleChildScrollView( // Envuelve todo el contenido en un scroll
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              // Componente Panel (con texto y tabla)
+              Panel(),
+              // const SizedBox(height: 16),
+              // // Componente Resumen
+              // const Resumen(),
+            ],
+          ),
         ),
       ),
     );

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:reconocimiento_app/services/api_services.dart';
 
@@ -6,7 +5,6 @@ class HomeAprendizScreen extends StatefulWidget {
   const HomeAprendizScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _HomeAprendizScreenState createState() => _HomeAprendizScreenState();
 }
 
@@ -35,121 +33,54 @@ class _HomeAprendizScreenState extends State<HomeAprendizScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
+    return Scaffold(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: FutureBuilder<List<dynamic>>(
           future: _objetos,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CupertinoActivityIndicator());
+              return const Center(child: CircularProgressIndicator()); // Indicador de carga normal
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return const Center(child: Text('No hay objetos registrados.'));
             } else {
               final List<dynamic> objetos = snapshot.data!;
-              return ListView.builder(
-                itemCount: objetos.length,
-                itemBuilder: (context, index) {
-                  final objeto = objetos[index];
-                  final imageUrl = objeto['foto_objeto'] ?? '';
-
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 16.0),
-                    decoration: BoxDecoration(
-                      color: CupertinoColors.white,
-                      borderRadius: BorderRadius.circular(12.0),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 5.0,
-                          spreadRadius: 0.5,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Mostrar la imagen
-                          imageUrl.isNotEmpty
-                              ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  child: Image.network(
-                                    imageUrl,
-                                    height: 100,
-                                    width: 100,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Container(
-                                        color: Colors.grey.shade200,
-                                        height: 100,
-                                        width: 100,
-                                        child: const Center(
-                                          child: Icon(
-                                            Icons.error,
-                                            color: Colors.red,
-                                            size: 50,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                )
-                              : Container(
-                                  color: Colors.grey.shade200,
-                                  height: 100,
-                                  width: 100,
-                                  child: const Center(
-                                    child: Icon(
-                                      Icons.image,
-                                      color: Colors.grey,
-                                      size: 50,
-                                    ),
-                                  ),
-                                ),
-                          const SizedBox(width: 16.0),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Marca: ${objeto['marca_objeto'] ?? 'Desconocida'}',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16.0,
-                                  ),
-                                ),
-                                const SizedBox(height: 8.0),
-                                Text(
-                                  'Modelo: ${objeto['modelo_objeto'] ?? 'Desconocido'}',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16.0,
-                                  ),
-                                ),
-                                const SizedBox(height: 8.0),
-                                Text(
-                                  'Descripción: ${objeto['descripcion_objeto'] ?? 'No disponible'}',
-                                  style: const TextStyle(
-                                    fontSize: 14.0,
-                                    color: CupertinoColors.inactiveGray,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Center(
+                    child: Text(
+                      "Previa vista",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
                     ),
-                  );
-                },
+                  ),
+                  const SizedBox(height: 16.0),
+                  Expanded(
+                    child: GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 1,
+                        mainAxisSpacing: 16.0,
+                        crossAxisSpacing: 16.0,
+                      ),
+                      itemCount: objetos.length,
+                      itemBuilder: (context, index) {
+                        final objeto = objetos[index];
+                        final imageUrl = objeto['foto_objeto'] ?? '';
+
+                        return _buildLargeImageCard(imageUrl);
+                      },
+                    ),
+                  ),
+                ],
               );
             }
           },
@@ -157,4 +88,49 @@ class _HomeAprendizScreenState extends State<HomeAprendizScreen> {
       ),
     );
   }
+
+  // Método para construir los campos grandes con imágenes
+  Widget _buildLargeImageCard(String imageUrl) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 3,
+            blurRadius: 5,
+            offset: const Offset(0, 3), // Sombra
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Image.network(
+          imageUrl,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              color: Colors.grey.shade200,
+              child: const Center(
+                child: Icon(
+                  Icons.error,
+                  color: Colors.red,
+                  size: 50,
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: HomeAprendizScreen(),
+  ));
 }
