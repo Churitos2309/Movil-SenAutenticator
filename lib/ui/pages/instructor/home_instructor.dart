@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math'; // Para seleccionar aleatoriamente
 import 'package:reconocimiento_app/services/api_services.dart';
-import './Fichas_Instructor/Usuarios_aprendiz/Usuarios.dart';
+import 'fichas_instructor/usuarios_aprendiz/usuarios.dart';
 
 
 class HomeScreenInstructor extends StatefulWidget {
@@ -24,7 +24,7 @@ class _HomeScreenInstructorState extends State<HomeScreenInstructor> {
   // Función para obtener fichas de la API
   void fetchFichas() async {
     try {
-      final data = await apiService.post('fichas/');
+      final data = await apiService.get('fichas/');
       setState(() {
         fichas = data;
       });
@@ -90,7 +90,7 @@ class _HomeScreenInstructorState extends State<HomeScreenInstructor> {
               },
               imagePath: 'images/login/sena-cauca.jpg', // Imagen de fondo
             ),
-            SizedBox(height: defaultPadding), // Espacio entre campos
+            const SizedBox(height: defaultPadding), // Espacio entre campos
 
             // Campo 2
             _buildField(
@@ -113,7 +113,7 @@ class _HomeScreenInstructorState extends State<HomeScreenInstructor> {
               },
               imagePath: 'images/login/SENA1.jpg', // Imagen de fondo
             ),
-            SizedBox(height: defaultPadding), // Espacio entre campos
+            const SizedBox(height: defaultPadding), // Espacio entre campos
 
             // Campo 3
             _buildField(
@@ -137,7 +137,7 @@ class _HomeScreenInstructorState extends State<HomeScreenInstructor> {
               imagePath: 'images/login/SENACAUCA.jpg', // Imagen de fondo
             ),
 
-            SizedBox(height: defaultPadding), // Espacio entre campos
+            const SizedBox(height: defaultPadding), // Espacio entre campos
             
             // Campo 4
             _buildField(
@@ -160,7 +160,7 @@ class _HomeScreenInstructorState extends State<HomeScreenInstructor> {
               },
               imagePath: 'images/login/SENA1.jpg', // Imagen de fondo
             ),
-            SizedBox(height: defaultPadding), // Espacio entre campos
+            const SizedBox(height: defaultPadding), // Espacio entre campos
 
             // Campo 5
             _buildField(
@@ -218,7 +218,7 @@ class _HomeScreenInstructorState extends State<HomeScreenInstructor> {
                   color: Colors.black.withOpacity(0.1),
                   spreadRadius: 3,
                   blurRadius: 8,
-                  offset: Offset(0, 6), // Sombra suave y más dispersa
+                  offset: const Offset(0, 6), // Sombra suave y más dispersa
                 ),
               ],
             ),
@@ -241,14 +241,14 @@ class _HomeScreenInstructorState extends State<HomeScreenInstructor> {
                   ),
                   child: Text(
                     title,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18, // Tamaño de fuente ajustado
                       fontWeight: FontWeight.bold,
                       color: Colors.white, // Contraste con el fondo
                     ),
                   ),
                 ),
-                SizedBox(height: 6.0), // Menos espacio entre el título y la descripción
+                const SizedBox(height: 6.0), // Menos espacio entre el título y la descripción
 
                 // Fondo degradado para la descripción
                 Container(
@@ -263,20 +263,20 @@ class _HomeScreenInstructorState extends State<HomeScreenInstructor> {
                   ),
                   child: Text(
                     description,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14, // Tamaño de fuente ajustado
                       color: Colors.white,
                     ),
                   ),
                 ),
-                Spacer(), // Empuja el botón hacia abajo
+                const Spacer(), // Empuja el botón hacia abajo
 
                 // Botón con un estilo más moderno
                 ElevatedButton(
                   onPressed: onPressed,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white.withOpacity(0.9), // Fondo semitransparente
-                    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0), // Menos padding
+                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0), // Menos padding
                     elevation: 6, // Efecto de elevación más pronunciado
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16.0), // Bordes más redondeados
@@ -284,7 +284,7 @@ class _HomeScreenInstructorState extends State<HomeScreenInstructor> {
                   ),
                   child: Text(
                     buttonText,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black87, // Texto más oscuro para contraste con el botón
                       fontWeight: FontWeight.bold,
                     ),

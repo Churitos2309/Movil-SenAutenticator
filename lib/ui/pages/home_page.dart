@@ -11,6 +11,7 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _HomePageState createState() => _HomePageState();
 }
 
@@ -21,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   // Posiciones para hacer scroll
 
   // Bandera de carga
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
   @override
   void initState() {
@@ -135,7 +136,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(height: 20),
                 const SizedBox(height: 20),
-                Container(
+                SizedBox(
                   width: double.infinity,
                   height: 310,
                   child: Column(
@@ -357,24 +358,24 @@ class _HomePageState extends State<HomePage> {
                   width: double.infinity,
                   height: 600,
                   color: const Color.fromARGB(50, 158, 158, 158),
-                  child: Column(
+                  child: const Column(
                     children: [
-                      const Text(
+                      Text(
                         'Sobre la App',
                         style: TextStyle(
                             fontSize: 25,
                             fontStyle: FontStyle.italic,
                             decoration: TextDecoration.underline),
                       ),
-                      const SizedBox(
+                      SizedBox(
                         height: 20,
                       ),
                       Row(
                         children: [
                           Expanded(
-                            child: Container(
+                            child: SizedBox(
                               width: double.infinity,
-                              child: const Column(
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Card(
@@ -493,19 +494,19 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
-                Container(
+                const SizedBox(
                   width: double.infinity,
                   height: 300,
                   child: Column(
                     children: [
-                      const Text(
+                      Text(
                         'Testimonios',
                         style: TextStyle(
                             fontSize: 25,
                             fontStyle: FontStyle.italic,
                             decoration: TextDecoration.underline),
                       ),
-                      const SizedBox(
+                      SizedBox(
                         height: 50,
                       ),
                       SingleChildScrollView(
@@ -514,9 +515,9 @@ class _HomePageState extends State<HomePage> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Container(
+                            SizedBox(
                               width: 230,
-                              child: const Card(
+                              child: Card(
                                 elevation: 4,
                                 margin: EdgeInsets.all(8.0),
                                 child: Padding(
@@ -535,9 +536,9 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                             ),
-                            Container(
+                            SizedBox(
                               width: 230,
-                              child: const Card(
+                              child: Card(
                                 elevation: 4,
                                 margin: EdgeInsets.all(8.0),
                                 child: Padding(
@@ -556,9 +557,9 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                             ),
-                            Container(
+                            SizedBox(
                               width: 230,
-                              child: const Card(
+                              child: Card(
                                 elevation: 4,
                                 margin: EdgeInsets.all(8.0),
                                 child: Padding(
@@ -577,9 +578,9 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                             ),
-                            Container(
+                            SizedBox(
                               width: 230,
-                              child: const Card(
+                              child: Card(
                                 elevation: 4,
                                 margin: EdgeInsets.all(8.0),
                                 child: Padding(
@@ -624,11 +625,11 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ],
                       ),
-                      child: Column(
+                      child: const Column(
                         crossAxisAlignment:
                             CrossAxisAlignment.start, // Alineación del texto
                         children: [
-                          const Text(
+                          Text(
                             'Últimas Noticias',
                             style: TextStyle(
                               fontSize: 25,
@@ -636,12 +637,12 @@ class _HomePageState extends State<HomePage> {
                               decoration: TextDecoration.underline,
                             ),
                           ),
-                          const SizedBox(
+                          SizedBox(
                               height:
                                   16), // Espacio entre el título y el contenido
-                          Container(
+                          SizedBox(
                             height: 300,
-                            child: const Flexible(
+                            child: Flexible(
                               fit: FlexFit.loose,
                               child: Padding(
                                 padding: EdgeInsets.all(8.0),
@@ -735,7 +736,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Container(
@@ -813,16 +814,16 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-        bottomNavigationBar: BottonNavScreen());
+        bottomNavigationBar: const BottonNavScreen());
   }
 
-  void _scrollToPosition(double position) {
-    _scrollController.animateTo(
-      position,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-    );
-  }
+  // void _scrollToPosition(double position) {
+  //   _scrollController.animateTo(
+  //     position,
+  //     duration: const Duration(milliseconds: 500),
+  //     curve: Curves.easeInOut,
+  //   );
+  // }
 
   void _showModalCard(BuildContext context, Widget card) {
     showModalBottomSheet(

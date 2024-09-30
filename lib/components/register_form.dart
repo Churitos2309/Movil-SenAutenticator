@@ -6,11 +6,11 @@ class RegisterForm extends StatelessWidget {
   final TextEditingController passwordController;
 
   const RegisterForm({
-    Key? key,
+    super.key,
     required this.formKey,
     required this.emailController,
     required this.passwordController,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class RegisterForm extends StatelessWidget {
         children: [
           TextFormField(
             controller: emailController,
-            decoration: InputDecoration(labelText: 'Email'),
+            decoration: const InputDecoration(labelText: 'Email'),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your email';
@@ -30,7 +30,7 @@ class RegisterForm extends StatelessWidget {
           ),
           TextFormField(
             controller: passwordController,
-            decoration: InputDecoration(labelText: 'Password'),
+            decoration: const InputDecoration(labelText: 'Password'),
             obscureText: true,
             validator: (value) {
               if (value == null || value.isEmpty) {

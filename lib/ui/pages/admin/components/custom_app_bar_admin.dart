@@ -6,7 +6,7 @@ import 'package:reconocimiento_app/ui/router.dart';
 class CustomAppBarAdmin extends StatelessWidget implements PreferredSizeWidget {
   final String title;
 
-  CustomAppBarAdmin({required this.title});
+  const CustomAppBarAdmin({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {

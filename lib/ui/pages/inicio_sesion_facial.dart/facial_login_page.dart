@@ -6,7 +6,10 @@ import 'package:provider/provider.dart';
 import 'package:reconocimiento_app/providers/facial_login_provider.dart';
 
 class FacialLoginPage extends StatefulWidget {
+  const FacialLoginPage({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _FacialLoginPageState createState() => _FacialLoginPageState();
 }
 
@@ -65,7 +68,7 @@ class _FacialLoginPageState extends State<FacialLoginPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Inicio de Sesión Facial'),
+        title: const Text('Inicio de Sesión Facial'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

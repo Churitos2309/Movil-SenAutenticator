@@ -6,7 +6,10 @@ import 'package:provider/provider.dart';
 import 'package:reconocimiento_app/services/api_services.dart';
 
 class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _ProfilePageState createState() => _ProfilePageState();
 }
 
@@ -51,7 +54,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: const Text('Profile'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -63,36 +66,36 @@ class _ProfilePageState extends State<ProfilePage> {
                 onTap: _pickImage,
                 child: CircleAvatar(
                   radius: 50,
-                  backgroundImage: _image != null ? FileImage(_image!) : AssetImage('assets/default_profile.png') as ImageProvider,
+                  backgroundImage: _image != null ? FileImage(_image!) : const AssetImage('assets/default_profile.png') as ImageProvider,
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextFormField(
                 initialValue: _profileData['first_name'],
-                decoration: InputDecoration(labelText: 'First Name'),
+                decoration: const InputDecoration(labelText: 'First Name'),
                 onSaved: (value) {
                   _profileData['first_name'] = value!;
                 },
               ),
               TextFormField(
                 initialValue: _profileData['last_name'],
-                decoration: InputDecoration(labelText: 'Last Name'),
+                decoration: const InputDecoration(labelText: 'Last Name'),
                 onSaved: (value) {
                   _profileData['last_name'] = value!;
                 },
               ),
               TextFormField(
                 initialValue: _profileData['email'],
-                decoration: InputDecoration(labelText: 'Email'),
+                decoration: const InputDecoration(labelText: 'Email'),
                 onSaved: (value) {
                   _profileData['email'] = value!;
                 },
               ),
               // Agrega más campos según sea necesario
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _submitProfile,
-                child: Text('Save Profile'),
+                child: const Text('Save Profile'),
               ),
             ],
           ),

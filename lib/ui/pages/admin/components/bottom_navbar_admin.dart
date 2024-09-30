@@ -9,7 +9,10 @@ import 'package:reconocimiento_app/ui/pages/admin/objetos_page.dart';
 import 'package:reconocimiento_app/ui/pages/aprendiz/components/custom_app_bar_aprendiz.dart';
 
 class BottomNavbarAdmin extends StatefulWidget {
+  const BottomNavbarAdmin({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _BottomNavbarAdminState createState() => _BottomNavbarAdminState();
 }
 
@@ -18,9 +21,9 @@ class _BottomNavbarAdminState extends State<BottomNavbarAdmin>{
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
   final List<Widget> _screens = [
-    HomeScreenAdmin(),
-    ObjetosAdminPage(),
-    HistorialAdminPage(),
+    const HomeScreenAdmin(),
+    const ObjetosAdminPage(),
+    const HistorialAdminPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -34,7 +37,7 @@ class _BottomNavbarAdminState extends State<BottomNavbarAdmin>{
     final scrollProvider = Provider.of<ScrollProvider>(context);
 
     return Scaffold(
-      appBar: CustomAppBarAprendiz(title: 'Administrador'),
+      appBar: const CustomAppBarAprendiz(title: 'Administrador'),
       // AppBar(
       //   title: Text('App Title'),
       // ),

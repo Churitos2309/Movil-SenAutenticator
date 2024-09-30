@@ -1,10 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:reconocimiento_app/services/api_services.dart';
 
 class Panel extends StatefulWidget {
-  const Panel({Key? key}) : super(key: key);
+  const Panel({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _PanelState createState() => _PanelState();
 }
 
@@ -25,7 +27,9 @@ class _PanelState extends State<Panel> {
         usuarios = data;
       });
     } catch (e) {
-      print('Error obteniendo usuarios: $e');
+      if (kDebugMode) {
+        print('Error obteniendo usuarios: $e');
+      }
     }
   }
 
@@ -37,7 +41,7 @@ class _PanelState extends State<Panel> {
         decoration: BoxDecoration(
           color: Colors.white, // Fondo blanco limpio
           borderRadius: BorderRadius.circular(15.0), // Bordes más redondeados
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black12, // Sombra suave
               blurRadius: 10.0,
@@ -49,8 +53,8 @@ class _PanelState extends State<Panel> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Texto con estilo iOS
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 16.0),
               child: Text(
                 'Resultados de usuarios',
                 style: TextStyle(
@@ -63,7 +67,7 @@ class _PanelState extends State<Panel> {
             ),
             // Contenedor para la tabla estilizada
             Container(
-              constraints: BoxConstraints(
+              constraints: const BoxConstraints(
                 maxHeight: 250, // Altura adecuada para la tabla
               ),
               child: SingleChildScrollView(
@@ -77,7 +81,7 @@ class _PanelState extends State<Panel> {
                       fontWeight: FontWeight.w600,
                       color: Colors.grey.shade700,
                     ),
-                    dataTextStyle: TextStyle(
+                    dataTextStyle: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w500, // Texto más claro
                       color: Colors.black87, // Color oscuro sutil
@@ -120,8 +124,8 @@ class _PanelState extends State<Panel> {
           DataCell(Text(usuario['numero_documento_usuario'] ?? '')),
         ],
         // Estilo para las filas
-        color: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
-          if (states.contains(MaterialState.selected)) {
+        color: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+          if (states.contains(WidgetState.selected)) {
             return Colors.blue.shade50; // Color cuando se selecciona una fila
           }
           return null;  // Usar el color por defecto

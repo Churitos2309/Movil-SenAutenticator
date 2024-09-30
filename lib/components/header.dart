@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Header extends StatelessWidget {
   final String title;
 
-  const Header({Key? key, required this.title}) : super(key: key);
+  const Header({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +11,7 @@ class Header extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Text(
         title,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.bold,
           color: Colors.black,

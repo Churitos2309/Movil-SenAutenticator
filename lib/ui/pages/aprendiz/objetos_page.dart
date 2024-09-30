@@ -1,14 +1,16 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'dart:convert';
-import 'dart:io';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ObjetosAprendizPage extends StatefulWidget {
-  const ObjetosAprendizPage({Key? key}) : super(key: key);
+  const ObjetosAprendizPage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ObjetosAprendizPageState createState() => _ObjetosAprendizPageState();
 }
 
@@ -21,7 +23,8 @@ class _ObjetosAprendizPageState extends State<ObjetosAprendizPage> {
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>(); // Key para el formulario
 
-  static const Color primaryColor = Color(0xFF39a900); // Verde institucional del SENA
+  static const Color primaryColor =
+      Color(0xFF39a900); // Verde institucional del SENA
   static const double defaultPadding = 16.0;
 
   Future<void> _pickImage(ImageSource source) async {
@@ -38,14 +41,18 @@ class _ObjetosAprendizPageState extends State<ObjetosAprendizPage> {
           _image = pickedFile;
         });
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No se seleccionó ninguna imagen.')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('No se seleccionó ninguna imagen.')),
+          );
+        }
       }
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al seleccionar la imagen: $error')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error al seleccionar la imagen: $error')),
+        );
+      }
     }
   }
 
@@ -83,7 +90,9 @@ class _ObjetosAprendizPageState extends State<ObjetosAprendizPage> {
   Future<void> _submitData() async {
     if (!_formKey.currentState!.validate() || _image == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Por favor, completa todos los campos e incluye una imagen')),
+        const SnackBar(
+            content: Text(
+                'Por favor, completa todos los campos e incluye una imagen')),
       );
       return;
     }
@@ -92,7 +101,8 @@ class _ObjetosAprendizPageState extends State<ObjetosAprendizPage> {
       _isLoading = true;
     });
 
-    const String url = 'https://backendsenauthenticator.up.railway.app/api/objetos/';
+    const String url =
+        'https://backendsenauthenticator.up.railway.app/api/objetos/';
 
     final request = http.MultipartRequest('POST', Uri.parse(url))
       ..fields['marca_objeto'] = _marcaController.text
@@ -117,9 +127,11 @@ class _ObjetosAprendizPageState extends State<ObjetosAprendizPage> {
       final response = await request.send();
 
       if (response.statusCode == 201) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Objeto creado exitosamente')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Objeto creado exitosamente')),
+          );
+        }
         _marcaController.clear();
         _modeloController.clear();
         _descripcionController.clear();
@@ -130,23 +142,26 @@ class _ObjetosAprendizPageState extends State<ObjetosAprendizPage> {
       } else {
         final responseBody = await response.stream.bytesToString();
         final errorResponse = jsonDecode(responseBody);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al crear el objeto: ${response.statusCode} - ${errorResponse['message'] ?? 'Sin detalles'}')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text(
+                    'Error al crear el objeto: ${response.statusCode} - ${errorResponse['message'] ?? 'Sin detalles'}')),
+          );
+        }
       }
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al crear el objeto: $error')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error al crear el objeto: $error')),
+        );
+      }
     } finally {
       setState(() {
         _isLoading = false;
       });
     }
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -189,7 +204,8 @@ class _ObjetosAprendizPageState extends State<ObjetosAprendizPage> {
                           TextFormField(
                             controller: _marcaController,
                             decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.branding_watermark, color: primaryColor),
+                              prefixIcon: const Icon(Icons.branding_watermark,
+                                  color: primaryColor),
                               labelText: 'Marca del objeto',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12.0),
@@ -209,7 +225,8 @@ class _ObjetosAprendizPageState extends State<ObjetosAprendizPage> {
                           TextFormField(
                             controller: _modeloController,
                             decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.device_hub, color: primaryColor),
+                              prefixIcon:
+                                  const Icon(Icons.device_hub, color: primaryColor),
                               labelText: 'Modelo del objeto',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12.0),
@@ -230,7 +247,8 @@ class _ObjetosAprendizPageState extends State<ObjetosAprendizPage> {
                             controller: _descripcionController,
                             maxLines: 3,
                             decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.description, color: primaryColor),
+                              prefixIcon:
+                                  const Icon(Icons.description, color: primaryColor),
                               labelText: 'Descripción del objeto',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12.0),
@@ -250,7 +268,8 @@ class _ObjetosAprendizPageState extends State<ObjetosAprendizPage> {
                           TextFormField(
                             controller: _usuarioController,
                             decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.person, color: primaryColor),
+                              prefixIcon:
+                                  const Icon(Icons.person, color: primaryColor),
                               labelText: 'Usuario del objeto',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12.0),
@@ -277,7 +296,8 @@ class _ObjetosAprendizPageState extends State<ObjetosAprendizPage> {
                                   image: DecorationImage(
                                     image: kIsWeb
                                         ? NetworkImage(_image!.path)
-                                        : FileImage(File(_image!.path)) as ImageProvider,
+                                        : FileImage(File(_image!.path))
+                                            as ImageProvider,
                                     fit: BoxFit.cover,
                                   ),
                                   boxShadow: [
@@ -295,18 +315,21 @@ class _ObjetosAprendizPageState extends State<ObjetosAprendizPage> {
                           Center(
                             child: ElevatedButton.icon(
                               onPressed: _selectImageSource,
-                              icon: Icon(Icons.image, color: primaryColor),
+                              icon: const Icon(Icons.image, color: primaryColor),
                               label: Text(
-                                _image == null ? 'Seleccionar imagen' : 'Cambiar imagen',
-                                style: TextStyle(color: primaryColor),
+                                _image == null
+                                    ? 'Seleccionar imagen'
+                                    : 'Cambiar imagen',
+                                style: const TextStyle(color: primaryColor),
                               ),
                               style: ElevatedButton.styleFrom(
                                 iconColor: Colors.white, // Fondo blanco
-                                side: BorderSide(color: primaryColor),
+                                side: const BorderSide(color: primaryColor),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12.0),
                                 ),
-                                padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 12.0, horizontal: 20.0),
                               ),
                             ),
                           ),
@@ -317,9 +340,20 @@ class _ObjetosAprendizPageState extends State<ObjetosAprendizPage> {
                               width: double.infinity,
                               child: ElevatedButton(
                                 onPressed: _isLoading ? null : _submitData,
+                                style: ElevatedButton.styleFrom(
+                                  iconColor: primaryColor,
+                                  shadowColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 14.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                ),
                                 child: _isLoading
                                     ? const CircularProgressIndicator(
-                                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                Colors.white),
                                       )
                                     : const Text(
                                         'Enviar',
@@ -328,14 +362,6 @@ class _ObjetosAprendizPageState extends State<ObjetosAprendizPage> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                style: ElevatedButton.styleFrom(
-                                  iconColor: primaryColor,
-                                  shadowColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(vertical: 14.0),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                  ),
-                                ),
                               ),
                             ),
                           ),
