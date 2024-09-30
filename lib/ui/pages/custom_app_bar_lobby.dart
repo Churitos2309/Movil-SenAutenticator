@@ -23,6 +23,7 @@ class CustomAppBarLobby extends StatelessWidget implements PreferredSizeWidget {
             child: const ImageIcon(
               AssetImage('images/login/LogoReconocimientoFacialBlanco.png'),
               color: Colors.white,
+              size: 35,
             ),
           ),
           const SizedBox(width: 10),

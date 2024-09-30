@@ -120,9 +120,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
         }
       } else {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Error al registrar')),
-          );
+          // ignore: unnecessary_null_comparison
+          if (responseData == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Error al registrar')),
+            );
+          } else {
+            Navigator.popAndPushNamed(context, Routes.login);
+          }
         }
       }
     } catch (e) {

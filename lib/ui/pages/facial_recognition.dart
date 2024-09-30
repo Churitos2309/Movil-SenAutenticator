@@ -3,11 +3,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:reconocimiento_app/services/api_services.dart';
 import 'package:reconocimiento_app/providers/facial_recognite_provider.dart';
+import 'package:reconocimiento_app/services/api_services.dart';
 
 class FacialRecognitionPage extends StatefulWidget {
-  const FacialRecognitionPage(ApiService apiService, {super.key});
+  
+
+  final ApiService apiService;
+
+  const FacialRecognitionPage(this.apiService, {super.key});
 
   @override
   // ignore: library_private_types_in_public_api

@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:reconocimiento_app/ui/router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-
 // ignore: unused_element
-Future<void> _checkAuth(BuildContext context, String route)async {
-
+Future<void> _checkAuth(BuildContext context, String route) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   if (!prefs.containsKey('token')) {
-    Navigator.pushReplacementNamed(context, '/login');
-  }else {
-    Navigator.pushNamed(context, route);
+    if (context.mounted) {
+      Navigator.pushReplacementNamed(context, Routes.login);
+    }
+  } else {
+    if (context.mounted) {
+      Navigator.pushNamed(context, route);
+    }
   }
-
 }
