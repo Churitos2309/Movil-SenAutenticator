@@ -10,6 +10,7 @@ class AdminPage extends StatefulWidget {
   const AdminPage({super.key, required this.body, required this.currentIndex});
 
   @override
+  // ignore: library_private_types_in_public_api
   _AdminPageState createState() => _AdminPageState();
 }
 
@@ -20,6 +21,7 @@ class _AdminPageState extends State<AdminPage> {
     super.initState();
   }
 
+  // ignore: unused_element
   void _onItemTapped(int index) {
     setState(() {
     });
@@ -40,9 +42,9 @@ class _AdminPageState extends State<AdminPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarAdmin(title: 'Aprendiz'),
+      appBar: const CustomAppBarAdmin(title: 'Aprendiz'),
       body: widget.body,
-      bottomNavigationBar: BottomNavbarAdmin(
+      bottomNavigationBar: const BottomNavbarAdmin(
         // currentIndex: widget.currentIndex,
         // onItemTapped: _onItemTapped,
       ),

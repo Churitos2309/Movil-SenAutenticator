@@ -22,12 +22,12 @@ class DatosAprendiz extends StatelessWidget {
             Row(
               children: [
                 IconButton(
-                  icon: Icon(Icons.close),
+                  icon: const Icon(Icons.close),
                   onPressed: () {
                     Navigator.pop(context); // Cierra el modal
                   },
                 ),
-                Expanded(
+                const Expanded(
                   child: Center(
                     child: Text(
                       'Detalles del Aprendiz',
@@ -50,7 +50,7 @@ class DatosAprendiz extends StatelessWidget {
                 radius: 50.0,
                 backgroundImage: usuario['face_register'] != null
                     ? NetworkImage(usuario['face_register']) // Carga la imagen de la API
-                    : AssetImage('assets/default_avatar.png') as ImageProvider, // Imagen por defecto
+                    : const AssetImage('assets/default_avatar.png') as ImageProvider, // Imagen por defecto
               ),
             ),
             const SizedBox(height: 16.0),
@@ -77,7 +77,7 @@ class DatosAprendiz extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16.0,
             color: Colors.black87,
@@ -87,7 +87,7 @@ class DatosAprendiz extends StatelessWidget {
         Expanded(
           child: Text(
             value,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16.0,
               color: Colors.black54, // Color más suave para el texto
             ),

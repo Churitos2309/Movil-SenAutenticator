@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:reconocimiento_app/services/api_services.dart';
 
@@ -6,6 +7,7 @@ class HistorialAprendizPage extends StatefulWidget {
   const HistorialAprendizPage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _HistorialAprendizPageState createState() => _HistorialAprendizPageState();
 }
 
@@ -21,15 +23,21 @@ class _HistorialAprendizPageState extends State<HistorialAprendizPage> {
   Future<List<dynamic>> fetchObjetos() async {
     try {
       ApiService apiService = ApiService();
-      print('Fetching objects...');
+      if (kDebugMode) {
+        print('Fetching objects...');
+      }
       final response = await apiService.get('objetos/');
       if (response.isEmpty) {
         throw Exception("No hay objetos disponibles");
       }
-      print('Objects fetched: ${response.length}');
+      if (kDebugMode) {
+        print('Objects fetched: ${response.length}');
+      }
       return response;
     } catch (e) {
-      print('Error fetching objects: $e');
+      if (kDebugMode) {
+        print('Error fetching objects: $e');
+      }
       throw Exception('Error al obtener los objetos: $e');
     }
   }

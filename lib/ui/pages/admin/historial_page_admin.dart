@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'tabla/graficas.dart';
 
 class HistorialAdminPage extends StatelessWidget {
-  const HistorialAdminPage({Key? key}) : super(key: key);
+  const HistorialAdminPage({super.key});
   
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class HistorialAdminPage extends StatelessWidget {
               const SizedBox(height: 16.0),
 
               // Importar y mostrar el widget de gráficas
-              Graficas(),
+              const Graficas(),
             ],
           ),
         ),

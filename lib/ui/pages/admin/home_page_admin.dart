@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:convert';
@@ -7,6 +8,7 @@ class HomeScreenAdmin extends StatefulWidget {
   const HomeScreenAdmin({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _HomeScreenAdminState createState() => _HomeScreenAdminState();
 }
 
@@ -21,29 +23,39 @@ class _HomeScreenAdminState extends State<HomeScreenAdmin> {
 
   // Función para obtener los datos desde la API
   Future<Map<String, int>?> fetchData() async {
-    final String apiUrl =
+    const String apiUrl =
         'https://backendsenauthenticator.up.railway.app/api/usuarios/';
     try {
       final response = await http.get(Uri.parse(apiUrl));
 
-      print('Fetching data from API: $apiUrl'); // Depuración
+      if (kDebugMode) {
+        print('Fetching data from API: $apiUrl');
+      } // Depuración
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
-        print('API response data: $data'); // Depuración
+        if (kDebugMode) {
+          print('API response data: $data');
+        } // Depuración
         Map<String, int> roleCounts = {};
         for (var user in data) {
           String role = user['rol_usuario'] ?? 'Desconocido';
           roleCounts[role] = (roleCounts[role] ?? 0) + 1;
         }
-        print('Role counts: $roleCounts'); // Depuración
+        if (kDebugMode) {
+          print('Role counts: $roleCounts');
+        } // Depuración
         return roleCounts;
       } else {
-        print('Error en la conexión: ${response.statusCode}');
+        if (kDebugMode) {
+          print('Error en la conexión: ${response.statusCode}');
+        }
         return null; // Retorna null si hay un error
       }
     } catch (e) {
-      print('Exception en fetchData: $e'); // Depuración
+      if (kDebugMode) {
+        print('Exception en fetchData: $e');
+      } // Depuración
       return null;
     }
   }
@@ -189,8 +201,10 @@ class _HomeScreenAdminState extends State<HomeScreenAdmin> {
                             return const Text('No hay datos disponibles');
                           } else {
                             final roleCounts = snapshot.data!;
-                            print(
-                                'Building BarChart with roleCounts: $roleCounts'); // Depuración
+                            if (kDebugMode) {
+                              print(
+                                'Building BarChart with roleCounts: $roleCounts');
+                            } // Depuración
 
                             // Calcular el ancho necesario basado en la cantidad de roles
                             double chartWidth = roleCounts.length * 60.0;

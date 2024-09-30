@@ -7,9 +7,10 @@ import 'package:reconocimiento_app/services/api_services.dart';
 import 'package:reconocimiento_app/providers/facial_recognite_provider.dart';
 
 class FacialRecognitionPage extends StatefulWidget {
-  const FacialRecognitionPage(ApiService apiService);
+  const FacialRecognitionPage(ApiService apiService, {super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _FacialRecognitionPageState createState() => _FacialRecognitionPageState();
 }
 

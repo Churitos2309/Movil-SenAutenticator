@@ -5,6 +5,8 @@ import 'package:particles_flutter/component/particle/particle.dart';
 import 'package:particles_flutter/particles_engine.dart';
 
 class BackgroundAnimation extends StatelessWidget {
+  const BackgroundAnimation({super.key});
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;

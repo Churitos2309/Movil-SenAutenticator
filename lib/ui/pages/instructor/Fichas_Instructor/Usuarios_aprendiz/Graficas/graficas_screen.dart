@@ -37,9 +37,10 @@ List<PieChartSectionData> pieChartSelectionData = [
 ];
 
 class GraficasInstructorScreen extends StatefulWidget {
-  const GraficasInstructorScreen({Key? key}) : super(key: key);
+  const GraficasInstructorScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _GraficasInstructorScreenState createState() =>
       _GraficasInstructorScreenState();
 }
@@ -142,7 +143,7 @@ class _GraficasInstructorScreenState extends State<GraficasInstructorScreen> {
                                 child: Text('Error: ${snapshot.error}'));
                           } else if (snapshot.hasData) {
                             final data = snapshot.data!;
-                            return Container(
+                            return SizedBox(
                               height: 200,
                               child: Stack(
                                 children: [
@@ -161,14 +162,14 @@ class _GraficasInstructorScreenState extends State<GraficasInstructorScreen> {
                                         const SizedBox(height: 16.0),
                                         Text(
                                           "${(data['pieData'][0].value).toStringAsFixed(1)}%",
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 24,
                                             color: Colors.black,
                                             fontWeight: FontWeight.w600,
                                             height: 0.5,
                                           ),
                                         ),
-                                        Text(
+                                        const Text(
                                           "porcentaje",
                                           style: TextStyle(
                                             color: Colors.black,
@@ -346,7 +347,7 @@ class _GraficasInstructorScreenState extends State<GraficasInstructorScreen> {
                               ),
                             ),
                             borderData: FlBorderData(show: false), // Sin borde alrededor de la gráfica
-                            gridData: FlGridData(
+                            gridData: const FlGridData(
                               show: true,
                               drawVerticalLine: false, // Eliminamos líneas verticales
                             ),
