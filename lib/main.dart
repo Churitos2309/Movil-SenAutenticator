@@ -7,8 +7,6 @@ import 'package:reconocimiento_app/services/api_services.dart';
 import 'package:reconocimiento_app/services/auth_provider.dart';
 import 'package:reconocimiento_app/services/scroll_provider.dart';
 import 'package:reconocimiento_app/ui/router.dart';
-//////////////////////////////////
-import 'package:reconocimiento_app/ui/pages/aprendiz/historial_page_aprendiz.dart';
 
 import 'providers/facial_login_provider.dart';
 
@@ -16,7 +14,6 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        Provider(create: (_) => ApiService()),
         ChangeNotifierProvider<FacialRecognitionProvider>(
             create: (_) => FacialRecognitionProvider(ApiService())),
         ChangeNotifierProvider<FacialLoginProvider>(
@@ -48,7 +45,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: '/',
+      initialRoute: '/baseAprendiz',
       onGenerateRoute: Routes.generateRoute,
     );
   }
