@@ -50,7 +50,6 @@ class ApiService {
   //     rethrow;
   //   }
   // }
-  
 
   Future<Map<String, dynamic>> uploadProfile(
       Map<String, dynamic> data, File? image) async {
@@ -108,17 +107,27 @@ class ApiService {
     }
     throw Exception('Failed to fetch objetos');
   }
+
   ///////////////////////////////////////////////////////////////////77
   Future<List<dynamic>> get(String path) async {
-  try {
-    final response = await _dio.get(path);
-    return response.data; // Asegúrate de que response.data sea una lista
-  } on DioException catch (e) {
-    _handleDioError(e);
+    try {
+      final response = await _dio.get(path);
+      return response.data; // Asegúrate de que response.data sea una lista
+    } on DioException catch (e) {
+      _handleDioError(e);
+    }
+    throw Exception('Failed to complete get request');
   }
-  throw Exception('Failed to complete get request');
-}
 
+  Future<List<dynamic>> fetchUsuarios() async {
+    try {
+      final response = await _dio.get('usuarios/');
+      return response.data; // Aquí se espera una lista de usuarios
+    } on DioException catch (e) {
+      _handleDioError(e);
+    }
+    throw Exception('Failed to fetch usuarios');
+  }
 
   Future<List<dynamic>> getObjetos() async {
     try {
