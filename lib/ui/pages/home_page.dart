@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 10),
                 TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, Routes.objetos);
+                    Navigator.pushNamed(context, Routes.registroFacial);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF3C8DBC), // Azul claro
@@ -113,14 +113,14 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Row(
                         children: [
-                          // Image.network(
-                          //   'https://cdn-icons-png.flaticon.com/512/2223/2223126.png',
-                          //   cacheWidth: 200,
-                          // ),
-                          Image.asset(
-                            'images/img/ReconocimientoFacial.webp',
+                          Image.network(
+                            'https://cdn-icons-png.flaticon.com/512/2223/2223126.png',
                             cacheWidth: 200,
                           ),
+                          // Image.asset(
+                          //   'images/img/ReconocimientoFacial.webp',
+                          //   cacheWidth: 200,
+                          // ),
                           const Expanded(
                             child: Text(
                               'SENAuthenticator es una aplicación de Reconocimiento Facial con IA diseñada para ofrecer un control preciso y eficiente en instalaciones del SENA Alto Cauca.',

@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 
 class ApiService {
@@ -69,6 +71,19 @@ class ApiService {
       String endpoint, Map<String, dynamic> data) async {
     return post(endpoint, data);
   }
+
+  Future<String> _getUserRole(String userName) async {
+  final response = await http.get(
+    Uri.parse('https://backendsenauthenticator.up.railway.app/api/get-user-role/$userName'),
+  );
+
+  if (response.statusCode == 200) {
+    final responseJson = jsonDecode(response.body);
+    return responseJson['role'];
+  } else {
+    throw Exception('Error al obtener el rol del usuario');
+  }
+}
 
   Future<Map<String, dynamic>> registerFace({
     required String nombreCompleto,

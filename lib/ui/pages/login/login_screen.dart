@@ -6,6 +6,7 @@ import 'package:particles_flutter/component/particle/particle.dart';
 import 'package:particles_flutter/particles_engine.dart';
 import 'package:reconocimiento_app/services/api_services.dart';
 import 'package:reconocimiento_app/ui/pages/custom_app_bar_lobby.dart';
+import 'package:reconocimiento_app/ui/pages/login/pages/Card_inicie_con.dart';
 import 'package:reconocimiento_app/ui/router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -322,6 +323,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                 const Text(
                                   "O inicie con ",
                                   style: TextStyle(color: Colors.white),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return const FacialLoginModal();
+                                      },
+                                    );
+                                  },
+                                  icon: Image.asset(
+                                    'images/img/ReconocimientoFacial.webp',
+                                    cacheWidth: 100,
+                                  ),
                                 ),
                                 const SizedBox(height: 20.0),
                                 Expanded(
